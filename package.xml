@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <name>catkin_pure_python</name>
+  <version>0.0.1</version>
+  <description>
+    Catkin macros to allow using pure python packages in usual catkin workspaces with normal python workflow.
+  </description>
+
+  <maintainer email="asmodehn@gmail.com">AlexV</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://github.com/asmodehn/catkin_pure_python</url>
+  <url type="repository">https://github.com/asmodehn/catkin_pure_python</url>
+  <url type="bugtracker">https://github.com/asmodehn/catkin_pure_python/issues</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>python</build_depend>
+  <build_depend>python-pip</build_depend>
+  <run_depend>python</run_depend>
+  <run_depend>python-pip</run_depend>
+</package>

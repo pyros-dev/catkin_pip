@@ -1,0 +1,8 @@
+prefix=/home/alexv/ROS/gopher_concert/src/catkin_pure_python/build/install
+
+Name: catkin_pure_python
+Description: Description of catkin_pure_python
+Version: 0.0.1
+Cflags: 
+Libs: -L/home/alexv/ROS/gopher_concert/src/catkin_pure_python/build/install/lib 
+Requires: 
