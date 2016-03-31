@@ -21,6 +21,6 @@ if (CATKIN_ENABLE_TESTING)
     # Nose Tests
     ############
 
-    catkin_add_nosetests(pyros_setup/tests)
+    #catkin_add_nosetests(test)
 
 endif()

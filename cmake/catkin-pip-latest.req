@@ -1,0 +1,5 @@
+# not setting any version here to force catkin-pip to follow python and not remain stuck on deprecated versions.
+pip
+setuptools
+# fixing security since python 2.7.6 on trusty is broken : https://stackoverflow.com/questions/29099404/ssl-insecureplatform-error-when-using-requests-package
+requests[security]

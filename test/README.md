@@ -6,7 +6,8 @@ This directory aims at gathering tests to validate the behavior of catkin_pure_p
 * "building" them (in catkin terminology) 
 * make sure we can use them (somehow)
 
-We should also use cookiecutter to get some pure python package structure that also works in catkin.
+TODO : We should also use cookiecutter to get pure python package structure and make sure it also works with catkin.
+If not we should provide here the required tools to make it so.
 
 More tests will be added when we find more use cases that fit catkin_pure_python purpose
 
