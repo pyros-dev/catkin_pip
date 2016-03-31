@@ -22,14 +22,26 @@ macro(catkin_pip_setup)
 
         # need to find a pip command that works for old pip versions (indigo supports trusty which is pip v1.5.4)
         # note target here means we cannot check if a package is already installed or not before installing, using old pip.
+        # Avoid --install-option since the setuptools version found will be different the first time and the following times
         execute_process(
-          COMMAND /usr/bin/pip install -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-latest.req" --target "${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_PYTHON_DESTINATION}" --exists-action w
+          COMMAND /usr/bin/pip install -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-latest.req" --download-cache "${CMAKE_BINARY_DIR}/pip-cache" --target "${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_PYTHON_DESTINATION}"
           WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
           RESULT_VARIABLE PIP_RESULT
           OUTPUT_VARIABLE PIP_VARIABLE
         )
 
         message(STATUS "    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}")
+
+        # Setting up the command for install space
+        install(CODE "
+            message(STATUS \"    ... Installing catkin-pip requirements using system pip ...\")
+            execute_process(
+              COMMAND /usr/bin/pip install -r \"${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-latest.req\" --download-cache \"${CMAKE_BINARY_DIR}/pip-cache\" --target \"${CMAKE_INSTALL_PREFIX}/${CATKIN_GLOBAL_PYTHON_DESTINATION}\"
+              WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+              RESULT_VARIABLE PIP_RESULT
+              OUTPUT_VARIABLE PIP_VARIABLE)
+            message(STATUS \"    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}\")
+        ")
 
         set( CATKIN_PIP python -m pip )  # this should retrieve the recently downloaded pip since using catkin means we have sourced a ROS env setup.bash
 
@@ -43,7 +55,6 @@ macro(catkin_pip_requirements requirements_txt)
     file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_PYTHON_DESTINATION})
 
     execute_process(
-      # COMMAND ${CATKIN_PIP} install -r ${requirements_txt} --ignore-installed --install-option "--prefix=${CATKIN_DEVEL_PREFIX}" --install-option "--install-dir=${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_PYTHON_DESTINATION}"
       COMMAND ${CATKIN_PIP} install -r ${requirements_txt} --ignore-installed --prefix "${CATKIN_DEVEL_PREFIX}" --install-option "--install-layout=deb"
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
       RESULT_VARIABLE PIP_RESULT
@@ -54,10 +65,11 @@ macro(catkin_pip_requirements requirements_txt)
     install(CODE "
       message(STATUS \"    ... Installing Pip requirements ...\")
       execute_process(
-      COMMAND ${CATKIN_PIP} install -r ${requirements_txt} --ignore-installed --install-option \"--prefix=${CMAKE_INSTALL_PREFIX}\" --install-option \"--install-dir=${CMAKE_INSTALL_PREFIX}/${CATKIN_GLOBAL_PYTHON_DESTINATION}\"
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      RESULT_VARIABLE PIP_RESULT
-      OUTPUT_VARIABLE PIP_VARIABLE)
+          COMMAND ${CATKIN_PIP} install -r ${requirements_txt} --ignore-installed --prefix \"${CATKIN_DEVEL_PREFIX}\" --install-option \"--install-layout=deb\"
+          WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+          RESULT_VARIABLE PIP_RESULT
+          OUTPUT_VARIABLE PIP_VARIABLE)
+      message(STATUS \"    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}\")
     ")
 
     message(STATUS "    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}")
@@ -84,13 +96,14 @@ macro(catkin_pip_package)
 
     # Setting up the command for install space
     install(CODE "
-    message(STATUS \"    ... Installing as a Pip package ...\")
-    execute_process(
-      COMMAND ${CATKIN_PIP} install . --install-option \"--prefix=${CMAKE_INSTALL_PREFIX}\" --install-option \"--install-dir=${CMAKE_INSTALL_PREFIX}/${CATKIN_GLOBAL_PYTHON_DESTINATION}\"
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      RESULT_VARIABLE PIP_RESULT
-      OUTPUT_VARIABLE PIP_VARIABLE
-    )")
+        message(STATUS \"    ... Installing as a Pip package ...\")
+        execute_process(
+          COMMAND ${CATKIN_PIP} install . --install-option \"--install-dir=${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_PYTHON_DESTINATION}\" --install-option \"--script-dir=${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_BIN_DESTINATION}\"
+          WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+          RESULT_VARIABLE PIP_RESULT
+          OUTPUT_VARIABLE PIP_VARIABLE)
+        message(STATUS \"    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}\")
+    ")
 
     message(STATUS "    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}")
 
