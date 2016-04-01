@@ -10,8 +10,9 @@ TODO : We should also use cookiecutter to get pure python package structure and 
 If not we should provide here the required tools to make it so (not attempt to modify the python package structure).
 
 Project examples to use :
-* [cookiecutter-pypa](https://github.com/audreyr/cookiecutter-pypackage)
 * [cookiecutter-pipproject](https://github.com/wdm0006/cookiecutter-pipproject)
+* [cookiecutter-pypackage-minimal](https://github.com/kragniz/cookiecutter-pypackage-minimal) 
+* [cookiecutter-pypa](https://github.com/audreyr/cookiecutter-pypackage)
 *
 * TODO : find more python package references
 
