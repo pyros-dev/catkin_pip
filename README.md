@@ -1,6 +1,8 @@
 catkin_pure_python
 ==================
 
+[![Build Status](https://travis-ci.org/asmodehn/catkin_pure_python.svg?branch=indigo)](https://travis-ci.org/asmodehn/catkin_pure_python)
+
 Provides catkin extension (cmake hooks) to work with pure python packages in catkin workspaces.
 Because state of the art python (ref. http://jeffknupp.com/blog/2013/08/16/open-sourcing-a-python-project-the-right-way/) should be allowed to work in catkin.
 
