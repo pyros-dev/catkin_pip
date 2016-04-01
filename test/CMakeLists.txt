@@ -1,21 +1,16 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(catkin_pure_python_tests)
-
 #
 # Here we generate a set of python projects with different structures
 # and use them as tests for catkin_pure_python
+# This CMakeLists is just a way to gather all subprojects
+# We assume here that the global workspace setup is already done by the parent CMakeLists.txt
 #
 
 find_package(catkin REQUIRED)
-# Include our own extension from source (to be sure)
+# Include our own extension from source (to be sure), only to be able to get common pip requirements
 include(../cmake/catkin-pip.cmake)
-# But in your own packages you want to :
-# find_package(catkin REQUIRED COMPONENTS catkin_pure_python)
 
-# First we need to setup our test requirements (using latest pip packages)
-catkin_pip_setup()
-
-# We need to install the pip dependencies in the workspace being created
+# We need to install the common pip dependencies in the workspace being created
 catkin_pip_requirements(${CMAKE_CURRENT_SOURCE_DIR}/test_requirements.txt)
 
 message(STATUS "PATH $ENV{PATH}")
@@ -36,11 +31,11 @@ execute_process(
 )
 message(STATUS "    ... Done ...")
 
-
-
-# and make sure they still work with catkin by running the tests
+#
+# and make sure they still work with catkin by building them all as subprojects
 #
 
+include(mypippkg.cmake)
 
 
 if (CATKIN_ENABLE_TESTING)
