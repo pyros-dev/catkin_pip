@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(mypippkg)
 
 # This is a full project CMakeLists (in case we call it independently for tests or so)
-set (PIP_PROJECT_DIR mypippkg)
+set (PIP_PROJECT_DIR ./mypippkg)
 
 find_package(catkin REQUIRED)
 # Include our own extension from source (to be sure)
