@@ -35,15 +35,12 @@ message(STATUS "    ... Done ...")
 # and make sure they still work with catkin by building them all as subprojects
 #
 
-include(mypippkg.cmake)
-
-
 if (CATKIN_ENABLE_TESTING)
 
     ########################
     # Nose Tests should work
     ########################
 
-    #catkin_add_nosetests(sampleproject/tests)
+    include(mypippkg.cmake)
 
 endif()

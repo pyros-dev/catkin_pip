@@ -127,9 +127,16 @@ else ()
 
 endif()
 
-macro(catkin_pip_package package_path)
+macro(catkin_pip_package)
 
-    if( NOT package_path)
+    set (extra_macro_args ${ARGN})
+
+    # Did we get any optional args?
+    list(LENGTH extra_macro_args num_extra_args)
+    if (${num_extra_args} GREATER 0)
+        list(GET extra_macro_args 0 package_path)
+        message ("Got package_path: ${package_path}")
+    else()
         set(package_path .)
     endif()
     message(STATUS "    ... Configuring ${package_path} as a Pip package ...")

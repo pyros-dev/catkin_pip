@@ -15,6 +15,7 @@ Project examples to use :
 * [cookiecutter-pypa](https://github.com/audreyr/cookiecutter-pypackage)
 *
 * TODO : find more python package references
+* TODO : add a ros package to prove it doesnt disturb normal ros process either (at least not too much...).
 
 More tests will be added when we find more use cases that fit catkin_pure_python purpose
 
