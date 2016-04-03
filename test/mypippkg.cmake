@@ -12,7 +12,7 @@ include(../cmake/catkin-pip.cmake)
 
 # We need to install the pip dependencies in the workspace being created
 catkin_pip_requirements(${PIP_PROJECT_DIR}/requirements.txt)
-# CAREFUL : all projects here share the same workspace. pip might have conflicts...
+# CAREFUL : all projects for test here will share the same workspace. pip might have conflicts...
 
 # defining current package as a package that should be managed by pip (not catkin - even though we make it usable with workspaces)
 catkin_pip_package(${PIP_PROJECT_DIR})
