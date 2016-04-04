@@ -4,13 +4,32 @@ if ( NOT CATKIN_PIP_REQUIREMENTS_PATH )
     set (CATKIN_PIP_REQUIREMENTS_PATH ${CMAKE_CURRENT_LIST_DIR})
 endif()
 
+if ( NOT CATKIN_PIP_GLOBAL_PYTHON_DESTINATION )
+    set (CATKIN_PIP_GLOBAL_PYTHON_DESTINATION "lib/python2.7/site-packages")
+endif()
+
+# _setup_util.py should already exist here.
+# catkin should have done hte workspace setup before we reach here
+if ( EXISTS ${CATKIN_DEVEL_PREFIX}/_setup_util.py )
+    file(READ ${CATKIN_DEVEL_PREFIX}/_setup_util.py  SETUP_UTIL_PY)
+    string(REPLACE
+        "'PYTHONPATH': 'lib/python2.7/dist-packages',"
+        "'PYTHONPATH': ['lib/python2.7/dist-packages', '${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION}']"
+        PATCHED_SETUP_UTIL_PY
+        ${SETUP_UTIL_PY}
+    )
+    file(WRITE ${CATKIN_DEVEL_PREFIX}/_setup_util.py  ${PATCHED_SETUP_UTIL_PY})
+else()
+    message(FATAL_ERROR "SETUP_UTIL.PY DOES NOT EXISTS YET ")
+endif()
+
 # Since we need (almost) the same configuration for both devel and install space, we create cmake files for each workspace setup.
 set(CONFIGURE_PREFIX ${CATKIN_DEVEL_PREFIX})
-set(PIP_PACKAGE_INSTALL_COMMAND \${CATKIN_PIP} install -e \${package_path} --install-option "--install-dir=${CONFIGURE_PREFIX}/${CATKIN_GLOBAL_PYTHON_DESTINATION}" --install-option "--script-dir=${CONFIGURE_PREFIX}/${CATKIN_GLOBAL_BIN_DESTINATION}")
+set(PIP_PACKAGE_INSTALL_COMMAND \${CATKIN_PIP} install -e \${package_path} --install-option "--install-dir=${CONFIGURE_PREFIX}/${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION}" --install-option "--script-dir=${CONFIGURE_PREFIX}/${CATKIN_GLOBAL_BIN_DESTINATION}")
 configure_file(${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake.in ${CONFIGURE_PREFIX}/.catkin-pip-setup.cmake @ONLY)
 
 set(CONFIGURE_PREFIX ${CMAKE_INSTALL_PREFIX})
-set(PIP_PACKAGE_INSTALL_COMMAND \${CATKIN_PIP} install \${package_path} --prefix "${CONFIGURE_PREFIX}" --install-option "--install-layout=deb")
+set(PIP_PACKAGE_INSTALL_COMMAND \${CATKIN_PIP} install \${package_path} --prefix "${CONFIGURE_PREFIX}")
 configure_file(${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake.in ${CONFIGURE_PREFIX}/.catkin-pip-setup.cmake @ONLY)
 
 unset(CONFIGURE_PREFIX)

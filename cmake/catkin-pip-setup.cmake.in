@@ -6,11 +6,18 @@
 
 message(STATUS "Loading ${CMAKE_CURRENT_LIST_FILE}... ")
 
-# Make sure the pip target directory for the workspace is in python path
+# Make sure the atkin python package directory for the workspace is in python path
 # this is only needed if the user didn't source the current workspace setup.bash (happens the first time)
 string(FIND $ENV{PYTHONPATH} @CONFIGURE_PREFIX@/${CATKIN_GLOBAL_PYTHON_DESTINATION} FOUND_PPATH)
 if ( FOUND_PPATH LESS 0 )
     set(ENV{PYTHONPATH} "@CONFIGURE_PREFIX@/${CATKIN_GLOBAL_PYTHON_DESTINATION}:$ENV{PYTHONPATH}")
+endif()
+
+# Make sure the pip target directory for the workspace is in python path
+# this is only needed if the user didn't source the current workspace setup.bash (happens the first time)
+string(FIND $ENV{PYTHONPATH} @CONFIGURE_PREFIX@/${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION} FOUND_PPPATH)
+if ( FOUND_PPPATH LESS 0 )
+    set(ENV{PYTHONPATH} "@CONFIGURE_PREFIX@/${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION}:$ENV{PYTHONPATH}")
 endif()
 
 # Make sure the bin target directory for the workspace is in system path
@@ -33,7 +40,7 @@ macro(catkin_pip_requirements_prefix requirements_txt )
     message(STATUS "    ... Retrieving Pip requirements ${requirements_txt} into @CONFIGURE_PREFIX@...")
 
     execute_process(
-      COMMAND ${CATKIN_PIP} -q install -r ${requirements_txt} --ignore-installed --prefix "@CONFIGURE_PREFIX@" --install-option "--install-layout=deb"
+      COMMAND ${CATKIN_PIP} install -r ${requirements_txt} --ignore-installed --prefix "@CONFIGURE_PREFIX@"
       WORKING_DIRECTORY @CMAKE_CURRENT_SOURCE_DIR@
       RESULT_VARIABLE PIP_RESULT
       OUTPUT_VARIABLE PIP_VARIABLE
@@ -42,7 +49,7 @@ macro(catkin_pip_requirements_prefix requirements_txt )
 
     message(STATUS "    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}")
     if (PIP_RESULT)
-        message(STATUS "Command ${CATKIN_PIP} -q install -r ${requirements_txt} --ignore-installed --prefix \"@CONFIGURE_PREFIX@\" --install-option \"--install-layout=deb\" FAILED")
+        message(STATUS "Command ${CATKIN_PIP} install -r ${requirements_txt} --ignore-installed --prefix \"@CONFIGURE_PREFIX@\" FAILED")
         message(FATAL_ERROR "${PIP_ERROR}")
     endif()
 endmacro()
@@ -86,14 +93,17 @@ else ()
 
     message(STATUS "    ... Retrieving catkin_pure_python requirements using system pip ...")
 
-    file(MAKE_DIRECTORY @CONFIGURE_PREFIX@/${CATKIN_GLOBAL_PYTHON_DESTINATION})
+    #file(MAKE_DIRECTORY @CONFIGURE_PREFIX@/${CATKIN_GLOBAL_PYTHON_DESTINATION})
+    # NOW MOVING TO USE site-packages if installed from source via pip
+    # Explanation here : http://stackoverflow.com/questions/9387928/whats-the-difference-between-dist-packages-and-site-packages
+    file(MAKE_DIRECTORY @CONFIGURE_PREFIX@/${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION})
 
     # We need to find a pip command that works for old pip versions (indigo supports trusty which is pip v1.5.4)
     # Note --target here means we cannot check if a package is already installed or not before installing, using old pip.
     # which means we have to reinstall dependencies everytime and specify --exists-action w to avoid "already exists" errors
     # Avoid --install-option since the setuptools version found will be different the first time and the following times
     execute_process(
-      COMMAND ${CATKIN_SYS_PIP} -q install -r "@CATKIN_PIP_REQUIREMENTS_PATH@/catkin-pip-base.req" --download-cache "${CMAKE_BINARY_DIR}/pip-cache" --target "@CONFIGURE_PREFIX@/${CATKIN_GLOBAL_PYTHON_DESTINATION}" --exists-action w
+      COMMAND ${CATKIN_SYS_PIP} -q install -r "@CATKIN_PIP_REQUIREMENTS_PATH@/catkin-pip-base.req" --download-cache "${CMAKE_BINARY_DIR}/pip-cache" --target "@CONFIGURE_PREFIX@/${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION}" --exists-action w
       WORKING_DIRECTORY @CMAKE_CURRENT_SOURCE_DIR@
       RESULT_VARIABLE PIP_RESULT
       OUTPUT_VARIABLE PIP_VARIABLE
@@ -102,7 +112,7 @@ else ()
 
     message(STATUS "    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}")
     if (PIP_RESULT)
-        message(STATUS "Command ${CATKIN_SYS_PIP} -q install -r \"@CATKIN_PIP_REQUIREMENTS_PATH@/catkin-pip-base.req\" --download-cache \"${CMAKE_BINARY_DIR}/pip-cache\" --target \"@CONFIGURE_PREFIX@/${CATKIN_GLOBAL_PYTHON_DESTINATION}\" --exists-action w FAILED")
+        message(STATUS "Command ${CATKIN_SYS_PIP} install -r \"@CATKIN_PIP_REQUIREMENTS_PATH@/catkin-pip-base.req\" --download-cache \"${CMAKE_BINARY_DIR}/pip-cache\" --target \"@CONFIGURE_PREFIX@/${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION}\" --exists-action w FAILED")
         message(FATAL_ERROR "${PIP_ERROR}")
     endif()
 
