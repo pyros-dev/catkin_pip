@@ -17,10 +17,11 @@ message(STATUS "PATH $ENV{PATH}")
 
 # Make sure we get the right cookiecutter
 find_program( CATKIN_COOKIECUTTER NAMES cookiecutter PATHS ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_BIN_DESTINATION} NO_DEFAULT_PATH)
-message(STATUS "cookiecutter found at ${COOKIECUTTER}")
 if( NOT CATKIN_COOKIECUTTER )
     message( FATAL_ERROR "cookiecutter pip command not found. Make sure you have installed the cookiecutter pip package on your workspace.")
-endif( NOT CATKIN_COOKIECUTTER )
+else()
+    message(STATUS "cookiecutter found at ${CATKIN_COOKIECUTTER}")
+endif()
 
 message(STATUS "    ... Getting cookiecutter-pipproject template from cookiecutter ...")
 execute_process(

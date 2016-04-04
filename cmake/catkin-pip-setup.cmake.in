@@ -33,7 +33,7 @@ macro(catkin_pip_requirements_prefix requirements_txt )
     message(STATUS "    ... Retrieving Pip requirements ${requirements_txt} into @CONFIGURE_PREFIX@...")
 
     execute_process(
-      COMMAND ${CATKIN_PIP} install -r ${requirements_txt} --ignore-installed --prefix "@CONFIGURE_PREFIX@" --install-option "--install-layout=deb"
+      COMMAND ${CATKIN_PIP} -q install -r ${requirements_txt} --ignore-installed --prefix "@CONFIGURE_PREFIX@" --install-option "--install-layout=deb"
       WORKING_DIRECTORY @CMAKE_CURRENT_SOURCE_DIR@
       RESULT_VARIABLE PIP_RESULT
       OUTPUT_VARIABLE PIP_VARIABLE
@@ -42,7 +42,7 @@ macro(catkin_pip_requirements_prefix requirements_txt )
 
     message(STATUS "    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}")
     if (PIP_RESULT)
-        message(STATUS "Command ${CATKIN_PIP} install -r ${requirements_txt} --ignore-installed --prefix \"@CONFIGURE_PREFIX@\" --install-option \"--install-layout=deb\" FAILED")
+        message(STATUS "Command ${CATKIN_PIP} -q install -r ${requirements_txt} --ignore-installed --prefix \"@CONFIGURE_PREFIX@\" --install-option \"--install-layout=deb\" FAILED")
         message(FATAL_ERROR "${PIP_ERROR}")
     endif()
 endmacro()
@@ -79,7 +79,7 @@ else ()
     message(STATUS "    ... Catkin pip was not found in @CONFIGURE_PREFIX@/@CATKIN_GLOBAL_BIN_DESTINATION@ ...")
     # Assuming Ubuntu Trusty here. platform detection is another hurdle
     set(CMAKE_SYSTEM_PREFIX_PATH / /usr /usr/local)
-    find_program(CATKIN_SYS_PIP NAMES pip pip2 pip2.7 NO_SYSTEM_ENVIRONMENT_PATH)  # we need to make sure we dont find any other catkin-pip from somewhere else if our path is not clean (careful with underlays)
+    find_program(CATKIN_SYS_PIP NAMES pip pip2 pip2.7 NO_CMAKE_PATH NO_CMAKE_ENVIRONMENT_PATH NO_SYSTEM_ENVIRONMENT_PATH)  # we need to make sure we don't find any other catkin-pip from somewhere else if our path is not clean (careful with underlays or install/devel)
     if(NOT CATKIN_SYS_PIP)
         message( FATAL_ERROR "pip system command not found. Make sure you have installed the python-pip package on your system.")
     endif()
@@ -93,7 +93,7 @@ else ()
     # which means we have to reinstall dependencies everytime and specify --exists-action w to avoid "already exists" errors
     # Avoid --install-option since the setuptools version found will be different the first time and the following times
     execute_process(
-      COMMAND ${CATKIN_SYS_PIP} install -r "@CATKIN_PIP_REQUIREMENTS_PATH@/catkin-pip-base.req" --download-cache "${CMAKE_BINARY_DIR}/pip-cache" --target "@CONFIGURE_PREFIX@/${CATKIN_GLOBAL_PYTHON_DESTINATION}" --exists-action w
+      COMMAND ${CATKIN_SYS_PIP} -q install -r "@CATKIN_PIP_REQUIREMENTS_PATH@/catkin-pip-base.req" --download-cache "${CMAKE_BINARY_DIR}/pip-cache" --target "@CONFIGURE_PREFIX@/${CATKIN_GLOBAL_PYTHON_DESTINATION}" --exists-action w
       WORKING_DIRECTORY @CMAKE_CURRENT_SOURCE_DIR@
       RESULT_VARIABLE PIP_RESULT
       OUTPUT_VARIABLE PIP_VARIABLE
@@ -102,7 +102,7 @@ else ()
 
     message(STATUS "    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}")
     if (PIP_RESULT)
-        message(STATUS "Command ${CATKIN_SYS_PIP} install -r \"@CATKIN_PIP_REQUIREMENTS_PATH@/catkin-pip-base.req\" --download-cache \"${CMAKE_BINARY_DIR}/pip-cache\" --target \"@CONFIGURE_PREFIX@/${CATKIN_GLOBAL_PYTHON_DESTINATION}\" --exists-action w FAILED")
+        message(STATUS "Command ${CATKIN_SYS_PIP} -q install -r \"@CATKIN_PIP_REQUIREMENTS_PATH@/catkin-pip-base.req\" --download-cache \"${CMAKE_BINARY_DIR}/pip-cache\" --target \"@CONFIGURE_PREFIX@/${CATKIN_GLOBAL_PYTHON_DESTINATION}\" --exists-action w FAILED")
         message(FATAL_ERROR "${PIP_ERROR}")
     endif()
 
