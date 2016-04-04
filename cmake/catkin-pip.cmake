@@ -5,6 +5,8 @@ if ( NOT CATKIN_PIP_REQUIREMENTS_PATH )
 endif()
 
 if ( NOT CATKIN_PIP_GLOBAL_PYTHON_DESTINATION )
+    # using site-packages as it s the default for pip and should also be used on debian systems for installs from non system packages
+    # Explanation here : http://stackoverflow.com/questions/9387928/whats-the-difference-between-dist-packages-and-site-packages
     set (CATKIN_PIP_GLOBAL_PYTHON_DESTINATION "lib/python2.7/site-packages")
 endif()
 
