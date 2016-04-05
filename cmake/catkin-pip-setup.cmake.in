@@ -8,23 +8,23 @@ message(STATUS "Loading ${CMAKE_CURRENT_LIST_FILE}... ")
 
 # Make sure the atkin python package directory for the workspace is in python path
 # this is only needed if the user didn't source the current workspace setup.bash (happens the first time)
-string(FIND $ENV{PYTHONPATH} @CONFIGURE_PREFIX@/${CATKIN_GLOBAL_PYTHON_DESTINATION} FOUND_PPATH)
+string(FIND "$ENV{PYTHONPATH}" @CONFIGURE_PREFIX@/${CATKIN_GLOBAL_PYTHON_DESTINATION} FOUND_PPATH)
 if ( FOUND_PPATH LESS 0 )
     set(ENV{PYTHONPATH} "@CONFIGURE_PREFIX@/${CATKIN_GLOBAL_PYTHON_DESTINATION}:$ENV{PYTHONPATH}")
 endif()
 
 # Make sure the pip target directory for the workspace is in python path
 # this is only needed if the user didn't source the current workspace setup.bash (happens the first time)
-string(FIND $ENV{PYTHONPATH} @CONFIGURE_PREFIX@/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@ FOUND_PPPATH)
+string(FIND "$ENV{PYTHONPATH}" @CONFIGURE_PREFIX@/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@ FOUND_PPPATH)
 if ( FOUND_PPPATH LESS 0 )
     set(ENV{PYTHONPATH} "@CONFIGURE_PREFIX@/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@:$ENV{PYTHONPATH}")
 endif()
 
 # Make sure the bin target directory for the workspace is in system path
 # this is only needed if the user didn't source the current workspace setup.bash (happens the first time)
-string(FIND $ENV{PATH} @CONFIGURE_PREFIX@/@CATKIN_GLOBAL_BIN_DESTINATION@ FOUND_SPATH)
+string(FIND "$ENV{PATH}" @CONFIGURE_PREFIX@/${CATKIN_GLOBAL_BIN_DESTINATION} FOUND_SPATH)
 if ( FOUND_SPATH LESS 0 )
-    set(ENV{PATH} "@CONFIGURE_PREFIX@/@CATKIN_GLOBAL_BIN_DESTINATION@:$ENV{PATH}")
+    set(ENV{PATH} "@CONFIGURE_PREFIX@/${CATKIN_GLOBAL_BIN_DESTINATION}:$ENV{PATH}")
 endif()
 
 message(STATUS "Catkin pip PYTHONPATH : $ENV{PYTHONPATH}")

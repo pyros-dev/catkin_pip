@@ -18,9 +18,9 @@ if ( EXISTS ${CATKIN_DEVEL_PREFIX}/_setup_util.py )
         "'PYTHONPATH': 'lib/python2.7/dist-packages',"
         "'PYTHONPATH': ['lib/python2.7/dist-packages', '${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION}']"
         PATCHED_SETUP_UTIL_PY
-        ${SETUP_UTIL_PY}
+        "${SETUP_UTIL_PY}"
     )
-    file(WRITE ${CATKIN_DEVEL_PREFIX}/_setup_util.py  ${PATCHED_SETUP_UTIL_PY})
+    file(WRITE ${CATKIN_DEVEL_PREFIX}/_setup_util.py  "${PATCHED_SETUP_UTIL_PY}")
 else()
     message(FATAL_ERROR "SETUP_UTIL.PY DOES NOT EXISTS YET ")
 endif()
