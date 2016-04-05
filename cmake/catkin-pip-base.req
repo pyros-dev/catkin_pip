@@ -1,0 +1,4 @@
+# Basic tools to install, simulating virtualenv creation behavior.
+# Not setting any version here to force catkin-pip to follow python and not remain stuck on deprecated versions.
+pip
+setuptools
