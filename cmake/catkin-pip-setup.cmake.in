@@ -38,9 +38,11 @@ message(STATUS "Catkin pip PATH : $ENV{PATH}")
 
 macro(catkin_pip_requirements_prefix requirements_txt )
     message(STATUS "    ... Retrieving Pip requirements ${requirements_txt} into @CONFIGURE_PREFIX@...")
+    # TODO : display command line before executing, we might get stuck here if pip wants user input
+    # message(WARNING "${CATKIN_PIP} install -r ${requirements_txt} --ignore-installed --src ${CMAKE_SOURCE_DIR} --exists-action b --prefix \"@CONFIGURE_PREFIX@\"")
 
     execute_process(
-      COMMAND ${CATKIN_PIP} install -r ${requirements_txt} --ignore-installed --prefix "@CONFIGURE_PREFIX@"
+      COMMAND ${CATKIN_PIP} install -r ${requirements_txt} --ignore-installed --src ${CMAKE_SOURCE_DIR} --exists-action b --prefix "@CONFIGURE_PREFIX@"
       WORKING_DIRECTORY @CMAKE_CURRENT_SOURCE_DIR@
       RESULT_VARIABLE PIP_RESULT
       OUTPUT_VARIABLE PIP_VARIABLE
@@ -49,7 +51,7 @@ macro(catkin_pip_requirements_prefix requirements_txt )
 
     message(STATUS "    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}")
     if (PIP_RESULT)
-        message(STATUS "Command ${CATKIN_PIP} install -r ${requirements_txt} --ignore-installed --prefix \"@CONFIGURE_PREFIX@\" FAILED")
+        message(STATUS "Command ${CATKIN_PIP} install -r ${requirements_txt} --ignore-installed --src ${CMAKE_SOURCE_DIR} --exists-action b --prefix \"@CONFIGURE_PREFIX@\" FAILED")
         message(FATAL_ERROR "${PIP_ERROR}")
     endif()
 endmacro()

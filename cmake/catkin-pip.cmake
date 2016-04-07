@@ -27,11 +27,11 @@ endif()
 
 # Since we need (almost) the same configuration for both devel and install space, we create cmake files for each workspace setup.
 set(CONFIGURE_PREFIX ${CATKIN_DEVEL_PREFIX})
-set(PIP_PACKAGE_INSTALL_COMMAND \${CATKIN_PIP} install --ignore-installed -e \${package_path} --prefix "${CONFIGURE_PREFIX}")
+set(PIP_PACKAGE_INSTALL_COMMAND \${CATKIN_PIP} install -e \${package_path} --prefix "${CONFIGURE_PREFIX}")
 configure_file(${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake.in ${CONFIGURE_PREFIX}/.catkin-pip-setup.cmake @ONLY)
 
 set(CONFIGURE_PREFIX ${CMAKE_INSTALL_PREFIX})
-set(PIP_PACKAGE_INSTALL_COMMAND \${CATKIN_PIP} install --ignore-installed \${package_path} --prefix "${CONFIGURE_PREFIX}")
+set(PIP_PACKAGE_INSTALL_COMMAND \${CATKIN_PIP} install \${package_path} --prefix "${CONFIGURE_PREFIX}")
 configure_file(${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake.in ${CONFIGURE_PREFIX}/.catkin-pip-setup.cmake @ONLY)
 
 unset(CONFIGURE_PREFIX)
