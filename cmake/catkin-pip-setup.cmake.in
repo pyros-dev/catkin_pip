@@ -75,7 +75,8 @@ endmacro()
 
 
 # Trying to find our own pip
-# Careful this creates a CACHE variable
+# Careful this creates a CACHE variable that we need to recreate here in case people clean devel without cleaning build
+unset(CATKIN_PIP CACHE)
 find_program(CATKIN_PIP NAMES pip pip2 pip2.7 PATHS @CONFIGURE_PREFIX@/@CATKIN_GLOBAL_BIN_DESTINATION@ NO_DEFAULT_PATH)
 
 if (CATKIN_PIP)
