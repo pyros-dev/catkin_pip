@@ -14,13 +14,9 @@ install(DIRECTORY cmake
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
-if (CATKIN_ENABLE_TESTING)
-
-    add_subdirectory(test)
-    ############
-    # Nose Tests
-    ############
-
-    #catkin_add_nosetests(test)
-
-endif()
+# Not testing when building now.
+# Tests are not ready for packaging
+#
+# if (CATKIN_ENABLE_TESTING)
+#     add_subdirectory(test)
+# endif()
