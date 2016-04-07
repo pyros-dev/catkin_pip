@@ -33,16 +33,24 @@ message(STATUS "Catkin pip PATH : $ENV{PATH}")
 # Note : this is obviously not changing anything in the shell environment where cmake was started from.
 # And WE DO NOT WANT to do it there. The user controls his bash environment independently of what runs in it.
 
+# Default command to install requirements
+if ( NOT PIP_REQUIREMENTS_INSTALL_COMMAND)
+    set(PIP_REQUIREMENTS_INSTALL_COMMAND install -r \@requirements_arg\@ --ignore-installed --src ${CMAKE_SOURCE_DIR} --exists-action b --prefix "@CONFIGURE_PREFIX@")
+endif()
 
 # Note : we need to install our fixups as normal requirements
-
 macro(catkin_pip_requirements_prefix requirements_txt )
-    message(STATUS "    ... Retrieving Pip requirements ${requirements_txt} into @CONFIGURE_PREFIX@...")
-    # TODO : display command line before executing, we might get stuck here if pip wants user input
-    # message(WARNING "${CATKIN_PIP} install -r ${requirements_txt} --ignore-installed --src ${CMAKE_SOURCE_DIR} --exists-action b --prefix \"@CONFIGURE_PREFIX@\"")
+    set(requirements_arg ${requirements_txt})
+    # doing the extra expansion to get requirements_txt
+    string(CONFIGURE "${PIP_REQUIREMENTS_INSTALL_COMMAND}" EXPANDED_PIP_REQUIREMENTS_INSTALL_COMMAND @ONLY)
+    # message(STATUS "EXPANDED_PIP_REQUIREMENTS_INSTALL_COMMAND ${EXPANDED_PIP_REQUIREMENTS_INSTALL_COMMAND}")
+    set(FULL_CMD ${CATKIN_PIP} ${EXPANDED_PIP_REQUIREMENTS_INSTALL_COMMAND})
+
+    string(REPLACE ";" " " PIP_REQUIREMENTS_INSTALL_CMDSTR "${FULL_CMD}")
+    message(STATUS "    ... Running ${PIP_REQUIREMENTS_INSTALL_CMDSTR} ...")
 
     execute_process(
-      COMMAND ${CATKIN_PIP} install -r ${requirements_txt} --ignore-installed --src ${CMAKE_SOURCE_DIR} --exists-action b --prefix "@CONFIGURE_PREFIX@"
+      COMMAND ${FULL_CMD}
       WORKING_DIRECTORY @CMAKE_CURRENT_SOURCE_DIR@
       RESULT_VARIABLE PIP_RESULT
       OUTPUT_VARIABLE PIP_VARIABLE
@@ -51,7 +59,7 @@ macro(catkin_pip_requirements_prefix requirements_txt )
 
     message(STATUS "    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}")
     if (PIP_RESULT)
-        message(STATUS "Command ${CATKIN_PIP} install -r ${requirements_txt} --ignore-installed --src ${CMAKE_SOURCE_DIR} --exists-action b --prefix \"@CONFIGURE_PREFIX@\" FAILED")
+        message(STATUS "Command ${PIP_REQUIREMENTS_INSTALL_CMDSTR} FAILED !")
         message(FATAL_ERROR "${PIP_ERROR}")
     endif()
 endmacro()
