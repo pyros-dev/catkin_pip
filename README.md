@@ -58,4 +58,9 @@ catkin_pip_package()
 ...
 ```
 
+Roadmap
+=======
 
+- [] check if suitable to have catkin always look into site-packages by default, it would avoid this code to hack `_setup_util.py` in each workspace
+- [] multiple packages using catkin_pure_python in same workspace should find each other in the right order and avoid pip version error...
+- [] debian packaging. Not sure yet if this is even suitable/possible without huge changes...
