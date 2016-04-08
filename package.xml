@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>catkin_pure_python</name>
-  <version>0.0.3</version>
+  <version>0.0.4</version>
   <description>
     Catkin macros to allow using pure python packages in usual catkin workspaces with normal python workflow.
   </description>
