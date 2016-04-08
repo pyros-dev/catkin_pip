@@ -2,8 +2,15 @@
 Changelog for package catkin_pure_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.3 (2016-04-07)
+------------------
+* small refactor to improve cmake messages
+* now specifying source director and exists-action backup when installing reuqirements.
+  restored previous behavior to check for installed packages before installing current package. this avoid reinstalling dependencies satisfied by requirements.
+* always cleaning cache for catkin_pip for safety.
+* added --ignore-installed so pip doesnt try to remove old packages from system.
+  quick Readme Roadmap
+* Contributors: alexv
 
 0.0.2 (2016-04-04)
 ------------------
