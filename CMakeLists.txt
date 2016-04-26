@@ -14,9 +14,5 @@ install(DIRECTORY cmake
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
-# Not testing when building now.
-# Tests are not ready for packaging
-#
-# if (CATKIN_ENABLE_TESTING)
-#     add_subdirectory(test)
-# endif()
+# Not testing when building here.
+# But travis should.

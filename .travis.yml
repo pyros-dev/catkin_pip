@@ -16,9 +16,9 @@ install:
   - rosdep install --default-yes --from-paths ./ --rosdistro $CI_ROS_DISTRO
 script:
   - source /opt/ros/$CI_ROS_DISTRO/setup.bash
-  - mkdir build
-  - cd build
-  - cmake .. -DCMAKE_INSTALL_PREFIX=./install
+  - mkdir testbuild
+  - cd testbuild
+  - cmake ../test -DCMAKE_INSTALL_PREFIX=./install
   - make -j1
   - make -j1 tests
   - make -j1 run_tests
