@@ -1,7 +1,7 @@
 #
 # This script is in charge of doing the pip setup in a workspace.
 # It will be configured by cmake and dropped in devel or install workspace
-# where is will setup a workspace emulation of virtualenvs
+# where it will setup a workspace emulation of virtualenvs
 #
 
 message(STATUS "Loading ${CMAKE_CURRENT_LIST_FILE}... ")
@@ -16,7 +16,7 @@ if ( NOT CATKIN_PIP_GLOBAL_PYTHON_DESTINATION )
     set (CATKIN_PIP_GLOBAL_PYTHON_DESTINATION "lib/python2.7/site-packages")
 endif()
 
-# Make sure the atkin python package directory for the workspace is in python path
+# Make sure the catkin python package directory for the workspace is in python path
 # this is only needed if the user didn't source the current workspace setup.bash (happens the first time)
 string(FIND "$ENV{PYTHONPATH}" @CONFIGURE_PREFIX@/${CATKIN_GLOBAL_PYTHON_DESTINATION} FOUND_PPATH)
 if ( FOUND_PPATH LESS 0 )
@@ -136,7 +136,7 @@ else ()
     # which means we have to reinstall dependencies everytime and specify --exists-action w to avoid "already exists" errors
     # Avoid --install-option since the setuptools version found will be different the first time and the following times
     execute_process(
-      COMMAND ${CATKIN_SYS_PIP} -q install -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req" --download-cache "${CMAKE_BINARY_DIR}/pip-cache" --target "@CONFIGURE_PREFIX@/${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION}" --exists-action w
+      COMMAND ${CATKIN_SYS_PIP} -q install -r "${CATKIN_PIP_REQUIREMENTS_PATH}/.catkin-pip-base.req" --download-cache "${CMAKE_BINARY_DIR}/pip-cache" --target "@CONFIGURE_PREFIX@/${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION}" --exists-action w
       WORKING_DIRECTORY @CMAKE_CURRENT_SOURCE_DIR@
       RESULT_VARIABLE PIP_RESULT
       OUTPUT_VARIABLE PIP_VARIABLE
@@ -145,7 +145,7 @@ else ()
 
     message(STATUS "    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}")
     if (PIP_RESULT)
-        message(STATUS "Command ${CATKIN_SYS_PIP} install -r \"${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req\" --download-cache \"${CMAKE_BINARY_DIR}/pip-cache\" --target \"@CONFIGURE_PREFIX@/${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION}\" --exists-action w FAILED")
+        message(STATUS "Command ${CATKIN_SYS_PIP} install -r \"${CATKIN_PIP_REQUIREMENTS_PATH}/.catkin-pip-base.req\" --download-cache \"${CMAKE_BINARY_DIR}/pip-cache\" --target \"@CONFIGURE_PREFIX@/${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION}\" --exists-action w FAILED")
         message(FATAL_ERROR "${PIP_ERROR}")
     endif()
 
@@ -153,7 +153,7 @@ else ()
     unset(CATKIN_SYS_PIP CACHE)  # we dont need this any longer
 
     # Fixing security since python 2.7.6 on trusty is broken : https://stackoverflow.com/questions/29099404/ssl-insecureplatform-error-when-using-requests-package
-    catkin_pip_requirements_prefix("${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-fixups.req")
+    catkin_pip_requirements_prefix("${CATKIN_PIP_REQUIREMENTS_PATH}/.catkin-pip-fixups.req")
 
     unset(CATKIN_PIP)
     # now we can finally use the simple "pip" entry_point (forcing cmake to find it)

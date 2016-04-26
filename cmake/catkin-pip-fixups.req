@@ -1,7 +1,7 @@
 # Extra requirements, usually to fix some broken platform implementations...
 
 # Installs base packages a second time, from a recent pip, to setup all entrypoints and other latest setuptools bells and wistles properly
--r catkin-pip-base.req
+-r .catkin-pip-base.req
 
 # Upgrading to use latest nose
 nose
