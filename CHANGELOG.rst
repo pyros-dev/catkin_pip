@@ -2,6 +2,12 @@
 Changelog for package catkin_pure_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.0.5 (2016-04-26)
+------------------
+* fix catkin-pip requirements not found in workspace path
+* typo
+* Contributors: alexv
+
 0.0.4 (2016-04-08)
 ------------------
 * Merge remote-tracking branch 'origin/indigo' into indigo
