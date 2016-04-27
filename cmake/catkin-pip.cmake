@@ -12,6 +12,7 @@ configure_file(${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake.in ${CONFIGURE_P
 #configure_file(${CMAKE_CURRENT_LIST_DIR}/catkin-pip-base.req ${CONFIGURE_PREFIX}/.catkin-pip-base.req COPYONLY)
 #configure_file(${CMAKE_CURRENT_LIST_DIR}/catkin-pip-fixups.req ${CONFIGURE_PREFIX}/.catkin-pip-fixups.req COPYONLY)
 
+# TODO : We start from source to go to devel/ or install/. We should instead use scripts from the build/ folder as dispatcher to devel or install, somehow...
 set(CONFIGURE_PREFIX ${CMAKE_INSTALL_PREFIX})
 set(PIP_PACKAGE_INSTALL_COMMAND \${CATKIN_PIP} install \${package_path} --prefix "${CONFIGURE_PREFIX}")
 configure_file(${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake.in ${CONFIGURE_PREFIX}/.catkin-pip-setup.cmake @ONLY)
