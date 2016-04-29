@@ -2,6 +2,14 @@
 Changelog for package catkin_pure_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.0.6 (2016-04-29)
+------------------
+* adding --ignore-installed to avoid pip picking up local editable package when installing.
+* informative comments
+* better fix for catkin-pip requirements not found in workspace path
+* fixing travis to run tests for catkin-pip
+* Contributors: alexv
+
 0.0.5 (2016-04-26)
 ------------------
 * fix catkin-pip requirements not found in workspace path
