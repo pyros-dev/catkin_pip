@@ -2,6 +2,12 @@
 Changelog for package catkin_pure_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.0.7 (2016-05-09)
+------------------
+* removing --ignore-installed for editable package, to allow requirements to satisfy setup.py dependencies.
+* changing package to format v2
+* Contributors: alexv
+
 0.0.6 (2016-04-29)
 ------------------
 * adding --ignore-installed to avoid pip picking up local editable package when installing.
