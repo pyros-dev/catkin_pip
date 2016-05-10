@@ -8,14 +8,14 @@ endif()
 # Since we need (almost) the same configuration for both devel and install space, we create cmake files for each workspace setup.
 set(CONFIGURE_PREFIX ${CATKIN_DEVEL_PREFIX})
 set(PIP_PACKAGE_INSTALL_COMMAND \${CATKIN_PIP} install -e \${package_path} --prefix "${CONFIGURE_PREFIX}")
-configure_file(${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake.in ${CONFIGURE_PREFIX}/.catkin-pip-setup.cmake @ONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/.catkin-pip-setup-devel.cmake @ONLY)
 #configure_file(${CMAKE_CURRENT_LIST_DIR}/catkin-pip-base.req ${CONFIGURE_PREFIX}/.catkin-pip-base.req COPYONLY)
 #configure_file(${CMAKE_CURRENT_LIST_DIR}/catkin-pip-fixups.req ${CONFIGURE_PREFIX}/.catkin-pip-fixups.req COPYONLY)
 
 # TODO : We start from source to go to devel/ or install/. We should instead use scripts from the build/ folder as dispatcher to devel or install, somehow...
 set(CONFIGURE_PREFIX ${CMAKE_INSTALL_PREFIX})
 set(PIP_PACKAGE_INSTALL_COMMAND \${CATKIN_PIP} install \${package_path} --prefix "${CONFIGURE_PREFIX}" --ignore-installed)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake.in ${CONFIGURE_PREFIX}/.catkin-pip-setup.cmake @ONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/.catkin-pip-setup-install.cmake @ONLY)
 #configure_file(${CMAKE_CURRENT_LIST_DIR}/catkin-pip-base.req ${CONFIGURE_PREFIX}/.catkin-pip-base.req COPYONLY)
 #configure_file(${CMAKE_CURRENT_LIST_DIR}/catkin-pip-fixups.req ${CONFIGURE_PREFIX}/.catkin-pip-fixups.req COPYONLY)
 
@@ -23,7 +23,7 @@ unset(CONFIGURE_PREFIX)
 unset(PIP_PACKAGE_INSTALL_COMMAND)
 
 # And here we need to do the devel workspace setup.
-include(${CATKIN_DEVEL_PREFIX}/.catkin-pip-setup.cmake)
+include(${CMAKE_CURRENT_BINARY_DIR}/.catkin-pip-setup-devel.cmake)
 
 
 macro(catkin_pip_requirements requirements_txt )
@@ -50,7 +50,7 @@ macro(catkin_pip_package)
     # Setting up the command for install space for user convenience
     install(CODE "
         #Setting paths for install by including our configured install cmake file
-        include(${CMAKE_INSTALL_PREFIX}/.catkin-pip-setup.cmake)
+        include(${CMAKE_CURRENT_BINARY_DIR}/.catkin-pip-setup-install.cmake)
         catkin_pip_package_prefix(${package_path})
     ")
 endmacro()
