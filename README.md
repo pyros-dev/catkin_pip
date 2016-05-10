@@ -58,6 +58,14 @@ catkin_pip_package()
 ...
 ```
 
+As a result, for source dependencies (available only for development) you can :
+- Use pip dependency requirements mechanism with any python git repo, for devel workspace
+- Use wstool/rosinstall to retrieve multiple git repository in one place.
+
+And for package dependencies (available for development and for your package) you can :
+- Use pip dependency requirements mechanism with any python package from pypi, for both devel and install workspace.
+- Use rosdep dependency mechanism, with any ros package dependency.
+
 Roadmap
 =======
 
