@@ -2,6 +2,12 @@
 Changelog for package catkin_pure_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.0.8 (2016-05-10)
+------------------
+* not writing cmake files into workspace anymore. instead in build directory of each package.
+* added doc about pip/ros dependency handling.
+* Contributors: alexv
+
 0.0.7 (2016-05-09)
 ------------------
 * removing --ignore-installed for editable package, to allow requirements to satisfy setup.py dependencies.
