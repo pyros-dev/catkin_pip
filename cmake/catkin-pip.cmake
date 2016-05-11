@@ -13,33 +13,38 @@ if ( NOT CATKIN_PIP_GLOBAL_PYTHON_DESTINATION )
     set (CATKIN_PIP_GLOBAL_PYTHON_DESTINATION "lib/python2.7/site-packages")
 endif()
 
-# Hacking existing ROS _setup_util.py
-# TODO : that would be better in a env hook...
-macro(catkin_pip_hack_setup python_path_extra setup_util_path )
-    # _setup_util.py should already exist here.
-    # catkin should have done the workspace setup before we reach here
-    if ( EXISTS ${setup_util_path} )
-        message(STATUS "Hacking ${setup_util_path}...")
-        file(READ ${setup_util_path} SETUP_UTIL_PY)
-        string(REPLACE
-            "'PYTHONPATH': 'lib/python2.7/dist-packages',"
-            "'PYTHONPATH': ['${python_path_extra}', 'lib/python2.7/dist-packages']"
-            PATCHED_SETUP_UTIL_PY
-            "${SETUP_UTIL_PY}"
-        )
-        file(WRITE ${setup_util_path} "${PATCHED_SETUP_UTIL_PY}")
-    else()
-        message(FATAL_ERROR "SETUP_UTIL.PY DOES NOT EXISTS YET at ${setup_util_path}")
-    endif()
-endmacro()
+# # Hacking existing ROS _setup_util.py
+# # TODO : that would be better in a env hook...
+# macro(catkin_pip_hack_setup python_path_extra setup_util_path )
+#     # _setup_util.py should already exist here.
+#     # catkin should have done the workspace setup before we reach here
+#     if ( EXISTS ${setup_util_path} )
+#         message(STATUS "Hacking ${setup_util_path}...")
+#         file(READ ${setup_util_path} SETUP_UTIL_PY)
+#         string(REPLACE
+#             "'PYTHONPATH': 'lib/python2.7/dist-packages',"
+#             "'PYTHONPATH': ['${python_path_extra}', 'lib/python2.7/dist-packages']"
+#             PATCHED_SETUP_UTIL_PY
+#             "${SETUP_UTIL_PY}"
+#         )
+#         file(WRITE ${setup_util_path} "${PATCHED_SETUP_UTIL_PY}")
+#     else()
+#         message(FATAL_ERROR "SETUP_UTIL.PY DOES NOT EXISTS YET at ${setup_util_path}")
+#     endif()
+# endmacro()
 
-# devel space
-catkin_pip_hack_setup( ${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION} ${CATKIN_DEVEL_PREFIX}/_setup_util.py)
+# # devel space
+# catkin_pip_hack_setup( ${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION} ${CATKIN_DEVEL_PREFIX}/_setup_util.py)
 
-# install space (following catkin_generate_environment cmake code structure)
-if(NOT CATKIN_BUILD_BINARY_PACKAGE)
-    catkin_pip_hack_setup( ${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION} ${CMAKE_BINARY_DIR}/catkin_generated/installspace/_setup_util.py)
-endif()
+# # install space (following catkin_generate_environment cmake code structure)
+# if(NOT CATKIN_BUILD_BINARY_PACKAGE)
+#     catkin_pip_hack_setup( ${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION} ${CMAKE_BINARY_DIR}/catkin_generated/installspace/_setup_util.py)
+# endif()
+
+# env hook solution
+# note ${CMAKE_CURRENT_SOURCE_DIR}/env-hooks points to final package source env-hook DIR
+# note ${CMAKE_CURRENT_LIST_DIR}/env-hooks points to catkin-pip env-hook DIR
+catkin_add_env_hooks(42.site-packages SHELLS bash DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../env-hooks)
 
 # Since we need (almost) the same configuration for both devel and install space, we create cmake files for each workspace setup.
 set(CONFIGURE_PREFIX ${CATKIN_DEVEL_PREFIX})
