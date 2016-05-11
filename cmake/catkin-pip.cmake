@@ -1,8 +1,44 @@
 message(STATUS "Loading catkin-pip.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
 
+# TODO : we probably should move some of these variables into an env hook ?
+
 if ( NOT CATKIN_PIP_REQUIREMENTS_PATH )
     # Needs to be here to avoid copying all dependent script into the workspace on configure step
     set (CATKIN_PIP_REQUIREMENTS_PATH ${CMAKE_CURRENT_LIST_DIR})
+endif()
+
+if ( NOT CATKIN_PIP_GLOBAL_PYTHON_DESTINATION )
+    # using site-packages as it is the default for pip and should also be used on debian systems for installs from non system packages
+    # Explanation here : http://stackoverflow.com/questions/9387928/whats-the-difference-between-dist-packages-and-site-packages
+    set (CATKIN_PIP_GLOBAL_PYTHON_DESTINATION "lib/python2.7/site-packages")
+endif()
+
+# Hacking existing ROS _setup_util.py
+# TODO : that would be better in a env hook...
+macro(catkin_pip_hack_setup python_path_extra setup_util_path )
+    # _setup_util.py should already exist here.
+    # catkin should have done the workspace setup before we reach here
+    if ( EXISTS ${setup_util_path} )
+        message(STATUS "Hacking ${setup_util_path}...")
+        file(READ ${setup_util_path} SETUP_UTIL_PY)
+        string(REPLACE
+            "'PYTHONPATH': 'lib/python2.7/dist-packages',"
+            "'PYTHONPATH': ['${python_path_extra}', 'lib/python2.7/dist-packages']"
+            PATCHED_SETUP_UTIL_PY
+            "${SETUP_UTIL_PY}"
+        )
+        file(WRITE ${setup_util_path} "${PATCHED_SETUP_UTIL_PY}")
+    else()
+        message(FATAL_ERROR "SETUP_UTIL.PY DOES NOT EXISTS YET at ${setup_util_path}")
+    endif()
+endmacro()
+
+# devel space
+catkin_pip_hack_setup( ${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION} ${CATKIN_DEVEL_PREFIX}/_setup_util.py)
+
+# install space (following catkin_generate_environment cmake code structure)
+if(NOT CATKIN_BUILD_BINARY_PACKAGE)
+    catkin_pip_hack_setup( ${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION} ${CMAKE_BINARY_DIR}/catkin_generated/installspace/_setup_util.py)
 endif()
 
 # Since we need (almost) the same configuration for both devel and install space, we create cmake files for each workspace setup.
@@ -47,6 +83,7 @@ macro(catkin_pip_package)
 
     catkin_pip_package_prefix(${package_path})
 
+    # TODO this whole cmake is a actually a template, and we can probably integrate this in normal catkin flow
     # Setting up the command for install space for user convenience
     install(CODE "
         #Setting paths for install by including our configured install cmake file
