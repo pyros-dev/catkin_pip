@@ -1,0 +1,17 @@
+<package>
+   <name>mypippkg</name>
+   <version>0.0.1</version>
+   <description>
+      A python package that can be installed with pip.
+   </description>
+   <maintainer email="asmodehn@gmail.com">AlexV</maintainer>
+   <author>Will McGinnis</author>
+   <license>BSD</license>
+   <url type="repository">https://github.com/wdm0006/cookiecutter-pipproject.git</url>
+
+   <buildtool_depend>catkin</buildtool_depend>
+   <build_depend version_gte="0.0.8">catkin_pure_python</build_depend>
+
+</package>
+
+

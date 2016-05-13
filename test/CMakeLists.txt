@@ -11,7 +11,8 @@ find_package(catkin REQUIRED)
 include(../cmake/catkin-pip.cmake)
 
 # We need to install the common pip dependencies in the workspace being created
-catkin_pip_requirements(${CMAKE_CURRENT_SOURCE_DIR}/test_requirements.txt)
+# For now we ignore existing platform setup. (might not be best choice ?)
+catkin_pip_requirements(${CMAKE_CURRENT_SOURCE_DIR}/test_requirements.txt --ignore-installed)
 
 message(STATUS "PATH $ENV{PATH}")
 
@@ -26,11 +27,24 @@ endif()
 message(STATUS "    ... Getting cookiecutter-pipproject template from cookiecutter ...")
 execute_process(
   COMMAND ${CATKIN_COOKIECUTTER} --no-input https://github.com/wdm0006/cookiecutter-pipproject.git
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pipproject
   RESULT_VARIABLE PIP_RESULT
   OUTPUT_VARIABLE PIP_VARIABLE
 )
 message(STATUS "    ... Done ...")
+
+#
+# Configuring catkin-pip extras from source by ourselves
+# we should reproduce catkin behavior here
+#
+# set (DEVELSPACE True)
+# set (INSTALLSPACE False)
+# configure_file( ../cmake/catkin-pip-setup.cmake.in ${CATKIN_DEVEL_PREFIX}/share/catkin_pip/cmake/catkin-pip-setup.cmake @ONLY)
+
+# set (DEVELSPACE False)
+# set (INSTALLSPACE True)
+# configure_file( ../cmake/catkin-pip-setup.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/catkin_generated/installspace/catkin-pip-setup.cmake @ONLY)
+
 
 #
 # and make sure they still work with catkin by building them all as subprojects
@@ -42,6 +56,6 @@ if (CATKIN_ENABLE_TESTING)
     # Nose Tests should work
     ########################
 
-    include(mypippkg.cmake)
+    add_subdirectory(pipproject)
 
 endif()
