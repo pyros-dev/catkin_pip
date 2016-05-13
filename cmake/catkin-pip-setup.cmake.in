@@ -1,0 +1,116 @@
+message(STATUS "Loading catkin-pip-setup.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
+
+# protecting against missing cmake file
+include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-env.cmake" RESULT_VARIABLE CATKIN_PIP_ENV_FOUND )
+IF ( NOT CATKIN_PIP_ENV_FOUND )
+    message ( FATAL_ERROR "{CMAKE_CURRENT_LIST_DIR}/catkin-pip-env.cmake Not Found !!!" )
+ENDIF ( NOT CATKIN_PIP_ENV_FOUND )
+
+# protecting against missing cmake file
+include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-runcmd.cmake" RESULT_VARIABLE CATKIN_PIP_RUNCMD_FOUND )
+IF ( NOT CATKIN_PIP_RUNCMD_FOUND )
+    message ( FATAL_ERROR "{CMAKE_CURRENT_LIST_DIR}/catkin-pip-runcmd.cmake Not Found !!!" )
+ENDIF ( NOT CATKIN_PIP_RUNCMD_FOUND )
+
+# protecting against missing cmake file
+include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-prefix.cmake" RESULT_VARIABLE CATKIN_PIP_PREFIX_FOUND )
+IF ( NOT CATKIN_PIP_PREFIX_FOUND )
+    message ( FATAL_ERROR "{CMAKE_CURRENT_LIST_DIR}/catkin-pip-prefix.cmake Not Found !!!" )
+ENDIF ( NOT CATKIN_PIP_PREFIX_FOUND )
+
+
+# We are replacing catkin's python_setup functionality
+function(catkin_pip_python_setup)
+
+    # Hijacking catkin scripts for install (in a function to not break everything else)
+    set(BACKUP_CMAKE_CURRENT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+    set(CMAKE_CURRENT_SOURCE_DIR ${package_path})
+
+    # BEGIN : This is from catkin_python_setup
+    # we need a file structure that can be consumed as a normal catkin package
+    #
+
+      assert(PYTHON_INSTALL_DIR)
+      set(INSTALL_CMD_WORKING_DIRECTORY ${package_path})
+
+      if(NOT WIN32)
+        set(INSTALL_SCRIPT
+          ${CMAKE_CURRENT_BINARY_DIR}/catkin_generated/python_distutils_install.sh)
+        configure_file(${catkin_EXTRAS_DIR}/templates/python_distutils_install.sh.in
+          ${INSTALL_SCRIPT}
+          @ONLY)
+      else()
+        # need to convert install prefix to native path for python setuptools --prefix (its fussy about \'s)
+        file(TO_NATIVE_PATH ${CMAKE_INSTALL_PREFIX} PYTHON_INSTALL_PREFIX)
+        set(INSTALL_SCRIPT
+          ${CMAKE_CURRENT_BINARY_DIR}/catkin_generated/python_distutils_install.bat)
+        configure_file(${catkin_EXTRAS_DIR}/templates/python_distutils_install.bat.in
+          ${INSTALL_SCRIPT}
+          @ONLY)
+      endif()
+
+      # generate python script which gets executed at install time
+      configure_file(${catkin_EXTRAS_DIR}/templates/safe_execute_install.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/catkin_generated/safe_execute_install.cmake)
+      install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/catkin_generated/safe_execute_install.cmake)
+
+
+      set(BACKUP_CMAKE_CURRENT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+    # END : This is the end of catkin_python_setup copy
+    # Ideally we shouldn't need any more tricks for building the install space
+    #
+
+endfunction()
+
+
+# macro(_catkin_package)
+#    message(AUTHOR_WARNING "OVERRIDING _catkin_package macro from original catkin")
+#
+#
+#
+# endmacro()
+
+macro(catkin_pip_setup)
+
+    set (extra_macro_args ${ARGN})
+
+    # Did we get any optional args?
+    list(LENGTH extra_macro_args num_extra_args)
+    if (${num_extra_args} GREATER 0)
+        list(GET extra_macro_args 0 package_path)
+        #message ("Got package_path: ${package_path}")
+    else()
+        set(package_path .)
+    endif()
+
+    # Note : environment should already be setup at configure time for devel
+
+    # Then we can run the pip command
+    catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --prefix "${CATKIN_DEVEL_PREFIX}")
+
+    if(NOT EXISTS ${package_path}/setup.py)
+        message(FATAL_ERROR "catkin_pip_setup() called without 'setup.py' in project folder '${package_path}'")
+    endif()
+
+
+    message(AUTHOR_WARNING "CMAKE_CURRENT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}")
+
+    catkin_pip_python_setup()
+
+    message(AUTHOR_WARNING "CMAKE_CURRENT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}")
+
+
+    # TODO : we might want to generate a package.xml on the fly from setup.py contents...
+
+    # Hijacking catkin scripts again
+    #set(_PACKAGE_XML_DIRECTORY ${package_path})
+
+
+    catkin_package()
+
+
+
+
+
+endmacro()

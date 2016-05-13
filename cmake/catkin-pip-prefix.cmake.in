@@ -1,0 +1,103 @@
+message(STATUS "Loading catkin-pip-prefix.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
+
+#
+# Important : This script is included by multiple cmake scripts at configure and build time
+# So it needs to be idempotent (no change if called multiple time with same settings/environment)
+#
+
+if ( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
+	message ( FATAL_ERROR " CMAKE MINIMUM BACKWARD COMPATIBILITY REQUIRED : 2.8 !" )
+endif( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
+
+# protecting against missing cmake file
+include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-env.cmake" RESULT_VARIABLE CATKIN_PIP_ENV_FOUND )
+IF ( NOT CATKIN_PIP_ENV_FOUND )
+    message ( FATAL_ERROR "{CMAKE_CURRENT_LIST_DIR}/catkin-pip-env.cmake Not Found !!!" )
+ENDIF ( NOT CATKIN_PIP_ENV_FOUND )
+
+# protecting against missing cmake file
+include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-runcmd.cmake" RESULT_VARIABLE CATKIN_PIP_RUNCMD_FOUND )
+IF ( NOT CATKIN_PIP_RUNCMD_FOUND )
+    message ( FATAL_ERROR "{CMAKE_CURRENT_LIST_DIR}/catkin-pip-runcmd.cmake Not Found !!!" )
+ENDIF ( NOT CATKIN_PIP_RUNCMD_FOUND )
+
+if ( NOT CATKIN_PIP_REQUIREMENTS_PATH )
+    # Our current path is where all catkin-pip requirements should be
+    set (CATKIN_PIP_REQUIREMENTS_PATH ${CMAKE_CURRENT_LIST_DIR})
+endif()
+
+macro(catkin_pip_setup_prefix ws_prefix)
+
+    # Setting up our environment (for devel space only)
+    catkin_pip_check_env(${ws_prefix})
+
+    # Trying to find our own pip
+    # Careful this creates a CACHE variable that we need to recreate here in case people clean devel without cleaning build
+    unset(CATKIN_PIP CACHE)
+    find_program(CATKIN_PIP NAMES pip pip2 pip2.7 PATHS ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@ NO_DEFAULT_PATH)
+
+    if (CATKIN_PIP)
+        message(STATUS "    ... Catkin pip was found at ${CATKIN_PIP} ...")
+    else ()
+        # If not found, it means we need to do the whole setup...
+        unset(CATKIN_PIP CACHE)
+        message(STATUS "    ... Catkin pip was not found in ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@ ...")
+        # Assuming Ubuntu Trusty here. platform detection is another hurdle
+        set(CMAKE_SYSTEM_PREFIX_PATH / /usr /usr/local)
+        find_program(CATKIN_SYS_PIP NAMES pip pip2 pip2.7 NO_CMAKE_PATH NO_CMAKE_ENVIRONMENT_PATH NO_SYSTEM_ENVIRONMENT_PATH)  # we need to make sure we don't find any other catkin-pip from somewhere else if our path is not clean (careful with underlays or install/devel)
+        if(NOT CATKIN_SYS_PIP)
+            message( FATAL_ERROR "pip system command not found. Make sure you have installed the python-pip package on your system.")
+        endif()
+
+        # message(STATUS "    ... Creating pip packages prefix ...")
+        # If needed we create the directory (to avoid later errors)
+        # file(MAKE_DIRECTORY ${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@)
+
+        message(STATUS "    ... Retrieving catkin_pure_python requirements using system pip ...")
+
+        # We need to find a pip command that works for old pip versions (indigo supports trusty which is pip v1.5.4)
+        # Note --target here means we cannot check if a package is already installed or not before installing, using old pip.
+        # which means we have to reinstall dependencies everytime and specify --exists-action w to avoid "already exists" errors
+        # Avoid --install-option since the setuptools version found will be different the first time and the following times
+        execute_process(
+          COMMAND ${CATKIN_SYS_PIP} -q install -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req" --download-cache "${CMAKE_BINARY_DIR}/pip-cache" --target "${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@" --exists-action w
+          WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+          RESULT_VARIABLE PIP_RESULT
+          OUTPUT_VARIABLE PIP_VARIABLE
+          ERROR_VARIABLE PIP_ERROR
+        )
+
+        message(STATUS "    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}")
+        if (PIP_RESULT)
+            message(STATUS "Command ${CATKIN_SYS_PIP} install -r \"${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req\" --download-cache \"${CMAKE_BINARY_DIR}/pip-cache\" --target \"${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@\" --exists-action w FAILED")
+            message(FATAL_ERROR "${PIP_ERROR}")
+        endif()
+
+        set(CATKIN_PIP python -m pip)  # to make sure we use our recently downloaded pip version (its entrypoints were not installed by old pip/setuptools)
+        unset(CATKIN_SYS_PIP CACHE)  # we dont need this any longer
+
+        # Fixing security since python 2.7.6 on trusty is broken : https://stackoverflow.com/questions/29099404/ssl-insecureplatform-error-when-using-requests-package
+        # Also reinstalling pip to finally get it in bin/
+
+        catkin_pip_runcmd(${CATKIN_PIP} install --ignore-installed -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-fixups.req" --src ${CMAKE_SOURCE_DIR} --exists-action b --prefix "${ws_prefix}")
+
+        unset(CATKIN_PIP)
+        # now we can finally use the simple "pip" entry_point (forcing cmake to find it)
+        find_program( CATKIN_PIP NAMES pip pip2 pip2.7 PATHS ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@ NO_DEFAULT_PATH)
+        if (CATKIN_PIP)
+            message( STATUS "Found catkin_pure_python pip command at ${CATKIN_PIP}.")
+        else()
+            message( FATAL_ERROR "catkin_pure_python pip command not found in ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@. Make sure you have installed the pip pip package on ${ws_prefix} workspace.")
+        endif()
+
+        # Providing another catkin nosetests usage...
+        # now we can finally use the simple "nosetests" entry_point (forcing cmake to find it)
+        find_program( PIP_NOSETESTS NAMES nosetests PATHS ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@ NO_DEFAULT_PATH)
+        if(PIP_NOSETESTS)
+            message( STATUS "Found catkin_pure_python nosetests command at ${PIP_NOSETESTS}.")
+        else()
+            message( FATAL_ERROR "catkin_pure_python nosetests command not found in ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@. Make sure you have installed the nose pip package on your ${ws_prefix} workspace.")
+        endif()
+
+    endif()
+endmacro()

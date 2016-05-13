@@ -1,0 +1,30 @@
+message(STATUS "Loading catkin-pip.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
+
+# Setting required policies
+# required to be able to do "if (True)"
+# FOREACH(policy CMP0011 CMP0012 CMP0013 CMP0014)
+#     IF(POLICY ${policy})
+#      CMAKE_POLICY(SET ${policy} NEW)
+#     ENDIF()
+# ENDFOREACH()
+
+# protecting against missing cmake file dependency
+include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-requirements.cmake" RESULT_VARIABLE CATKIN_PIP_REQUIREMENTS_FOUND )
+IF ( NOT CATKIN_PIP_REQUIREMENTS_FOUND )
+    message ( FATAL_ERROR "{CMAKE_CURRENT_LIST_DIR}/catkin-pip-requirements.cmake Not Found !!!" )
+ENDIF ( NOT CATKIN_PIP_REQUIREMENTS_FOUND )
+
+# protecting against missing cmake file dependency
+include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake" RESULT_VARIABLE CATKIN_PIP_SETUP_FOUND )
+IF ( NOT CATKIN_PIP_SETUP_FOUND )
+    message ( FATAL_ERROR "{CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake Not Found !!!" )
+ENDIF ( NOT CATKIN_PIP_SETUP_FOUND )
+
+catkin_add_env_hooks(42.site-packages SHELLS bash DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../env-hooks)
+
+catkin_pip_setup_prefix(${CATKIN_DEVEL_PREFIX})
+
+#
+# Install Space should have same behavior as package build
+# We want to check dependencies are all satisfied, without relying on pip requirements.
+#
