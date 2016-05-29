@@ -2,6 +2,19 @@
 Changelog for package catkin_pure_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.0 (2016-05-29)
+------------------
+* separating catkin_pip_setup and catkin_package macros.
+* now ignoring installed pip packaging when fetching requirements for pipproject.
+* removing debug output for shell envhook
+* fixing install procedure to get same structure as the distutils version.
+* now catkin-pip package is using normal catkin_package(), and installs fine, although with setuptools, which might break packaging...
+* refactoring cmake include and configure. test project devel space ok. the rest is still broken...
+* small improvement to do less configuration
+* now using an envhook to modify pythonpath instead of hacking catkin's _setup_util.py
+* _setup_util.py hack now done in cmake binary dir instead of final workspace.
+* Contributors: AlexV, alexv
+
 0.0.8 (2016-05-10)
 ------------------
 * not writing cmake files into workspace anymore. instead in build directory of each package.
