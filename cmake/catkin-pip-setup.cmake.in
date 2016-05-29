@@ -65,14 +65,6 @@ function(catkin_pip_python_setup)
 
 endfunction()
 
-
-# macro(_catkin_package)
-#    message(AUTHOR_WARNING "OVERRIDING _catkin_package macro from original catkin")
-#
-#
-#
-# endmacro()
-
 macro(catkin_pip_setup)
 
     set (extra_macro_args ${ARGN})
@@ -83,7 +75,7 @@ macro(catkin_pip_setup)
         list(GET extra_macro_args 0 package_path)
         #message ("Got package_path: ${package_path}")
     else()
-        set(package_path .)
+        set(package_path ${CMAKE_CURRENT_SOURCE_DIR})
     endif()
 
     # Note : environment should already be setup at configure time for devel
@@ -101,12 +93,5 @@ macro(catkin_pip_setup)
 
     # Hijacking catkin scripts again
     #set(_PACKAGE_XML_DIRECTORY ${package_path})
-
-
-    catkin_package()
-
-
-
-
 
 endmacro()

@@ -22,6 +22,9 @@ catkin_pip_setup(${PIP_PROJECT_DIR})
 
 # CAREFUL : all projects for test here will share the same workspace. pip might have conflicts...
 
+# Here we plug back into usual catkin package build flow
+catkin_package()
+
 ## Unit tests
 if (CATKIN_ENABLE_TESTING)
     catkin_add_nosetests(${PIP_PROJECT_DIR}/tests)
