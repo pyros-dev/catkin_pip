@@ -2,6 +2,11 @@
 Changelog for package catkin_pure_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.1 (2016-05-30)
+------------------
+* fixing catkin_pip_runcmd for package, hopefully.
+* Contributors: AlexV
+
 0.1.0 (2016-05-29)
 ------------------
 * separating catkin_pip_setup and catkin_package macros.
