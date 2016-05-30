@@ -22,7 +22,7 @@ ENDIF ( NOT CATKIN_PIP_PREFIX_FOUND )
 
 if ( NOT CATKIN_PIP_TEMPLATES_PATH )
     # templates should found relative to our current path
-    set (CATKIN_PIP_TEMPLATES_PATH ${CMAKE_CURRENT_LIST_DIR}/../templates)
+    set (CATKIN_PIP_TEMPLATES_PATH ${CMAKE_CURRENT_LIST_DIR}/templates)
 endif()
 
 # We are replacing catkin's python_setup functionality

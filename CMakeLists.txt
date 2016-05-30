@@ -30,8 +30,8 @@ catkin_package(
 configure_file(cmake/catkin-pip-base.req ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/catkin-pip-base.req COPYONLY)
 configure_file(cmake/catkin-pip-fixups.req ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/catkin-pip-fixups.req COPYONLY)
 configure_file(env-hooks/42.site-packages.bash.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/env-hooks/42.site-packages.bash.in COPYONLY)
-configure_file(templates/python_setuptools_install.bat.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/templates/python_setuptools_install.bat.in COPYONLY)
-configure_file(templates/python_setuptools_install.sh.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/templates/python_setuptools_install.sh.in COPYONLY)
+configure_file(cmake/templates/python_setuptools_install.bat.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/templates/python_setuptools_install.bat.in COPYONLY)
+configure_file(cmake/templates/python_setuptools_install.sh.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/templates/python_setuptools_install.sh.in COPYONLY)
 
 # to be found in install space and from package
 install(FILES
@@ -47,11 +47,11 @@ install(FILES
     ${CATKIN_PACKAGE_SHARE_DESTINATION}/env-hooks
 )
 
-install(FILES
-    templates/python_setuptools_install.bat.in
-    templates/python_setuptools_install.sh.in
+install(PROGRAMS
+    cmake/templates/python_setuptools_install.bat.in
+    cmake/templates/python_setuptools_install.sh.in
     DESTINATION
-    ${CATKIN_PACKAGE_SHARE_DESTINATION}/templates
+    ${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/templates
 )
 
 # Not testing when building here.
