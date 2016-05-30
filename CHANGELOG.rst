@@ -2,6 +2,11 @@
 Changelog for package catkin_pure_python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.2 (2016-05-30)
+------------------
+* fixing python_setuptools_install templates location and permissions
+* Contributors: alexv
+
 0.1.1 (2016-05-30)
 ------------------
 * fixing catkin_pip_runcmd for package, hopefully.
