@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>catkin_pure_python</name>
+  <name>catkin_pip</name>
   <version>0.1.2</version>
   <description>
     Catkin macros to allow using pure python packages in usual catkin workspaces with normal python workflow.
@@ -10,9 +10,9 @@
 
   <license>BSD</license>
 
-  <url type="website">http://github.com/asmodehn/catkin_pure_python</url>
-  <url type="repository">https://github.com/asmodehn/catkin_pure_python</url>
-  <url type="bugtracker">https://github.com/asmodehn/catkin_pure_python/issues</url>
+  <url type="website">http://github.com/asmodehn/catkin_pip</url>
+  <url type="repository">https://github.com/asmodehn/catkin_pip</url>
+  <url type="bugtracker">https://github.com/asmodehn/catkin_pip/issues</url>
 
   <buildtool_depend>catkin</buildtool_depend>
 

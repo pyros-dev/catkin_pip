@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 #
 # Here we generate a set of python projects with different structures
-# and use them as tests for catkin_pure_python, in same workspace.
+# and use them as tests for catkin_pip, in same workspace.
 # This CMakeLists is just a way to gather all subprojects
 # We assume here that the global workspace setup is already done by the parent CMakeLists.txt
 #
@@ -9,11 +9,11 @@ cmake_minimum_required(VERSION 2.8.3)
 find_package(catkin REQUIRED)
 
 # Setting up catkin-pip from source via symlink
-add_subdirectory(catkin_pure_python)
+add_subdirectory(catkin_pip)
 
 # include the extras (as a catkin components / find_package() would normally do)
 # Just because we need to install pip requirements here
-include(${CATKIN_DEVEL_PREFIX}/share/catkin_pure_python/cmake/catkin-pip-requirements.cmake)
+include(${CATKIN_DEVEL_PREFIX}/share/catkin_pip/cmake/catkin-pip-requirements.cmake)
 
 # We need to install the common pip dependencies in the workspace being created
 # For now we ignore existing platform setup. (might not be best choice ?)

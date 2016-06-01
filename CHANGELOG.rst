@@ -1,5 +1,5 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package catkin_pure_python
+Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 0.1.2 (2016-05-30)
@@ -70,7 +70,7 @@ Changelog for package catkin_pure_python
 0.0.2 (2016-04-04)
 ------------------
 * cleaning up cmake ouput. fixing install sys pip path and pippkg path.
-* Merge pull request `#2 <https://github.com/asmodehn/catkin_pure_python/issues/2>`_ from asmodehn/install_rules
+* Merge pull request `#2 <https://github.com/asmodehn/catkin_pip/issues/2>`_ from asmodehn/install_rules
   Install rules
 * improve pip finding. fixed install.
 * restructuring to get install running same code as devel
@@ -78,7 +78,7 @@ Changelog for package catkin_pure_python
 * removed ROS dependency on cookiecutter since we need to get it from pip.
 * added travis build status
 * fixing default argument for catkin_pip_package
-  fixing catkin_pure_python test build.
+  fixing catkin_pip test build.
 * attempting to fix nose and tests...
 * improved environment detection and setup.
 * improved readme

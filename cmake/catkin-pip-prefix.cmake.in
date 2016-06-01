@@ -53,7 +53,7 @@ macro(catkin_pip_setup_prefix ws_prefix)
         # If needed we create the directory (to avoid later errors)
         # file(MAKE_DIRECTORY ${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@)
 
-        message(STATUS "    ... Retrieving catkin_pure_python requirements using system pip ...")
+        message(STATUS "    ... Retrieving catkin_pip requirements using system pip ...")
 
         # We need to find a pip command that works for old pip versions (indigo supports trusty which is pip v1.5.4)
         # Note --target here means we cannot check if a package is already installed or not before installing, using old pip.
@@ -85,18 +85,18 @@ macro(catkin_pip_setup_prefix ws_prefix)
         # now we can finally use the simple "pip" entry_point (forcing cmake to find it)
         find_program( CATKIN_PIP NAMES pip pip2 pip2.7 PATHS ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@ NO_DEFAULT_PATH)
         if (CATKIN_PIP)
-            message( STATUS "Found catkin_pure_python pip command at ${CATKIN_PIP}.")
+            message( STATUS "Found catkin_pip pip command at ${CATKIN_PIP}.")
         else()
-            message( FATAL_ERROR "catkin_pure_python pip command not found in ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@. Make sure you have installed the pip pip package on ${ws_prefix} workspace.")
+            message( FATAL_ERROR "catkin_pip pip command not found in ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@. Make sure you have installed the pip pip package on ${ws_prefix} workspace.")
         endif()
 
         # Providing another catkin nosetests usage...
         # now we can finally use the simple "nosetests" entry_point (forcing cmake to find it)
         find_program( PIP_NOSETESTS NAMES nosetests PATHS ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@ NO_DEFAULT_PATH)
         if(PIP_NOSETESTS)
-            message( STATUS "Found catkin_pure_python nosetests command at ${PIP_NOSETESTS}.")
+            message( STATUS "Found catkin_pip nosetests command at ${PIP_NOSETESTS}.")
         else()
-            message( FATAL_ERROR "catkin_pure_python nosetests command not found in ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@. Make sure you have installed the nose pip package on your ${ws_prefix} workspace.")
+            message( FATAL_ERROR "catkin_pip nosetests command not found in ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@. Make sure you have installed the nose pip package on your ${ws_prefix} workspace.")
         endif()
 
     endif()

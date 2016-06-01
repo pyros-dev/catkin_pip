@@ -4,7 +4,7 @@ project(mypippkg)
 # This is a full project CMakeLists (in case we call it independently for tests or so)
 set (PIP_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/mypippkg)
 
-find_package(catkin REQUIRED COMPONENTS catkin_pure_python)
+find_package(catkin REQUIRED COMPONENTS catkin_pip)
 
 # For development, we need to install the pip dependencies in the workspace being created
 # Upon install, this will not do anything. All requirements should be satisfied by ROS dependencies system.

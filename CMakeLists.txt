@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(catkin_pure_python)
+project(catkin_pip)
 
 find_package(catkin REQUIRED)
 
@@ -14,7 +14,7 @@ if ( NOT CATKIN_PIP_GLOBAL_PYTHON_DESTINATION )
 endif()
 
 #
-# All cmake files here are CFG_EXTRAS, because they need to be loaded by any package using catkin_pure_python.
+# All cmake files here are CFG_EXTRAS, because they need to be loaded by any package using catkin_pip.
 
 catkin_package(
   CFG_EXTRAS

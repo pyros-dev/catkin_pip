@@ -10,7 +10,7 @@
    <url type="repository">https://github.com/wdm0006/cookiecutter-pipproject.git</url>
 
    <buildtool_depend>catkin</buildtool_depend>
-   <build_depend version_gte="0.0.8">catkin_pure_python</build_depend>
+   <build_depend version_gte="0.1.2">catkin_pip</build_depend>
 
 </package>
 

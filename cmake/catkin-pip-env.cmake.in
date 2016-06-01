@@ -12,7 +12,7 @@ endif( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
 macro(catkin_pip_check_env config_prefix)
     # Make sure the catkin python package directory for the workspace is in python path
     # This is only needed if the user didn't source the current workspace setup.bash.
-    # This happens the first time when using catkin_pure_python in workspace
+    # This happens the first time when using catkin_pip in workspace
     string(FIND "$ENV{PYTHONPATH}" ${config_prefix}/@CATKIN_GLOBAL_PYTHON_DESTINATION@ FOUND_PPATH)
     string(FIND "$ENV{PYTHONPATH}" ${config_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@ FOUND_PPPATH)
     string(FIND "$ENV{PATH}" ${config_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@ FOUND_SPATH)

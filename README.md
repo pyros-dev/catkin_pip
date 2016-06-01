@@ -1,12 +1,12 @@
-catkin_pure_python
+catkin_pip
 ==================
 
-[![Build Status](https://travis-ci.org/asmodehn/catkin_pure_python.svg?branch=indigo)](https://travis-ci.org/asmodehn/catkin_pure_python)
+[![Build Status](https://travis-ci.org/asmodehn/catkin_pip.svg?branch=indigo)](https://travis-ci.org/asmodehn/catkin_pip)
 
 Provides catkin extension (cmake hooks) to work with pure python packages in catkin workspaces.
 Because state of the art python (ref. http://jeffknupp.com/blog/2013/08/16/open-sourcing-a-python-project-the-right-way/) should be allowed to work in catkin.
 
-catkin_pure_python allows you to use your own package as a normal python package, with python workflow (example using virtualenvwrapper):
+catkin_pip allows you to use your own package as a normal python package, with python workflow (example using virtualenvwrapper):
 ```
 $ mkvirtualenv my_package_venv --system-site-packages
 (my_package_venv)$ pip install -r requirements.txt
@@ -42,7 +42,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(my_project)
 
 find_package(catkin REQUIRED COMPONENTS
-    catkin_pure_python
+    catkin_pip
 )
 
 # Getting pip requirements for catkin_pip itself
@@ -70,5 +70,5 @@ Roadmap
 =======
 
 - [] check if suitable to have catkin always look into site-packages by default, it would avoid this code to hack `_setup_util.py` in each workspace
-- [] multiple packages using catkin_pure_python in same workspace should find each other in the right order and avoid pip version error...
+- [] multiple packages using catkin_pip in same workspace should find each other in the right order and avoid pip version error...
 - [] debian packaging. Not sure yet if this is even suitable/possible without huge changes...
