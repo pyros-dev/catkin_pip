@@ -2,6 +2,11 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.3 (2016-06-01)
+------------------
+* renaming catkin_pure_python to catkin_pip for clarity
+* Contributors: alexv
+
 0.1.2 (2016-05-30)
 ------------------
 * fixing python_setuptools_install templates location and permissions
