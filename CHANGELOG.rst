@@ -2,6 +2,14 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.4 (2016-06-02)
+------------------
+* adding pytest as a test runner.
+  now using our nose in nosetests (instead of sytem one)
+  small fixes.
+* now travis building on jade as well
+* Contributors: AlexV, alexv
+
 0.1.3 (2016-06-01)
 ------------------
 * renaming catkin_pure_python to catkin_pip for clarity
