@@ -5,6 +5,10 @@
 
 # Upgrading to use latest nose
 nose
+# Also install pytest since we support it
+pytest
+pytest-cov
+pytest-timeout
 
 # Fixing security since python 2.7.6 on trusty is broken : https://stackoverflow.com/questions/29099404/ssl-insecureplatform-error-when-using-requests-package
 # On trusty it seems that installing libgnutls28-dev fixes the issue...
