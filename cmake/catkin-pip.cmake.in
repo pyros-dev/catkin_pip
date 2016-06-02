@@ -11,13 +11,13 @@ message(STATUS "Loading catkin-pip.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
 # protecting against missing cmake file dependency
 include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-requirements.cmake" RESULT_VARIABLE CATKIN_PIP_REQUIREMENTS_FOUND )
 IF ( NOT CATKIN_PIP_REQUIREMENTS_FOUND )
-    message ( FATAL_ERROR "{CMAKE_CURRENT_LIST_DIR}/catkin-pip-requirements.cmake Not Found !!!" )
+    message ( FATAL_ERROR "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-requirements.cmake Not Found !!!" )
 ENDIF ( NOT CATKIN_PIP_REQUIREMENTS_FOUND )
 
 # protecting against missing cmake file dependency
 include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake" RESULT_VARIABLE CATKIN_PIP_SETUP_FOUND )
 IF ( NOT CATKIN_PIP_SETUP_FOUND )
-    message ( FATAL_ERROR "{CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake Not Found !!!" )
+    message ( FATAL_ERROR "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake Not Found !!!" )
 ENDIF ( NOT CATKIN_PIP_SETUP_FOUND )
 
 catkin_add_env_hooks(42.site-packages SHELLS bash DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../env-hooks)

@@ -92,11 +92,19 @@ macro(catkin_pip_setup_prefix ws_prefix)
 
         # Providing another catkin nosetests usage...
         # now we can finally use the simple "nosetests" entry_point (forcing cmake to find it)
-        find_program( PIP_NOSETESTS NAMES nosetests PATHS ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@ NO_DEFAULT_PATH)
+        find_program( PIP_NOSETESTS NAMES "nosetests" "nosetests-${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}" PATHS ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@ NO_DEFAULT_PATH)
         if(PIP_NOSETESTS)
             message( STATUS "Found catkin_pip nosetests command at ${PIP_NOSETESTS}.")
         else()
             message( FATAL_ERROR "catkin_pip nosetests command not found in ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@. Make sure you have installed the nose pip package on your ${ws_prefix} workspace.")
+        endif()
+
+        # Same for py.test
+        find_program( PIP_PYTEST NAMES "py.test" "py.test-${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}" PATHS ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@ NO_DEFAULT_PATH)
+        if(PIP_PYTEST)
+            message( STATUS "Found catkin_pip py.test command at ${PIP_PYTEST}.")
+        else()
+            message( FATAL_ERROR "catkin_pip py.test command not found in ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@. Make sure you have installed the pytest pip package on your ${ws_prefix} workspace.")
         endif()
 
     endif()
