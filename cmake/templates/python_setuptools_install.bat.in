@@ -4,6 +4,9 @@ if DEFINED DESTDIR (
   echo "Destdir.............%DESTDIR%"
   set DESTDIR_ARG="--root=%DESTDIR%"
 )
+else (
+  set DESTDIR_ARG="--root=@SETUPTOOLS_INSTALL_PREFIX@"
+)
 
 cd "@INSTALL_CMD_WORKING_DIRECTORY@"
 
@@ -14,4 +17,4 @@ cmd /V:on /C set PYTHONPATH="@CMAKE_INSTALL_PREFIX@/@PYTHON_INSTALL_DIR@;@CMAKE_
              build --build-base "@CMAKE_CURRENT_BINARY_DIR@" ^
              install --single-version-externally-managed ^
              %DESTDIR_ARG% ^
-             @SETUPTOOLS_ARG_EXTRA@ --root="@SETUPTOOLS_INSTALL_PREFIX@" --prefix=""
+             @SETUPTOOLS_ARG_EXTRA@ --prefix=""

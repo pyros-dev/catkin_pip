@@ -10,6 +10,8 @@ if [ -n "$DESTDIR" ] ; then
             exit 1
     esac
     DESTDIR_ARG="--root=$DESTDIR"
+else
+    DESTDIR_ARG="--root=@CMAKE_INSTALL_PREFIX@"
 fi
 
 echo_and_run() { echo "+ $@" ; "$@" ; }
@@ -30,4 +32,4 @@ echo_and_run /usr/bin/env \
     build --build-base "@CMAKE_CURRENT_BINARY_DIR@" \
     install --single-version-externally-managed \
     $DESTDIR_ARG \
-    @SETUPTOOLS_ARG_EXTRA@ --root="@CMAKE_INSTALL_PREFIX@" --prefix=""
+    @SETUPTOOLS_ARG_EXTRA@ --prefix=""
