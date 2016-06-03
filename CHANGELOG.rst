@@ -2,6 +2,11 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.5 (2016-06-03)
+------------------
+* removing subdir in cfg_extra because of https://github.com/ros/catkin/issues/805
+* Contributors: alexv
+
 0.1.4 (2016-06-02)
 ------------------
 * adding pytest as a test runner.
