@@ -24,8 +24,8 @@ catkin_package(
   catkin-pip-setup.cmake
   catkin-pip-prefix.cmake
   catkin-pip-requirements.cmake
-  test/pytest.cmake
-  test/nosetests.cmake
+  pytest.cmake
+  nosetests.cmake
 )
 
 # to be found in devel space
