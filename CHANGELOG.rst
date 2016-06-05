@@ -2,6 +2,11 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.7 (2016-06-05)
+------------------
+* fixed site-packages env-hook to install with catkin-pip and not built project, and to be activated only in devel space.
+* Contributors: AlexV
+
 0.1.6 (2016-06-05)
 ------------------
 * improving python_install templates to match original version more...
