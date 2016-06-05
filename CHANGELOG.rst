@@ -2,6 +2,12 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.6 (2016-06-05)
+------------------
+* improving python_install templates to match original version more...
+* improving python install script to pass only one --root option
+* Contributors: AlexV, alexv
+
 0.1.5 (2016-06-03)
 ------------------
 * removing subdir in cfg_extra because of https://github.com/ros/catkin/issues/805
