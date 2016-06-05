@@ -43,6 +43,9 @@ install(FILES
     ${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake
 )
 
+# This goes with catkin_pip itself, since it is only needed when building from source, with catkin_pip as a dependency
+catkin_add_env_hooks(42.site-packages SHELLS bash DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/env-hooks)
+
 install(FILES
     env-hooks/42.site-packages.bash.in
     DESTINATION
