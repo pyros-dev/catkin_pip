@@ -2,6 +2,13 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.8 (2016-06-06)
+------------------
+* fix nose and pytest test runners to launch from pip latest install by catkin-pip.
+* fix PYTHONPATH manipulation to prepend a path.
+  not adding /opt/ros/<distro> to the path since original catkin will take care of that.
+* Contributors: AlexV
+
 0.1.7 (2016-06-05)
 ------------------
 * fixed site-packages env-hook to install with catkin-pip and not built project, and to be activated only in devel space.
