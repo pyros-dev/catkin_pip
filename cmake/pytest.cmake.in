@@ -35,7 +35,7 @@ function(catkin_add_pytests path)
   _warn_if_skip_testing("catkin_add_pytests")
 
   if(NOT PIP_PYTEST)
-    message(STATUS "skipping pytests(${path}) in project '${PROJECT_NAME}'")
+    message(WARNING "skipping pytests(${path}) in project '${PROJECT_NAME}'")
     return()
   endif()
 
@@ -76,26 +76,27 @@ function(catkin_add_pytests path)
   string(REPLACE ":" "." output_file_name ${output_file_name})
 
   set(output_path ${CATKIN_TEST_RESULTS_DIR}/${PROJECT_NAME})
-  # make --xunit-file argument an absolute path (https://github.com/nose-devs/nose/issues/779)
   get_filename_component(output_path "${output_path}" ABSOLUTE)
   set(cmd "${CMAKE_COMMAND} -E make_directory ${output_path}")
   set(tests "${_path_name}")
-  set(cmd ${cmd} "${PY_TEST} --timeout=${_pytest_TIMEOUT} ${tests} --junit-xml ${output_path}/pytests-${output_file_name}.xml ${_covarg}")
+  set(cmd ${cmd} "PYTHONPATH=$ENV{PYTHONPATH} ${PIP_PYTEST} --timeout=${_pytest_TIMEOUT} ${tests} --junit-xml ${output_path}/pytests-${output_file_name}.xml ${_covarg}")
   catkin_run_tests_target("pytests" ${output_file_name} "pytests-${output_file_name}.xml" COMMAND ${cmd} DEPENDENCIES ${_pytest_DEPENDENCIES} WORKING_DIRECTORY ${_pytest_WORKING_DIRECTORY})
 endfunction()
 
-find_program(PY_TEST NAMES
+# Providing another catkin pytests usage...
+# now we can finally use the simple "py.test" entry_point (forcing cmake to find it)
+find_program(PIP_PYTEST NAMES
   "py.test${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}"
   "py.test-${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}"
   "py.test${PYTHON_VERSION_MAJOR}"
   "py.test-${PYTHON_VERSION_MAJOR}"
-  "py.test")
-if(PY_TEST)
-  message(STATUS "Using Python py.test: ${PY_TEST}")
+  "py.test"
+  PATHS
+  ${CATKIN_DEVEL_PREFIX}/@CATKIN_GLOBAL_BIN_DESTINATION@
+  NO_DEFAULT_PATH
+)
+if(PIP_PYTEST)
+  message(STATUS "Catkin_pip using Python py.test: ${PIP_PYTEST}")
 else()
-  if("${PYTHON_VERSION_MAJOR}" STREQUAL "3")
-    message(WARNING "py.test not found, Python tests can not be run (try installing package 'python3-pytest')")
-  else()
-    message(WARNING "py.test not found, Python tests can not be run (try installing package 'python-pytest')")
-  endif()
+  message(FATAL_ERROR "Catkin_pip py.test command not found in ${CATKIN_DEVEL_PREFIX}/@CATKIN_GLOBAL_BIN_DESTINATION@. Make sure you have installed the pytest pip package on your ${CATKIN_DEVEL_PREFIX} workspace.")
 endif()
