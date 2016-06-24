@@ -2,6 +2,15 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.9 (2016-06-24)
+------------------
+* fixed site_packages env-hook.
+  bash script seems to work fine after all, the problem was somewhere else.
+  simplified the envhook flow between catkin, package, overlay.
+* changed site-packages env-hook to have .sh extension.
+  moving prepend function into catkin-pip package itself.
+* Contributors: alexv
+
 0.1.8 (2016-06-06)
 ------------------
 * fix nose and pytest test runners to launch from pip latest install by catkin-pip.
