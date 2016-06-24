@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Careful : env.sh *executes* it during cmake configure, but setup.sh source it !
+# If using a sh script, this can make a lot of issues...
+# Reference to address these from a Bourne shell http://stackoverflow.com/a/29835459
+
+# For catkin it is simpler to do add site-packages to PYTHONPATH in _setup_util.py.in than us doing it from here...
+# but until catkin does this by default, the proper way from outside catkin is probably a env-hook
+
+##Documentation:
+#  The colon command simply has its arguments evaluated and then succeeds.
+#  It is the original shell comment notation (before '#' to end of line). For a long time, Bourne shell scripts had a colon as the first character.
+#  The C Shell would read a script and use the first character to determine whether it was for the C Shell (a '#' hash) or the Bourne shell (a ':' colon).
+#  Then the kernel got in on the act and added support for '#!/path/to/program' and the Bourne shell got '#' comments, and the colon convention went by the wayside.
+#  But if you come across a script that starts with a colon (Like this one), now you will know why. ~ Jonathan Leffler
+
+# We should enable site-package only on devel space.
+# Install space should behave like packages, everything in debian layout.
+
+# finding our useful script from catkin_pip using rospack (work from source or bin package)
+CATKIN_PIP_SCRIPTS="$(rospack find catkin_pip)/scripts"
+echo "Catkin-pip scripts found in $CATKIN_PIP_SCRIPTS"
+
+# We combine it with site-packages (pip default) location, before attempting to prepend to the python path
+# Careful : echo is only possible if we are a bash script (not used by env.sh)
+echo "Prepending @CATKIN_DEVEL_PREFIX@/lib/python2.7/site-packages to PYTHONPATH"
+PYTHONPATH=$("${CATKIN_PIP_SCRIPTS}"/pythonpath_prepend.bash "@CATKIN_DEVEL_PREFIX@/lib/python2.7/site-packages")
+
+# to avoid side effect with multiple workspace having different version of catkin_pip
+unset CATKIN_PIP_SCRIPTS

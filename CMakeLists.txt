@@ -31,7 +31,7 @@ catkin_package(
 # to be found in devel space
 configure_file(cmake/catkin-pip-base.req ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/catkin-pip-base.req COPYONLY)
 configure_file(cmake/catkin-pip-fixups.req ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/catkin-pip-fixups.req COPYONLY)
-configure_file(env-hooks/42.site-packages.sh.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/env-hooks/42.site-packages.sh.in COPYONLY)
+configure_file(cmake/env-hooks/42.site_packages.bash.develspace.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/env-hooks/42.site_packages.bash.develspace.in COPYONLY)
 configure_file(cmake/templates/python_setuptools_install.bat.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/templates/python_setuptools_install.bat.in COPYONLY)
 configure_file(cmake/templates/python_setuptools_install.sh.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/templates/python_setuptools_install.sh.in COPYONLY)
 
@@ -43,19 +43,17 @@ install(FILES
     ${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake
 )
 
-# This goes with catkin_pip itself, since it is only needed when building from source, with catkin_pip as a dependency
-catkin_add_env_hooks(42.site-packages SHELLS sh DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/env-hooks)
-
-install(FILES
-    env-hooks/42.site-packages.sh.in
-    DESTINATION
-    ${CATKIN_PACKAGE_SHARE_DESTINATION}/env-hooks
-)
-
 install(PROGRAMS
     scripts/pythonpath_prepend.bash
     DESTINATION
     ${CATKIN_PACKAGE_SHARE_DESTINATION}/scripts
+)
+
+# We install in cmake folder the files that are needed by cmake code
+install(FILES
+    cmake/env-hooks/42.site_packages.bash.develspace.in
+    DESTINATION
+    ${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/env-hooks
 )
 
 install(PROGRAMS

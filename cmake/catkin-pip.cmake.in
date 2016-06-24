@@ -20,6 +20,16 @@ IF ( NOT CATKIN_PIP_SETUP_FOUND )
     message ( FATAL_ERROR "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake Not Found !!!" )
 ENDIF ( NOT CATKIN_PIP_SETUP_FOUND )
 
+# Setting our paths to package env-hooks provided by catkin-pip
+if ( NOT CATKIN_PIP_ENV_HOOKS_PATH )
+    # templates should found relative to our current path
+    set (CATKIN_PIP_ENV_HOOKS_PATH ${CMAKE_CURRENT_LIST_DIR}/env-hooks)
+endif()
+
+# Since we need the envhook as soon as a package is using catkin-pip from source, but only in devel space
+catkin_add_env_hooks(42.site_packages SHELLS bash DIRECTORY ${CATKIN_PIP_ENV_HOOKS_PATH} SKIP_INSTALL)
+# TODO : cmake should include this file only once, so the env hook is not recreated for every package that includes it...
+
 catkin_pip_setup_prefix(${CATKIN_DEVEL_PREFIX})
 
 #

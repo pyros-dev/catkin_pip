@@ -19,13 +19,14 @@ IF ( NOT CATKIN_PIP_PREFIX_FOUND )
 ENDIF ( NOT CATKIN_PIP_PREFIX_FOUND )
 
 
-
+# These are set on include time by catkin-pip and point to catkin-pip folders
 if ( NOT CATKIN_PIP_TEMPLATES_PATH )
     # templates should found relative to our current path
     set (CATKIN_PIP_TEMPLATES_PATH ${CMAKE_CURRENT_LIST_DIR}/templates)
 endif()
 
 # We are replacing catkin's python_setup functionality
+# This is run by the package and CMAKE_CURRENT_LIST_DIR refer to the package one.
 function(catkin_pip_python_setup)
 
     # Setting up variables for scripts configuration (in a function to keep it here)
