@@ -27,8 +27,8 @@ if ( NOT CATKIN_PIP_ENV_HOOKS_PATH )
 endif()
 
 # Since we need the envhook as soon as a package is using catkin-pip from source, but only in devel space
-catkin_add_env_hooks(42.site_packages SHELLS bash DIRECTORY ${CATKIN_PIP_ENV_HOOKS_PATH} SKIP_INSTALL)
-# TODO : cmake should include this file only once, so the env hook is not recreated for every package that includes it...
+catkin_add_env_hooks(42.site_packages SHELLS sh DIRECTORY ${CATKIN_PIP_ENV_HOOKS_PATH} SKIP_INSTALL)
+# TODO : cmake should include this file only once per workspace, so the env hook is not recreated for every package that uses catkin_pip if they are in same workspace...
 
 catkin_pip_setup_prefix(${CATKIN_DEVEL_PREFIX})
 
