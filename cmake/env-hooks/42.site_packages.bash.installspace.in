@@ -20,16 +20,10 @@
 CATKIN_PIP_SCRIPTS="$(rospack find catkin_pip)/scripts"
 echo "Catkin-pip scripts found in $CATKIN_PIP_SCRIPTS"
 
-#We need first the catkin_pip_env
+# We need ONLY the catkin_pip_env
 # Careful : echo is only possible if we are a bash script (not used by env.sh)
 echo "Prepending @CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ to PYTHONPATH"
 PYTHONPATH=$("${CATKIN_PIP_SCRIPTS}"/pythonpath_prepend.bash "@CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@")
-# TODO : maybe we should to that in .sh envhook, so that env.sh would set it up before any command we want to run (Check CATKIN_ENV doc)...
-
-# We combine it with site-packages (pip default) location, before attempting to prepend to the python path
-# Careful : echo is only possible if we are a bash script (not used by env.sh)
-echo "Prepending @CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ to PYTHONPATH"
-PYTHONPATH=$("${CATKIN_PIP_SCRIPTS}"/pythonpath_prepend.bash "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@")
 
 # to avoid side effect with multiple workspace having different version of catkin_pip
 unset CATKIN_PIP_SCRIPTS

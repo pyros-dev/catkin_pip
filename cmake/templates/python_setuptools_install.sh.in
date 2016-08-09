@@ -9,25 +9,33 @@ if [ -n "$DESTDIR" ] ; then
             /bin/echo "otherwise python's distutils will bork things."
             exit 1
     esac
-    DESTDIR_ARG="--single-version-externally-managed --root=$DESTDIR"
+    DESTDIR_ARG="--root=$DESTDIR"
+else
+    DESTDIR_ARG="--record=@CMAKE_INSTALL_PREFIX@/@PROJECT_NAME@.record"
 fi
 
 echo_and_run() { echo "+ $@" ; "$@" ; }
 
 echo_and_run cd "@INSTALL_CMD_WORKING_DIRECTORY@"
 
-# snsure that Python install destination exists
-echo_and_run mkdir -p "$DESTDIR@CMAKE_INSTALL_PREFIX@/@PYTHON_INSTALL_DIR@"
+# Ensure that Python install destination exists
+# Not needed with latest setuptools ?
+#echo_and_run mkdir -p "$DESTDIR@CMAKE_INSTALL_PREFIX@/@PYTHON_INSTALL_DIR@"
+
+# Verifying setuptools version
+echo_and_run /usr/bin/env \
+    PYTHONPATH="@CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@:@CMAKE_INSTALL_PREFIX@/@PYTHON_INSTALL_DIR@:@CMAKE_BINARY_DIR@/@PYTHON_INSTALL_DIR@:$PYTHONPATH" \
+    python -c "import setuptools; print 'setuptools from {0} version {1}'.format(setuptools.__file__, setuptools.__version__)"
 
 # Note that PYTHONPATH is pulled from the environment to support installing
 # into one location when some dependencies were installed in another
 # location, #123.
+# One of these locations must be the catkin_pip_env with the latest setuptools version to install packages with recent setuptools.
 echo_and_run /usr/bin/env \
-    PYTHONPATH="@CMAKE_INSTALL_PREFIX@/@PYTHON_INSTALL_DIR@:@CMAKE_BINARY_DIR@/@PYTHON_INSTALL_DIR@:$PYTHONPATH" \
-    CATKIN_BINARY_DIR="@CMAKE_BINARY_DIR@" \
+    PYTHONPATH="@CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@:@CMAKE_INSTALL_PREFIX@/@PYTHON_INSTALL_DIR@:@CMAKE_BINARY_DIR@/@PYTHON_INSTALL_DIR@:$PYTHONPATH" \
     "@PYTHON_EXECUTABLE@" \
     "@CATKIN_PIP_PACKAGE_PATH@/setup.py" \
     build --build-base "@CMAKE_CURRENT_BINARY_DIR@" \
-    install \
+    install --single-version-externally-managed \
     $DESTDIR_ARG \
     @SETUPTOOLS_ARG_EXTRA@ --prefix="@CMAKE_INSTALL_PREFIX@" --install-scripts="@CMAKE_INSTALL_PREFIX@/@CATKIN_GLOBAL_BIN_DESTINATION@"

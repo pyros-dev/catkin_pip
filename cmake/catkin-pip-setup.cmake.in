@@ -37,6 +37,7 @@ function(catkin_pip_python_setup)
     #
 
       assert(PYTHON_INSTALL_DIR)
+      assert(CATKIN_PIP_PYTHON_INSTALL_DIR)
       set(INSTALL_CMD_WORKING_DIRECTORY ${package_path})
 
       if(NOT WIN32)
