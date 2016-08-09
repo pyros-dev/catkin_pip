@@ -23,11 +23,6 @@ macro(catkin_pip_check_env config_prefix)
         "Quick patch will be applied to the current cmake process environment."
         )
 
-        if ( FOUND_PPATH LESS 0 )
-            message(STATUS "Adding ${config_prefix}/@CATKIN_GLOBAL_PYTHON_DESTINATION@ to PYTHONPATH")
-            set(ENV{PYTHONPATH} "${config_prefix}/@CATKIN_GLOBAL_PYTHON_DESTINATION@:$ENV{PYTHONPATH}")
-        endif()
-
         if ( FOUND_PPPATH LESS 0 )
             message(STATUS "Adding ${config_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@ to PYTHONPATH")
             set(ENV{PYTHONPATH} "${config_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@:$ENV{PYTHONPATH}")
