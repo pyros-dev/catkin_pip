@@ -16,6 +16,9 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <!-- we depend on rospack to dynamically find catkin_pip when generating envhooks for packages using catkin_pip -->
+  <depend>rospack</depend>
+
   <depend version_gte="2.7.5">python</depend>
   <depend version_gte="1.5.4">python-pip</depend>
 
