@@ -14,6 +14,9 @@ Contents:
    :maxdepth: 2
 
    readme_link
+   basic_ros_python_workflow
+   ros_python_hybrid_workflow
+   third_party_ros_pure_python_workflow
    changelog_link
 
 Indices and tables
