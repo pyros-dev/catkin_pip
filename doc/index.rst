@@ -3,7 +3,10 @@
 Catkin Pip
 ==========
 
-This `ROS`_ package allows using pure python package in ROS Systems, in catkin workspaces.
+This `ROS`_ package allows using pure python package in ROS Systems, from catkin workspaces.
+
+It was born from the need to interact with ROs from a pure python environment, along with pyros.
+Therefore the multiple workflows enabled by catkin_pip are workflows used by pyros and its dependencies.
 
 .. include:: weblinks.rst
 
