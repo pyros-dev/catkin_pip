@@ -31,6 +31,7 @@ install:
 
 # full ROS setup, build and test
 script:
+  - source /opt/ros/$CI_ROS_DISTRO/setup.bash && rospack profile
   - ./travis_checks.sh
 
 notifications:

@@ -18,6 +18,7 @@ if [ "$ROS_FLOW" == "devel" ]; then
 elif [ "$ROS_FLOW" == "install" ]; then
     make -j1 install
     source install/setup.bash
-    nosetests mypippkg
-    python -m pytest --pyargs mypippkg
+    # TMP disabling test from now, since mypippkg has no tests
+    #nosetests mypippkg
+    #python -m pytest --pyargs mypippkg
 fi
