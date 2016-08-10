@@ -6,7 +6,7 @@ set -e
 # ROS_FLOW [devel | install]
 
 source /opt/ros/$CI_ROS_DISTRO/setup.bash
-mkdir testbuild
+mkdir -p testbuild
 cd testbuild
 cmake ../test -DCMAKE_INSTALL_PREFIX=./install
 if [ "$ROS_FLOW" == "devel" ]; then
@@ -19,5 +19,5 @@ elif [ "$ROS_FLOW" == "install" ]; then
     make -j1 install
     source install/setup.bash
     nosetests mypippkg
-    py.test --pyargs mypippkg
+    python -m pytest --pyargs mypippkg
 fi
