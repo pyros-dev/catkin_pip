@@ -16,6 +16,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
 ## get catkin package information
+import catkin_sphinx
 import os
 import catkin_pkg.package
 catkin_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -30,8 +31,11 @@ catkin_package = catkin_pkg.package.parse_package(
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx',
-              'sphinx.ext.todo', 'sphinx.ext.viewcode', 'sphinx.ext.graphviz']
+extensions = ['sphinx.ext.ifconfig', 'sphinx.ext.todo', 'sphinx.ext.graphviz',
+              'sphinx.ext.intersphinx',
+              'catkin_sphinx.ShLexer', 'catkin_sphinx.cmake',
+              'sphinx.ext.autodoc', 'sphinx.ext.viewcode']
+
 
 # List automatically-documented module members in source code order.
 autodoc_member_order = 'bysource'
@@ -73,7 +77,7 @@ release = catkin_package.version
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['weblinks.rst']
+exclude_patterns = ['**/.git', 'testbuild/**', 'test/**', 'weblinks.rst']
 
 # The reST default role (used for this markup: `text`) to use for all
 #documents.  default_role = None
