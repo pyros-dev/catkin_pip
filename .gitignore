@@ -1,3 +1,5 @@
+doc/html
 build
+testbuild
 test/mypippkg
 .idea

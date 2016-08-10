@@ -14,7 +14,6 @@ Contents:
    :maxdepth: 2
 
    readme_link
-   overview
    changelog_link
 
 Indices and tables
