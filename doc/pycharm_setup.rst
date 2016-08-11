@@ -12,6 +12,7 @@ The environment for your project is not a specific environment per Project/Repos
 - Basic ROS commands and python commands will work from the terminal, after sourcing the devel space as usual with ROS `source devel/setup.bash`
 - Pycharm integrated python tools will work, but only if you have sourced the devel space before launching PyCharm, which might not be convenient in some cases...
 
+BEWARE : PyCharm (and Python imports ?) have some issues with symlinks, so you should avoid them if possible when setting up your workspace.
 
 Hybrid workflow
 ---------------
