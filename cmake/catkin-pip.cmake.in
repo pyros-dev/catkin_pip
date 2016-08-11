@@ -31,9 +31,11 @@ endif()
 set(CATKIN_PIP_ENV ${CMAKE_BINARY_DIR}/catkin_pip_env CACHE PATH "The path containing the python environment for catkin_pip dependencies" )
 set(CATKIN_PIP_PYTHON_INSTALL_DIR @CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@)
 
-# Since we need the envhook as soon as a package is using catkin-pip from source, but only in devel space
-catkin_add_env_hooks(42.site_packages SHELLS bash DIRECTORY ${CATKIN_PIP_ENV_HOOKS_PATH})
-# TODO : cmake should include this file only once, so the env hook is not recreated for every package that includes it...
+# Since we need the envhook as soon as a package is using catkin-pip from source, but only in devel space.
+catkin_add_env_hooks(42.site_packages SHELLS bash DIRECTORY ${CATKIN_PIP_ENV_HOOKS_PATH} SKIP_INSTALL)
+# SKIP_INSTALL because we definitely do not want it ending up in all deb packages built with catkin_pip.
+# If we need paths in install space, they should somehow be stored in generated scripts (make or others)
+# TODO : cmake should include this file only once, so the env hook is not recreated for every package that includes it, even in devel...
 
 # Setting up catkin prefix in catkin_pip_env
 catkin_pip_setup_prefix(${CATKIN_PIP_ENV})
