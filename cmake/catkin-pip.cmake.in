@@ -29,6 +29,7 @@ endif()
 # We want the catkin environment to be used for both devel and install workspace
 # to use latest versions python tools in both.
 set(CATKIN_PIP_ENV ${CMAKE_BINARY_DIR}/catkin_pip_env CACHE PATH "The path containing the python environment for catkin_pip dependencies" )
+set(CATKIN_PIP_NO_DEPS True CACHE BOOL "Whether we want to retrieve python dependencies and requirements for packages" )
 set(CATKIN_PIP_PYTHON_INSTALL_DIR @CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@)
 
 # Since we need the envhook as soon as a package is using catkin-pip from source, but only in devel space
