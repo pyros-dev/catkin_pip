@@ -14,7 +14,7 @@ This makes it easier to :
 - fork an existing python repository to integrate in your ROS development environment.
 - test your package with different version of packages available on pypi.
 
-An important limitation here is that this package will only work from source (inside a catkin devel workspace), and cannot be made into a ROS pacakge, until all dependencies are resolvable via rosdep.
+An important limitation here is that this package will only work from source (inside a catkin devel workspace), and cannot be made into a ROS package, until all dependencies are resolvable via rosdep.
 This is due to the complexity of managing multiple package managers with different strategies and policies in place.
 
 However it is perfectly releasable on pypi, just like any python package, provided that all your ROS dependencies are optional...
