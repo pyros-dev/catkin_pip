@@ -23,7 +23,11 @@ An example of the ros/python hybrid workflow is the pyros_setup package : https:
 This package is useful only in "pyros from python" usecase and does not need to be turned into a ROS package. All ROS dependencies are expected to exist.
 Having a way to retrieve ros package from the python install is a long term goal.
 
-This workflow is usually a transition workflow during the conversion from a python package (usable in source with catkin pip) to a ROS package (deployable via debs)
+This workflow is usually a transition workflow during the conversion from a python package (usable in source with catkin pip) to a ROS package (deployable via debs).
+As such it is important to test both the ROS devel workflow, and the ROS install workflow, separately. pyros_setup has such a setup.
+
+If one would try to enable the install workflow in the pyros-setup repository, that would fail because pip dependencies could not be found.
+It is exactly the behavior expected from catkin_pip, since the install flow needs to fail if the deb package would not be "viable" (in this case it would lack pip dependencies).
 
 Building a ROS package from it
 ------------------------------
