@@ -23,3 +23,8 @@ This makes it easier to :
 
 An example of the ros/python hybrid workflow is the pyzmp package : https://github.com/asmodehn/pyzmp
 This is a pure python package, imported into ROS ecosystem as is, in a deb package so other ROS packages can depend on it.
+
+The thirdparty package release is not mandatory. If your package doesnt have to be distributed via ROS package system, having a simple pip package is enough.
+https://github.com/asmodehn/pyros-setup is an example of this : it is a simple pip package, that is retrieved and used only via pip.
+your package can use it as a dependency to access ROS modules.
+Although for more user interaction with ROS from pure python, you want to have a look at https://github.com/asmodehn/pyros itself (provided as a pip package)

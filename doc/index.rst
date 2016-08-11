@@ -11,16 +11,50 @@ Therefore the multiple workflows enabled by catkin_pip are workflows used by pyr
 .. include:: weblinks.rst
 
 
-Contents:
+Overview
+--------
+
+.. toctree::
+   :maxdepth: 1
+
+   readme_link
+   changelog_link
+
+
+Workflows : The dynamic view
+----------------------------
+
+How we work with catkin /vs/ How we work with python
 
 .. toctree::
    :maxdepth: 2
 
-   readme_link
    basic_ros_python_workflow
-   ros_python_hybrid_workflow
    third_party_ros_pure_python_workflow
-   changelog_link
+
+   ros_python_hybrid_workflow
+
+
+Packages : the static view
+--------------------------
+
+What does a package look like for catkin /vs/ for python
+
+.. toctree::
+   :maxdepth: 2
+
+   catkin_build_release_flow
+   catkin_pip_build_flow
+
+
+IDE setup
+---------
+
+.. toctree::
+   :maxdepth: 2
+
+   pycharm_setup
+
 
 Indices and tables
 ==================
