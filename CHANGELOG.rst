@@ -2,8 +2,8 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.11 (2016-08-11)
+-------------------
 * added description of the catkin_pip build flow
 * we might not need the install envhook after all.
   correct setuptools is found via path in install script.
