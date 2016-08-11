@@ -2,6 +2,25 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* added description of the catkin_pip build flow
+* we might not need the install envhook after all.
+  correct setuptools is found via path in install script.
+  correct tools for test or other should be found via path in generated scripts, and used via catkin/make commands.
+* added warning in pycharm setup doc.
+* added first draft of pycharm setup doc
+* improved workflow doc with pointer to example package repos.
+* adding documentation for 3 ros-python workflows enabled by catkin_pip
+* improving documentation
+* disabling tests check from travis on install since mypippkg doesnt have any yet.
+* fixing travis_checks to run our pytest version from catkin_pip_env
+* cleaning up doc, installing ros-base in travis install step.
+* adding specific script for travis checks.
+  added basic doc structure.
+* new travis build flow to split devel and install flow and avoid one unwanted interferences.
+* Contributors: alexv
+
 0.1.10 (2016-08-09)
 -------------------
 * added rospack dependency
