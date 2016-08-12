@@ -21,7 +21,19 @@ Overview
    changelog_link
 
 
-Workflows : The dynamic view
+Packages : the static view
+--------------------------
+
+What does a package look like for catkin /vs/ for python
+
+.. toctree::
+   :maxdepth: 2
+
+   catkin_build_release_flow
+   catkin_pip_build_flow
+
+
+Workflows : the dynamic view
 ----------------------------
 
 How we work with catkin /vs/ How we work with python
@@ -34,17 +46,6 @@ How we work with catkin /vs/ How we work with python
 
    ros_python_hybrid_workflow
 
-
-Packages : the static view
---------------------------
-
-What does a package look like for catkin /vs/ for python
-
-.. toctree::
-   :maxdepth: 2
-
-   catkin_build_release_flow
-   catkin_pip_build_flow
 
 
 IDE setup
