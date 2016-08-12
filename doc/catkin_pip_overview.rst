@@ -1,15 +1,23 @@
-Catkin-pip build flow
-=====================
+Catkin-Pip Overview
+===================
+
+This document describe the different areas where catkin-pip makes Python ROS development easier.
 
 
 Pip package
 -----------
 
-Catkin-pip doesnt not change hte behavior of a pip package. It just amke its use easier in a catkin context.
+Catkin-pip doesnt not change the behavior of a pip package. It just make its use easier in a catkin context.
 
 Catkin-pip however suppose that the pip package needs to use latest python tools (setuptools, pip, pytest, nose) for manipulating it.
 This is in line with python expectation to use latest stable software (and not obsolete system dependencies).
 
+ROS Package
+-----------
+
+Catkin-pip doesnt not change the behavior of a ROS package. It just make it easier to build one from a recent python package.
+
+As ROS packages should only depend on other ros packages, one should be careful to have verified the package still behave as expected when not using pip dependencies before releasing.
 
 
 Devel Space
@@ -33,9 +41,18 @@ No pip dependencies are ever loaded in that system, so using the install space r
 
 When in that step, one should be careful that tools used to manipulate the package (test, docs) might be at a different version now (system) than in the devel space (catkin-pip version)
 
-ROS Package
------------
+Creating a ROs package from the install space is done as usual, only using a recent version of setuptools.
 
-A ROS package can be built from the install space, as usual. One should be careful to have verified the package still behave as expected when not using pip dependencies before releasing.
 
+Virtual environments
+--------------------
+
+Since Catkin-pip allows normal python package to "merge" easily with a ROS package, into what we call a "hybrid" package, one can now choose to use either :
+- a ROS package, installed on the system, in the ros environment.
+- a pip package, installed on a virtual env, with access to the system packages.
+
+Note that catkin-pip only solve the "build part" of the problem:
+
+- To dynamically use the python packages from your catkin workspace when launching a python program outside a ROS environment , you should check pyros-setup.
+- To dynamically discover/marshall/serialize messages format from your ROS processes, you should check pyros.
 

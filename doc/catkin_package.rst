@@ -160,8 +160,9 @@ Note these rosdep keys can refer to pip packages (check the rosdistro repository
 
 If you think I am mistaken please open an issue on catkin_pip repository, and share the information you have regarding these topics.
 
-Workflow
---------
+
+Package Development Workflow
+============================
 
 This is a description of the generic ROS catkin workflow to retrieve, develop, build, test and release a catkin-based package.
 We will use pyros-test project as an example.
@@ -459,3 +460,14 @@ Release
 **If this is not accurate, if I missed a step, or if there is a better way to do the same, please open a PullRequest or an issue on the catkin_pip repository with the related information so this doc can be corrected**
 
 **TODO : review this with the new catkin tools coming up (ie catkin build)**
+
+
+
+Continuous Testing Workflow
+===========================
+
+Because no software works until it has been tested, you should configure travis on your repository to run test with each commit and pull request.
+
+Catkin testing can be done with a simple `.travis.yml` file and a small shell script.
+
+

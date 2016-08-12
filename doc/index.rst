@@ -18,34 +18,33 @@ Overview
    :maxdepth: 1
 
    readme_link
+   catkin_pip_overview
    changelog_link
 
 
-Packages : the static view
---------------------------
+Packages : Working with Catkin-pip
+----------------------------------
 
-What does a package look like for catkin /vs/ for python
-
-.. toctree::
-   :maxdepth: 2
-
-   catkin_build_release_flow
-   catkin_pip_build_flow
-
-
-Workflows : the dynamic view
-----------------------------
-
-How we work with catkin /vs/ How we work with python
+Where we describe the different kind of package we can work with, and how catkin-pip makes the transition easier.
 
 .. toctree::
    :maxdepth: 2
 
-   basic_ros_python_workflow
-   third_party_ros_pure_python_workflow
+   catkin_package
+   pip_package
+   catkin_pip_package
 
-   ros_python_hybrid_workflow
 
+Conversion : From python to catkin to python
+--------------------------------------------
+
+Where we follow a step by step process to convert your existing code to be used in both catkin and python at the same time.
+
+.. toctree::
+   :maxdepth: 2
+
+   from_python_to_catkin
+   from_catkin_to_python
 
 
 IDE setup
