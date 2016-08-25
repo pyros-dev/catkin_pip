@@ -66,31 +66,14 @@ they can be used like this :
     # Corresponding install rules are also setup by each of these macros.
     ...
 
-As a result, for source dependencies (available only for development)
-you can :
+As a result you can:
 
--  Use pip dependency requirements mechanism with any python git repo,
-   for devel workspace
--  Use wstool/rosinstall to retrieve multiple git repository in one
-   place.
+- Use pip/setup.py dependency mechanism with any python git repo, for devel workspace.
+- Use pip dependency requirements mechanism with any pip dependency, for devel workspace.
+- Directly work with python package sources in your usual catkin workspaces (devel only), after just adding a `CMakeLists.txt` and a `package.xml` files.
+- Work with "hybrid" packages that can be released both via pip packages and ros packages, provided the proper dependencies exists for both package management systems (Note rosdep support of pip is not clear...).
+- Do a Third Party release of an existing python package into a ROS package (no setup.py changes required).
+   
 
-And for package dependencies (available for development and for your
-package) you can :
-
--  Use pip dependency requirements mechanism with any python package
-   from pypi, for both devel and install workspace.
--  Use rosdep dependency mechanism, with any ros package dependency.
-
-Roadmap
-=======
-
--  [] check if suitable to have catkin always look into site-packages by
-   default, it would avoid this code to hack ``_setup_util.py`` in each
-   workspace
--  [] multiple packages using catkin_pip in same workspace should find
-   each other in the right order and avoid pip version error…
--  [] debian packaging. Not sure yet if this is even suitable/possible
-   without huge changes…
-
-.. |Build Status| image:: https://travis-ci.org/asmodehn/catkin_pip.svg?branch=indigo
+.. |Build Status| image:: https://travis-ci.org/asmodehn/catkin_pip.svg?branch=devel
    :target: https://travis-ci.org/asmodehn/catkin_pip
