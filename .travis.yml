@@ -25,7 +25,7 @@ before_install:
   # Getting docker ros image
   - docker pull ros:${CI_ROS_DISTRO}-ros-core
   # Running as daemon
-  - docker run --name ${CONTAINER_NAME} -d -t ros:${CI_ROS_DISTRO}-ros-core -e CI_ROS_DISTRO=${CI_ROS_DISTRO} -e ROS_FLOW=${ROS_FLOW} /bin/bash | tee container.id
+  - docker run --name ${CONTAINER_NAME} -d -t ros:${CI_ROS_DISTRO}-ros-core /bin/bash | tee container.id
   # Checking current container
   - docker ps -a
   - docker exec -ti ${CONTAINER_NAME} hostname
@@ -47,8 +47,9 @@ install:
 script:
   - CONTAINER_ID=$(cat container.id)
   - docker ps -a
-  - docker exec -ti ${CONTAINER_NAME} rospack profile
-  - docker exec -ti ${CONTAINER_NAME} /git_clone/travis_checks.sh
+  - docker exec -ti ${CONTAINER_NAME} /bin/bash -c "source /opt/ros/$CI_ROS_DISTRO/setup.bash && rospack profile"
+  # Passing env vars here since passing in docker run currently breaks (2016-08-25)
+  - docker exec -ti ${CONTAINER_NAME} /bin/bash -c "export CI_ROS_DISTRO=$CI_ROS_DISTRO && export ROS_FLOW=$ROS_FLOW && /git_clone/travis_checks.sh"
   - docker stop "${CONTAINER_ID}"
 
 notifications:

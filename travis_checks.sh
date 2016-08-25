@@ -12,8 +12,9 @@ cd $DIR
 # CI_ROS_DISTRO [indigo | jade]
 # ROS_FLOW [devel | install]
 
-# In travis this is already done by the entrypoint
-# But it is mandatory when run by the developer
+# For travis docker, this is already done by the entrypoint in docker image.
+# However when using 'docker exec' we still need to source it ourselves.
+# Also it is mandatory when this script is run directly by the developer.
 source /opt/ros/$CI_ROS_DISTRO/setup.bash
 
 mkdir -p testbuild
