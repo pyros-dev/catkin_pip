@@ -83,7 +83,11 @@ macro(catkin_pip_setup)
     # Note : environment should already be setup at configure time for devel
 
     # Then we can run the pip command
-    catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --prefix "${CATKIN_DEVEL_PREFIX}")
+    if(CATKIN_PIP_NO_DEPS)
+        catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --no-dependencies --prefix "${CATKIN_DEVEL_PREFIX}")
+    else()
+        catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --prefix "${CATKIN_DEVEL_PREFIX}")
+    endif()
 
     if(NOT EXISTS ${package_path}/setup.py)
         message(FATAL_ERROR "catkin_pip_setup() called without 'setup.py' in project folder '${package_path}'")
