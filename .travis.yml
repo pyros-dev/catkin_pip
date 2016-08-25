@@ -25,7 +25,7 @@ before_install:
   # Getting docker ros image
   - docker pull ros:${CI_ROS_DISTRO}-ros-core
   # Running as daemon
-  - docker run --name ${CONTAINER_NAME} -d -t ros:${CI_ROS_DISTRO}-ros-core /bin/bash | tee container.id
+  - docker run --name ${CONTAINER_NAME} -d -t ros:${CI_ROS_DISTRO}-ros-core -e CI_ROS_DISTRO=${CI_ROS_DISTRO} -e ROS_FLOW=${ROS_FLOW} /bin/bash | tee container.id
   # Checking current container
   - docker ps -a
   - docker exec -ti ${CONTAINER_NAME} hostname
