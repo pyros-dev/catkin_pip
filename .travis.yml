@@ -23,7 +23,8 @@ env:
 
 before_install:
   - docker pull ros:${CI_ROS_DISTRO}-ros-core
-  - docker run --name ${CONTAINER_NAME} -d -t ros:${CI_ROS_DISTRO}-ros-core -v $HOME:$HOME /bin/bash | tee container.id
+  - echo $HOME
+  - docker run --name ${CONTAINER_NAME} -d -t ros:${CI_ROS_DISTRO}-ros-core /bin/bash | tee container.id
   - docker ps -a
   - docker exec -ti ${CONTAINER_NAME} hostname
   - docker exec -ti ${CONTAINER_NAME} uname -a
