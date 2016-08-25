@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# This script run basic checks on this project.
+# It is used by travis and can also be used by a developer for checking his current working tree.
+#
 # These variables need to be setup before calling this script:
 # CI_ROS_DISTRO [indigo | jade]
 # ROS_FLOW [devel | install]
