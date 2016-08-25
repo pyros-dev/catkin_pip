@@ -49,9 +49,10 @@ macro(catkin_pip_setup_prefix ws_prefix)
             message( FATAL_ERROR "pip system command not found. Make sure you have installed the python-pip package on your system.")
         endif()
 
-        message(STATUS "    ... Retrieving catkin_pip requirements using system pip ...")
+        message(STATUS "    ... Retrieving catkin_pip requirements using system pip for $ENV{ROS_DISTRO} ...")
 
-        if (ENV{ROS_DISTRO} STREQUAL "indigo")
+        # TODO : a better way is to actually retrieve the pip version (calling 'pip --version')
+        if ($ENV{ROS_DISTRO} STREQUAL "indigo" OR $ENV{ROS_DISTRO} STREQUAL "jade")  # assuming trusty system pip
             # We need to find a pip command that works for old pip versions (indigo supports trusty which is pip v1.5.4)
             # Note --target here means we cannot check if a package is already installed or not before installing, using old pip.
             # which means we have to reinstall dependencies everytime and specify --exists-action w to avoid "already exists" errors
@@ -68,7 +69,7 @@ macro(catkin_pip_setup_prefix ws_prefix)
                 message(STATUS "Command ${CATKIN_SYS_PIP} install -r \"${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req\" --download-cache \"${CMAKE_BINARY_DIR}/pip-cache\" --target \"${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@\" --exists-action w FAILED")
                 message(FATAL_ERROR "${PIP_ERROR}")
             endif()
-        elseif (ENV{ROS_DISTRO} STREQUAL "kinetic")
+        elseif ($ENV{ROS_DISTRO} STREQUAL "kinetic")  # assuming xenial system pip
             # We need to find a pip command that works for pip versions (kinetic supports xenial which is pip v8.1.1)
             execute_process(
               COMMAND ${CATKIN_SYS_PIP} -q install --system -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req" --cache-dir "${CMAKE_BINARY_DIR}/pip-cache" --target "${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@" --exists-action w
