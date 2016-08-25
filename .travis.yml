@@ -23,22 +23,22 @@ env:
 
 before_install:
   - docker pull ros:${CI_ROS_DISTRO}-ros-core
-  - docker run --name ${CONTAINER_NAME} -d -t ros:${CI_ROS_DISTRO}-ros-core -v $HOME:$HOME /bin/bash > container.id
+  - docker run --name ${CONTAINER_NAME} -d -t ros:${CI_ROS_DISTRO}-ros-core -v $HOME:$HOME /bin/bash | tee container.id
   - docker ps -a
-  - docker exec -t ${CONTAINER_NAME} hostname
-  - docker exec -t ${CONTAINER_NAME} uname -a
-  - docker exec -t ${CONTAINER_NAME} cat /etc/lsb-release
+  - docker exec -ti ${CONTAINER_NAME} hostname
+  - docker exec -ti ${CONTAINER_NAME} uname -a
+  - docker exec -ti ${CONTAINER_NAME} cat /etc/lsb-release
 
 install:
-  - docker exec -t ${CONTAINER_NAME} rosdep update
-  - docker exec -t ${CONTAINER_NAME} rosdep install --default-yes --from-paths ./ --rosdistro $CI_ROS_DISTRO
+  - docker exec -ti ${CONTAINER_NAME} rosdep update
+  - docker exec -ti ${CONTAINER_NAME} rosdep install --default-yes --from-paths $HOME --rosdistro $CI_ROS_DISTRO
 
 # full ROS setup, build and test
 script:
   - CONTAINER_ID=$(cat container.id)
   - docker ps -a
-  - docker exec -t ${CONTAINER_NAME} rospack profile
-  - docker exec -t ${CONTAINER_NAME} ./travis_checks.sh
+  - docker exec -ti ${CONTAINER_NAME} rospack profile
+  - docker exec -ti ${CONTAINER_NAME} $HOME/travis_checks.sh
   - docker stop "${CONTAINER_ID}"
 
 notifications:

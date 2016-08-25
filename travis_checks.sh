@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# first we ensure we change to the directory where this script is.
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $DIR
+
 # This script run basic checks on this project.
 # It is used by travis and can also be used by a developer for checking his current working tree.
 #
@@ -8,7 +12,10 @@ set -e
 # CI_ROS_DISTRO [indigo | jade]
 # ROS_FLOW [devel | install]
 
+# In travis this is already done by the entrypoint
+# But it is mandatory when run by the developer
 source /opt/ros/$CI_ROS_DISTRO/setup.bash
+
 mkdir -p testbuild
 cd testbuild
 cmake ../test -DCMAKE_INSTALL_PREFIX=./install
