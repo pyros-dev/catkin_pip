@@ -21,20 +21,24 @@ env:
     - CI_ROS_DISTRO=kinetic ROS_FLOW=install
   # TODO : test all possible flows (installing deps on devel or not, etc.)
 
-install:
-  - docker pull ros/${CI_ROS_DISTRO}-ros-core
-  - docker run --name ${CONTAINER_NAME} -d -t ros/${CI_ROS_DISTRO}-ros-core -v $HOME:$HOME /bin/bash > container.id
+before_install:
+  - docker pull ros:${CI_ROS_DISTRO}-ros-core
+  - docker run --name ${CONTAINER_NAME} -d -t ros:${CI_ROS_DISTRO}-ros-core -v $HOME:$HOME /bin/bash > container.id
   - docker ps -a
-  - docker exec -t ${TAG} hostname
-  - docker exec -t ${TAG} uname -a
-  - docker exec -t ${TAG} cat /etc/lsb-release
+  - docker exec -t ${CONTAINER_NAME} hostname
+  - docker exec -t ${CONTAINER_NAME} uname -a
+  - docker exec -t ${CONTAINER_NAME} cat /etc/lsb-release
+
+install:
+  - docker exec -t ${CONTAINER_NAME} rosdep update
+  - docker exec -t ${CONTAINER_NAME} rosdep install --default-yes --from-paths ./ --rosdistro $CI_ROS_DISTRO
 
 # full ROS setup, build and test
 script:
   - CONTAINER_ID=$(cat container.id)
   - docker ps -a
-  - docker exec -t ${TAG} rospack profile
-  - docker exec -t ${TAG} ./travis_checks.sh
+  - docker exec -t ${CONTAINER_NAME} rospack profile
+  - docker exec -t ${CONTAINER_NAME} ./travis_checks.sh
   - docker stop "${CONTAINER_ID}"
 
 notifications:
