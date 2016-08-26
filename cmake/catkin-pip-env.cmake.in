@@ -13,8 +13,8 @@ macro(catkin_pip_check_env config_prefix)
     # Make sure the catkin python package directory for the workspace is in python path
     # This is only needed if the user didn't source the current workspace setup.bash.
     # This happens the first time when using catkin_pip in workspace
-    string(FIND "$ENV{PYTHONPATH}" ${config_prefix}/@CATKIN_GLOBAL_PYTHON_DESTINATION@ FOUND_PPATH)
     string(FIND "$ENV{PYTHONPATH}" ${config_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@ FOUND_PPPATH)
+    string(FIND "$ENV{PYTHONPATH}" ${CATKIN_DEVEL_PREFIX}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@ FOUND_WPPPATH)
     string(FIND "$ENV{PATH}" ${config_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@ FOUND_SPATH)
 
     if ( ( FOUND_PPATH LESS 0 ) OR ( FOUND_PPPATH LESS 0 ) OR ( FOUND_SPATH LESS 0 ) )
@@ -23,14 +23,15 @@ macro(catkin_pip_check_env config_prefix)
         "Quick patch will be applied to the current cmake process environment."
         )
 
-        if ( FOUND_PPATH LESS 0 )
-            message(STATUS "Adding ${config_prefix}/@CATKIN_GLOBAL_PYTHON_DESTINATION@ to PYTHONPATH")
-            set(ENV{PYTHONPATH} "${config_prefix}/@CATKIN_GLOBAL_PYTHON_DESTINATION@:$ENV{PYTHONPATH}")
-        endif()
-
         if ( FOUND_PPPATH LESS 0 )
             message(STATUS "Adding ${config_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@ to PYTHONPATH")
             set(ENV{PYTHONPATH} "${config_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@:$ENV{PYTHONPATH}")
+        endif()
+
+        # We also need to put the site-packages from the devel workspace in the path to get it ready to use by packages
+        if ( FOUND_WPPPATH LESS 0 )
+            message(STATUS "Adding ${CATKIN_DEVEL_PREFIX}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@ to PYTHONPATH")
+            set(ENV{PYTHONPATH} "${CATKIN_DEVEL_PREFIX}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@:$ENV{PYTHONPATH}")
         endif()
 
         if ( FOUND_SPATH LESS 0 )

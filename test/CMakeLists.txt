@@ -13,7 +13,8 @@ add_subdirectory(catkin_pip)
 
 # include the extras (as a catkin components / find_package() would normally do)
 # Just because we need to install pip requirements here
-include(${CATKIN_DEVEL_PREFIX}/share/catkin_pip/cmake/catkin-pip-requirements.cmake)
+include(${CATKIN_DEVEL_PREFIX}/share/catkin_pip/cmake/catkin-pip.cmake)
+# note : including only the catkin-pip-requirements cmake here will break because some required variables are not set
 
 # We need to install the common pip dependencies in the workspace being created
 # For now we ignore existing platform setup. (might not be best choice ?)

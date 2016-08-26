@@ -9,8 +9,8 @@
 # Note : We should enable site-package only on devel space.
 # Install space should behave like packages, everything in debian layout.
 
-# We combine our workspace path with site-packages (pip default) location, before attempting to prepend to the python path
+# We combine our build path (catkin_pip_env) with site-packages (pip default) location, before attempting to prepend to the python path
 # Careful : echo is only possible if we are in a bash script (not used by env.sh)
-#echo "Prepending @CATKIN_DEVEL_PREFIX@/lib/python2.7/site-packages to PYTHONPATH"
+#echo "Prepending @CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ to PYTHONPATH"
 
-export PYTHONPATH=$("$(rospack find catkin_pip)/scripts/pythonpath_prepend.bash" "@CATKIN_DEVEL_PREFIX@/lib/python2.7/site-packages")
+export PYTHONPATH=$("$(rospack find catkin_pip)/scripts/pythonpath_prepend.bash" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@")

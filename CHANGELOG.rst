@@ -2,6 +2,38 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.11 (2016-08-11)
+-------------------
+* added description of the catkin_pip build flow
+* we might not need the install envhook after all.
+  correct setuptools is found via path in install script.
+  correct tools for test or other should be found via path in generated scripts, and used via catkin/make commands.
+* added warning in pycharm setup doc.
+* added first draft of pycharm setup doc
+* improved workflow doc with pointer to example package repos.
+* adding documentation for 3 ros-python workflows enabled by catkin_pip
+* improving documentation
+* disabling tests check from travis on install since mypippkg doesnt have any yet.
+* fixing travis_checks to run our pytest version from catkin_pip_env
+* cleaning up doc, installing ros-base in travis install step.
+* adding specific script for travis checks.
+  added basic doc structure.
+* new travis build flow to split devel and install flow and avoid one unwanted interferences.
+* Contributors: alexv
+
+0.1.10 (2016-08-09)
+-------------------
+* added rospack dependency
+* (Re)adding site-packages folder creation in devel workspace.
+* setup of catkin_pip environment also adds the workspace site-packages to the python path to get it ready for use, even if envhook was not used before.
+* Merge pull request `#28 <https://github.com/asmodehn/catkin_pip/issues/28>`_ from asmodehn/separate_catkin_pip_env
+  separating catkin_pip environment with workspace environment.
+* making sure env-hooks have all variables setup before adding.
+* separating catkin_pip environment with workspace environment.
+  added envhook for loading caktin_pip env on installspace.
+  removing install script for python on windows for now (outdated).
+* Contributors: AlexV, alexv
+
 0.1.9 (2016-06-24)
 ------------------
 * fixed site_packages env-hook.
