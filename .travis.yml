@@ -49,7 +49,7 @@ script:
   - docker ps -a
   - docker exec -ti ${CONTAINER_NAME} /bin/bash -c "source /opt/ros/$CI_ROS_DISTRO/setup.bash && rospack profile"
   # Passing env vars here since passing in docker run currently breaks (2016-08-25)
-  - docker exec -ti ${CONTAINER_NAME} /bin/bash -c "export CI_ROS_DISTRO=$CI_ROS_DISTRO && export ROS_FLOW=$ROS_FLOW && /git_clone/travis_checks.sh"
+  - docker exec -ti ${CONTAINER_NAME} /bin/bash -c "export CI_ROS_DISTRO=$CI_ROS_DISTRO && export ROS_FLOW=$ROS_FLOW && /git_clone/travis_checks.bash"
   - docker stop "${CONTAINER_ID}"
 
 notifications:
