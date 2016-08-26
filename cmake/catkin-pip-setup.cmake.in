@@ -1,5 +1,15 @@
 message(STATUS "Loading catkin-pip-setup.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
 
+if ( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
+	message ( FATAL_ERROR " CMAKE MINIMUM BACKWARD COMPATIBILITY REQUIRED : 2.8 !" )
+endif( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
+
+# Enforcing one time include https://cmake.org/Wiki/CMake_Performance_Tips#Use_an_include_guard
+if(catkin_pip_setup_included)
+  return()
+endif(catkin_pip_setup_included)
+set(catkin_pip_setup_included true)
+
 # protecting against missing cmake file
 include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-env.cmake" RESULT_VARIABLE CATKIN_PIP_ENV_FOUND )
 IF ( NOT CATKIN_PIP_ENV_FOUND )
@@ -22,7 +32,7 @@ ENDIF ( NOT CATKIN_PIP_PREFIX_FOUND )
 # These are set on include time by catkin-pip and point to catkin-pip folders
 if ( NOT CATKIN_PIP_TEMPLATES_PATH )
     # templates should found relative to our current path
-    set (CATKIN_PIP_TEMPLATES_PATH ${CMAKE_CURRENT_LIST_DIR}/templates)
+    set (CATKIN_PIP_TEMPLATES_PATH ${CMAKE_CURRENT_LIST_DIR}/templates CACHE PATH "templates path")
 endif()
 
 # We are replacing catkin's python_setup functionality
@@ -67,7 +77,7 @@ function(catkin_pip_python_setup)
 
 endfunction()
 
-macro(catkin_pip_setup)
+function(catkin_pip_setup)
 
     set (extra_macro_args ${ARGN})
 
@@ -100,4 +110,4 @@ macro(catkin_pip_setup)
     # Hijacking catkin scripts again
     #set(_PACKAGE_XML_DIRECTORY ${package_path})
 
-endmacro()
+endfunction()

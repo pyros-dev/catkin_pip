@@ -34,7 +34,7 @@ ENDIF ( NOT CATKIN_PIP_NOSETESTS_FOUND )
 function(catkin_add_pytests path)
   _warn_if_skip_testing("catkin_add_pytests")
 
-  if(NOT PIP_PYTEST)
+  if(NOT CATKIN_PIP_PYTEST)
     message(WARNING "skipping pytests(${path}) in project '${PROJECT_NAME}'")
     return()
   endif()
@@ -79,13 +79,13 @@ function(catkin_add_pytests path)
   get_filename_component(output_path "${output_path}" ABSOLUTE)
   set(cmd "${CMAKE_COMMAND} -E make_directory ${output_path}")
   set(tests "${_path_name}")
-  set(cmd ${cmd} "PYTHONPATH=$ENV{PYTHONPATH} ${PIP_PYTEST} --timeout=${_pytest_TIMEOUT} ${tests} --junit-xml ${output_path}/pytests-${output_file_name}.xml ${_covarg}")
+  set(cmd ${cmd} "PYTHONPATH=$ENV{PYTHONPATH} ${CATKIN_PIP_PYTEST} --timeout=${_pytest_TIMEOUT} ${tests} --junit-xml ${output_path}/pytests-${output_file_name}.xml ${_covarg}")
   catkin_run_tests_target("pytests" ${output_file_name} "pytests-${output_file_name}.xml" COMMAND ${cmd} DEPENDENCIES ${_pytest_DEPENDENCIES} WORKING_DIRECTORY ${_pytest_WORKING_DIRECTORY})
 endfunction()
 
 # Providing another catkin pytests usage...
 # now we can finally use the simple "py.test" entry_point (forcing cmake to find it)
-find_program(PIP_PYTEST NAMES
+find_program(CATKIN_PIP_PYTEST NAMES
   "py.test${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}"
   "py.test-${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}"
   "py.test${PYTHON_VERSION_MAJOR}"
@@ -95,8 +95,8 @@ find_program(PIP_PYTEST NAMES
   ${CATKIN_PIP_ENV}/@CATKIN_GLOBAL_BIN_DESTINATION@
   NO_DEFAULT_PATH
 )
-if(PIP_PYTEST)
-  message(STATUS "Catkin_pip using Python py.test: ${PIP_PYTEST}")
+if(CATKIN_PIP_PYTEST)
+  message(STATUS "Catkin_pip using Python py.test: ${CATKIN_PIP_PYTEST}")
 else()
   message(FATAL_ERROR "Catkin_pip py.test command not found in ${CATKIN_DEVEL_PREFIX}/@CATKIN_GLOBAL_BIN_DESTINATION@. Make sure you have installed the pytest pip package on your ${CATKIN_DEVEL_PREFIX} workspace.")
 endif()

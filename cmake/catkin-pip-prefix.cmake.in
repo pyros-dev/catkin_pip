@@ -1,13 +1,20 @@
 message(STATUS "Loading catkin-pip-prefix.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
 
+if ( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
+	message ( FATAL_ERROR " CMAKE MINIMUM BACKWARD COMPATIBILITY REQUIRED : 2.8 !" )
+endif( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
+
 #
 # Important : This script is included by multiple cmake scripts at configure and build time
 # So it needs to be idempotent (no change if called multiple time with same settings/environment)
 #
 
-if ( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
-	message ( FATAL_ERROR " CMAKE MINIMUM BACKWARD COMPATIBILITY REQUIRED : 2.8 !" )
-endif( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
+# Enforcing one time include https://cmake.org/Wiki/CMake_Performance_Tips#Use_an_include_guard
+if(catkin_pip_prefix_included)
+  return()
+endif(catkin_pip_prefix_included)
+set(catkin_pip_prefix_included true)
+
 
 # protecting against missing cmake file
 include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-env.cmake" RESULT_VARIABLE CATKIN_PIP_ENV_FOUND )
@@ -23,10 +30,10 @@ ENDIF ( NOT CATKIN_PIP_RUNCMD_FOUND )
 
 if ( NOT CATKIN_PIP_REQUIREMENTS_PATH )
     # Our current path is where all catkin-pip requirements should be
-    set (CATKIN_PIP_REQUIREMENTS_PATH ${CMAKE_CURRENT_LIST_DIR})
+    set (CATKIN_PIP_REQUIREMENTS_PATH ${CMAKE_CURRENT_LIST_DIR} CACHE PATH "where all catkin-pip requirements should be")
 endif()
 
-macro(catkin_pip_setup_prefix ws_prefix)
+function(catkin_pip_setup_prefix ws_prefix)
 
     # Setting up our environment (for devel space only)
     catkin_pip_check_env(${ws_prefix})
@@ -104,4 +111,4 @@ macro(catkin_pip_setup_prefix ws_prefix)
         endif()
 
     endif()
-endmacro()
+endfunction()
