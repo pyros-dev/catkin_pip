@@ -32,7 +32,7 @@ ENDIF ( NOT CATKIN_PIP_SETUP_FOUND )
 
 # Setting our paths to package env-hooks provided by catkin-pip
 if ( NOT CATKIN_PIP_ENV_HOOKS_PATH )
-    # templates should found relative to our current path
+    # templates should be found relative to our current path
     set (CATKIN_PIP_ENV_HOOKS_PATH ${CMAKE_CURRENT_LIST_DIR}/env-hooks)
 endif()
 
@@ -42,11 +42,15 @@ set(CATKIN_PIP_ENV ${CMAKE_BINARY_DIR}/catkin_pip_env CACHE PATH "The path conta
 set(CATKIN_PIP_NO_DEPS True CACHE BOOL "Whether we want to retrieve python dependencies and requirements for packages" )
 set(CATKIN_PIP_PYTHON_INSTALL_DIR @CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@ CACHE PATH "Where catkin pip install python packages")
 
-# Since we need the envhook as soon as a package is using catkin-pip from source, but only in devel space.
+# Since we need the envhook as soon as a package is using catkin-pip from source.
+# TODO : investigate, maybe we can simplify this by using CATKIN_ENV
+catkin_add_env_hooks(42.site_packages SHELLS sh DIRECTORY ${CATKIN_PIP_ENV_HOOKS_PATH} SKIP_INSTALL)
+# TODO : validate if we need both ?
 catkin_add_env_hooks(42.site_packages SHELLS bash DIRECTORY ${CATKIN_PIP_ENV_HOOKS_PATH} SKIP_INSTALL)
 # SKIP_INSTALL because we definitely do not want it ending up in all deb packages built with catkin_pip.
 # If we need paths in install space, they should somehow be stored in generated scripts (make or others)
-# TODO : cmake should include this file only once, so the env hook is not recreated for every package that includes it, even in devel...
+# TODO : cmake should include this file only once per workspace, so the env hook is not recreated for every package that uses catkin_pip if they are in same workspace...
+
 
 # Setting up catkin prefix in catkin_pip_env
 catkin_pip_setup_prefix(${CATKIN_PIP_ENV})

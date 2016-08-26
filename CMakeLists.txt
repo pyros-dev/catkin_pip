@@ -31,6 +31,7 @@ catkin_package(
 # to be found in devel space
 configure_file(cmake/catkin-pip-base.req ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/catkin-pip-base.req COPYONLY)
 configure_file(cmake/catkin-pip-fixups.req ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/catkin-pip-fixups.req COPYONLY)
+configure_file(cmake/env-hooks/42.site_packages.sh.develspace.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/env-hooks/42.site_packages.sh.develspace.in COPYONLY)
 configure_file(cmake/env-hooks/42.site_packages.bash.develspace.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/env-hooks/42.site_packages.bash.develspace.in COPYONLY)
 #configure_file(cmake/templates/python_setuptools_install.bat.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/templates/python_setuptools_install.bat.in COPYONLY)
 configure_file(cmake/templates/python_setuptools_install.sh.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/templates/python_setuptools_install.sh.in COPYONLY)
@@ -51,6 +52,7 @@ install(PROGRAMS
 
 # We install in cmake folder the files that are needed by cmake code
 install(FILES
+    cmake/env-hooks/42.site_packages.sh.develspace.in
     cmake/env-hooks/42.site_packages.bash.develspace.in
     DESTINATION
     ${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/env-hooks
