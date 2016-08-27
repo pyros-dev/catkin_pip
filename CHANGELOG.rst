@@ -2,6 +2,46 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.12 (2016-08-27)
+-------------------
+* Merge pull request `#40 <https://github.com/asmodehn/catkin_pip/issues/40>`_ from asmodehn/env_hooks
+  Env hooks
+* Merge pull request `#39 <https://github.com/asmodehn/catkin_pip/issues/39>`_ from asmodehn/include_seq
+  preventing multiple includes, reviewing variable scope.
+* preventing multiple includes, reviewing variable scope.
+* Merge branch 'devel' of https://github.com/asmodehn/catkin_pip into env_hooks
+  # Conflicts:
+  #	CMakeLists.txt
+  #	cmake/catkin-pip.cmake.in
+  #	cmake/env-hooks/42.site_packages.bash.develspace.in
+* Updated README
+* Merge pull request `#33 <https://github.com/asmodehn/catkin_pip/issues/33>`_ from asmodehn/install_no_deps
+  first implementation of --no-deps to no install a package dependencie…
+* Merge pull request `#35 <https://github.com/asmodehn/catkin_pip/issues/35>`_ from asmodehn/kinetic-devel
+  fixing pip upgrade for kinetic, based on ROS_DISTRO env var.
+* requirements now correctly loading catkin-pip build/catkin_pip_env.
+  now avoiding to load catkin-pip-requirements by itself.
+* fixing check of envvar ROS_DISTRO from cmake configure to decide which pip command to run
+* fixing rospack call. passing travis matrix env vars via shell command since docker run vars break on exec call.
+* now passing travis matrix env vars to container.
+* adding apt-get update call. also install sudo as not installed by default on xenial and required by rosdep.
+  cosmetics
+* using docker cp instead of volume to workaround docker/travis bug.
+* removing volume to $HOME in case it is the cause of docker breaks.
+* travis_checks script now change to its directory as first step.
+  fixed some docker commands.
+* fixing ros image name, container_name.
+  added rosdep comand to get dependencies.
+* changing travis to use docker to test multiple distro.
+* fixing pip upgrade for kinetic, based on ROS_DISTRO env var.
+* Restructured documentation
+* started new doc structure
+* documentation improvements
+* adding doc as reference for basic catkin build release flow
+* first implementation of --no-deps to no install a package dependencies via pip. helps confirm rosdep dependencies
+* now using simplified sh env_hook
+* Contributors: AlexV, alexv
+
 0.1.11 (2016-08-11)
 -------------------
 * added description of the catkin_pip build flow
