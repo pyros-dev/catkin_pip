@@ -40,7 +40,13 @@ endif()
 # to use latest versions python tools in both.
 set(CATKIN_PIP_ENV ${CMAKE_BINARY_DIR}/catkin_pip_env CACHE PATH "The path containing the python environment for catkin_pip dependencies" )
 set(CATKIN_PIP_NO_DEPS True CACHE BOOL "Whether we want to retrieve python dependencies and requirements for packages" )
-set(CATKIN_PIP_PYTHON_INSTALL_DIR @CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@ CACHE PATH "Where catkin pip install python packages")
+set(CATKIN_PIP_PYTHON_INSTALL_DIR @CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@)
+
+# These are set on include time by catkin-pip and point to catkin-pip folders
+if ( NOT CATKIN_PIP_SCRIPTS_PATH )
+    # templates should found relative to our current path
+    set (CATKIN_PIP_SCRIPTS_PATH ${CMAKE_CURRENT_LIST_DIR}/scripts CACHE PATH "scripts path")
+endif()
 
 # Since we need the envhook as soon as a package is using catkin-pip from source.
 # TODO : investigate, maybe we can simplify this by using CATKIN_ENV

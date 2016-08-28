@@ -13,4 +13,4 @@
 # Careful : echo is only possible if we are in a bash script (not used by env.sh)
 #echo "Prepending @CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ to PYTHONPATH"
 
-export PYTHONPATH=$("$(rospack find catkin_pip)/scripts/pythonpath_prepend.bash" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@")
+export PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/pythonpath_prepend.bash" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@")
