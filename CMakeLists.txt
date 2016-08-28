@@ -46,7 +46,7 @@ install(FILES
 )
 
 install(PROGRAMS
-    scripts/pythonpath_prepend.bash
+    cmake/scripts/pythonpath_prepend.bash
     DESTINATION
     ${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/scripts
 )
