@@ -2,8 +2,8 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.13 (2016-08-28)
+-------------------
 * fixing install rule for moved script.
 * getting rid of rospack dependency. didnt always work.
   moved pythonpath_prepend shell script to use it via cmake variable.
