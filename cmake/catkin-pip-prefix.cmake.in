@@ -33,6 +33,51 @@ if ( NOT CATKIN_PIP_REQUIREMENTS_PATH )
     set (CATKIN_PIP_REQUIREMENTS_PATH ${CMAKE_CURRENT_LIST_DIR} CACHE PATH "where all catkin-pip requirements should be")
 endif()
 
+function(find_catkin_system_pip)
+  # we need to make sure we don't find any other catkin-pip from somewhere else if our path is not clean (careful with underlays or install/devel)
+  find_program(CATKIN_SYS_PIP NAMES pip pip2 pip2.7 NO_CMAKE_PATH NO_CMAKE_ENVIRONMENT_PATH NO_SYSTEM_ENVIRONMENT_PATH)
+
+  if(CATKIN_SYS_PIP)
+    set(PIP_VERSION_COMMAND ${CATKIN_SYS_PIP} --version)
+
+    string(REPLACE ";" " " PIP_VERSION_CMDSTR "${PIP_VERSION_COMMAND}")
+    message(STATUS "    ... Running ${PIP_VERSION_CMDSTR} ...")
+
+    execute_process(
+      COMMAND ${PIP_VERSION_COMMAND}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      RESULT_VARIABLE PIP_VERSION_RESULT
+      OUTPUT_VARIABLE PIP_VERSION_VARIABLE
+      ERROR_VARIABLE PIP_VERSION_ERROR
+    )
+
+    message(STATUS "    ... Done ... [${PIP_VERSION_RESULT}]: ${PIP_VERSION_VARIABLE}")
+    if (PIP_VERSION_RESULT)
+        message(STATUS "Command ${PIP_VERSION_CMDSTR} FAILED !")
+        message(FATAL_ERROR "${PIP_VERSION_ERROR}")
+    else()
+        # we need to parse the result to extract the version
+        string(REPLACE " " ";" PIP_VERSION_VARIABLE_LIST ${PIP_VERSION_VARIABLE})
+        list(GET PIP_VERSION_VARIABLE_LIST 1 CATKIN_SYS_PIP_VERSION)
+        set (CATKIN_SYS_PIP_VERSION ${CATKIN_SYS_PIP_VERSION} CACHE STRING "Major version of pip detected on the system")
+
+        message(STATUS "    System pip version detected : ${CATKIN_SYS_PIP_VERSION}")
+
+        string(REPLACE "." ";" VERSION_LIST ${CATKIN_SYS_PIP_VERSION})
+        list(GET VERSION_LIST 0 CATKIN_SYS_PIP_VERSION_MAJOR)
+        set(CATKIN_SYS_PIP_VERSION_MAJOR ${CATKIN_SYS_PIP_VERSION_MAJOR} CACHE STRING "Major version of pip detected on the system" )
+        list(GET VERSION_LIST 1 CATKIN_SYS_PIP_VERSION_MINOR)
+        set(CATKIN_SYS_PIP_VERSION_MINOR ${CATKIN_SYS_PIP_VERSION_MINOR} CACHE STRING "Minor version of pip detected on the system" )
+        list(GET VERSION_LIST 2 CATKIN_SYS_PIP_VERSION_PATCH)
+        set(CATKIN_SYS_PIP_VERSION_PATCH ${CATKIN_SYS_PIP_VERSION_PATCH} CACHE STRING "Patch version of pip detected on the system" )
+    endif()
+  else(CATKIN_SYS_PIP)
+    message( FATAL_ERROR "pip system command not found. Make sure you have installed the python-pip package on your system.")
+  endif()
+
+endfunction(find_catkin_system_pip)
+
+
 function(catkin_pip_setup_prefix ws_prefix)
 
     # Setting up our environment (for devel space only)
@@ -51,15 +96,12 @@ function(catkin_pip_setup_prefix ws_prefix)
         message(STATUS "    ... Catkin pip was not found in ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@ ...")
         # Assuming Ubuntu Trusty here. platform detection is another hurdle
         set(CMAKE_SYSTEM_PREFIX_PATH / /usr /usr/local)
-        find_program(CATKIN_SYS_PIP NAMES pip pip2 pip2.7 NO_CMAKE_PATH NO_CMAKE_ENVIRONMENT_PATH NO_SYSTEM_ENVIRONMENT_PATH)  # we need to make sure we don't find any other catkin-pip from somewhere else if our path is not clean (careful with underlays or install/devel)
-        if(NOT CATKIN_SYS_PIP)
-            message( FATAL_ERROR "pip system command not found. Make sure you have installed the python-pip package on your system.")
-        endif()
 
-        message(STATUS "    ... Retrieving catkin_pip requirements using system pip for $ENV{ROS_DISTRO} ...")
+        find_catkin_system_pip()
 
-        # TODO : a better way is to actually retrieve the pip version (calling 'pip --version')
-        if ($ENV{ROS_DISTRO} STREQUAL "indigo" OR $ENV{ROS_DISTRO} STREQUAL "jade")  # assuming trusty system pip
+        message(STATUS "    ... Retrieving catkin_pip requirements using system pip ...")
+
+        if (${CATKIN_SYS_PIP_VERSION} VERSION_LESS 7.0.0)
             # We need to find a pip command that works for old pip versions (indigo supports trusty which is pip v1.5.4)
             # Note --target here means we cannot check if a package is already installed or not before installing, using old pip.
             # which means we have to reinstall dependencies everytime and specify --exists-action w to avoid "already exists" errors
@@ -76,7 +118,7 @@ function(catkin_pip_setup_prefix ws_prefix)
                 message(STATUS "Command ${CATKIN_SYS_PIP} install -r \"${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req\" --download-cache \"${CMAKE_BINARY_DIR}/pip-cache\" --target \"${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@\" --exists-action w FAILED")
                 message(FATAL_ERROR "${PIP_ERROR}")
             endif()
-        elseif ($ENV{ROS_DISTRO} STREQUAL "kinetic")  # assuming xenial system pip
+        else ()  # assuming latest pip
             # We need to find a pip command that works for pip versions (kinetic supports xenial which is pip v8.1.1)
             execute_process(
               COMMAND ${CATKIN_SYS_PIP} -q install --system -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req" --cache-dir "${CMAKE_BINARY_DIR}/pip-cache" --target "${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@" --exists-action w
