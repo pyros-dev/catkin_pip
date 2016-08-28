@@ -120,6 +120,7 @@ function(catkin_pip_setup_prefix ws_prefix)
             endif()
         else ()  # assuming latest pip
             # We need to find a pip command that works for pip versions (kinetic supports xenial which is pip v8.1.1)
+            # Careful --system is a debian porting extension. This will not work if the system pip command loads the pip package of pip itself, after the environment has been setup...
             execute_process(
               COMMAND ${CATKIN_SYS_PIP} -q install --system -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req" --cache-dir "${CMAKE_BINARY_DIR}/pip-cache" --target "${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@" --exists-action w
               WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
