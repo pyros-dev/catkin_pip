@@ -33,6 +33,94 @@ if ( NOT CATKIN_PIP_REQUIREMENTS_PATH )
     set (CATKIN_PIP_REQUIREMENTS_PATH ${CMAKE_CURRENT_LIST_DIR} CACHE PATH "where all catkin-pip requirements should be")
 endif()
 
+function(find_catkin_system_pip)
+  # we need to make sure we don't find any other catkin-pip from somewhere else if our path is not clean (careful with underlays or install/devel)
+  find_program(CATKIN_SYS_PIP NAMES pip pip2 pip2.7 NO_CMAKE_PATH NO_CMAKE_ENVIRONMENT_PATH NO_SYSTEM_ENVIRONMENT_PATH)
+
+  if(CATKIN_SYS_PIP)
+    set(PIP_VERSION_COMMAND ${CATKIN_SYS_PIP} --version)
+
+    string(REPLACE ";" " " PIP_VERSION_CMDSTR "${PIP_VERSION_COMMAND}")
+    #message(STATUS "    ... Running ${PIP_VERSION_CMDSTR} ...")
+
+    execute_process(
+      COMMAND ${PIP_VERSION_COMMAND}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      RESULT_VARIABLE PIP_VERSION_RESULT
+      OUTPUT_VARIABLE PIP_VERSION_VARIABLE
+      ERROR_VARIABLE PIP_VERSION_ERROR
+    )
+
+    #message(STATUS "    ... Done ... [${PIP_VERSION_RESULT}]: ${PIP_VERSION_VARIABLE}")
+    if (PIP_VERSION_RESULT)
+        message(STATUS "System Introspection Command ${PIP_VERSION_CMDSTR} FAILED !")
+        message(FATAL_ERROR "${PIP_VERSION_ERROR}")
+    else()
+        # we need to parse the result to extract the version
+        string(REPLACE " " ";" PIP_VERSION_VARIABLE_LIST ${PIP_VERSION_VARIABLE})
+        list(GET PIP_VERSION_VARIABLE_LIST 1 CATKIN_SYS_PIP_VERSION)
+        set (CATKIN_SYS_PIP_VERSION ${CATKIN_SYS_PIP_VERSION} CACHE INTERNAL "Major version of pip detected on the system")
+
+        message(STATUS "    System pip version detected : ${CATKIN_SYS_PIP_VERSION}")
+
+    endif()
+
+    # Detecting debian pip "--system" extension
+    # ros@ros-Kinetic-VM:~/Project$ pip install --help | grep -e "--system"
+    #  --system                    Install using the system scheme (overrides --user on Debian systems)
+    # ros@ros-Kinetic-VM:~/Project$ pip install --help | grep -e "--system" | wc -l
+    # 1
+
+    set(PIP_INSTALL_HELP_COMMAND ${CATKIN_SYS_PIP} install --help)
+
+    string(REPLACE ";" " " PIP_INSTALL_HELP_CMDSTR "${PIP_VERSION_COMMAND}")
+    #message(STATUS "    ... Running ${PIP_INSTALL_HELP_CMDSTR} ...")
+
+    execute_process(
+      COMMAND ${PIP_INSTALL_HELP_COMMAND}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      RESULT_VARIABLE PIP_INSTALL_HELP_RESULT
+      OUTPUT_VARIABLE PIP_INSTALL_HELP_VARIABLE
+      ERROR_VARIABLE PIP_INSTALL_HELP_ERROR
+    )
+
+    #message(STATUS "    ... Done ... [${PIP_INSTALL_HELP_RESULT}]: ${PIP_INSTALL_HELP_VARIABLE}")
+    if (PIP_INSTALL_HELP_RESULT)
+        message(STATUS "System Introspection Command ${PIP_INSTALL_HELP_CMDSTR} FAILED !")
+        message(FATAL_ERROR "${PIP_INSTALL_HELP_ERROR}")
+    else()
+        message(STATUS "    System pip install detected options : ")
+        string(REPLACE "\n" ";" PIP_INSTALL_HELP_VARIABLE_LIST ${PIP_INSTALL_HELP_VARIABLE})
+
+        # CMake list search
+        foreach(line IN LISTS PIP_INSTALL_HELP_VARIABLE_LIST)
+            # message("LINE : ${line}")
+            # parsing line by line to extract available options
+            string(REPLACE " " ";" line_list ";${line};")
+
+            list (FIND line_list "--user" _index)
+            if (${_index} GREATER -1)
+                message(STATUS "      --user")
+                set(CATKIN_SYS_PIP_HAS_USER TRUE CACHE INTERNAL "Whether detected system pip can do 'pip install --user'" )
+            endif()
+
+            list (FIND line_list "--system" _index)
+            if (${_index} GREATER -1)
+                message(STATUS "      --system")
+                set(CATKIN_SYS_PIP_HAS_SYSTEM TRUE CACHE INTERNAL "Whether detected system pip can do 'pip install --system'" )
+            endif()
+
+        endforeach()
+
+    endif()
+
+  else(CATKIN_SYS_PIP)
+    message( FATAL_ERROR "pip system command not found. Make sure you have installed the python-pip package on your system.")
+  endif()
+
+endfunction(find_catkin_system_pip)
+
+
 function(catkin_pip_setup_prefix ws_prefix)
 
     # Setting up our environment (for devel space only)
@@ -51,21 +139,26 @@ function(catkin_pip_setup_prefix ws_prefix)
         message(STATUS "    ... Catkin pip was not found in ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@ ...")
         # Assuming Ubuntu Trusty here. platform detection is another hurdle
         set(CMAKE_SYSTEM_PREFIX_PATH / /usr /usr/local)
-        find_program(CATKIN_SYS_PIP NAMES pip pip2 pip2.7 NO_CMAKE_PATH NO_CMAKE_ENVIRONMENT_PATH NO_SYSTEM_ENVIRONMENT_PATH)  # we need to make sure we don't find any other catkin-pip from somewhere else if our path is not clean (careful with underlays or install/devel)
-        if(NOT CATKIN_SYS_PIP)
-            message( FATAL_ERROR "pip system command not found. Make sure you have installed the python-pip package on your system.")
-        endif()
 
-        message(STATUS "    ... Retrieving catkin_pip requirements using system pip for $ENV{ROS_DISTRO} ...")
+        find_catkin_system_pip()
 
-        # TODO : a better way is to actually retrieve the pip version (calling 'pip --version')
-        if ($ENV{ROS_DISTRO} STREQUAL "indigo" OR $ENV{ROS_DISTRO} STREQUAL "jade")  # assuming trusty system pip
+        message(STATUS "    ... Retrieving catkin_pip requirements using system pip ...")
+
+        if (${CATKIN_SYS_PIP_VERSION} VERSION_LESS 6.0.0)
+            if(${CATKIN_SYS_PIP_HAS_SYSTEM})
+                # if --system is present, it means the default behavior has been changed to --user (by debian/ubuntu)
+                # and we have to specify --system in order to use --target
+                set(OPT_SYSTEM "--system")
+            else(${CATKIN_SYS_PIP_HAS_SYSTEM})
+                set(OPT_SYSTEM "")
+            endif(${CATKIN_SYS_PIP_HAS_SYSTEM})
+
             # We need to find a pip command that works for old pip versions (indigo supports trusty which is pip v1.5.4)
             # Note --target here means we cannot check if a package is already installed or not before installing, using old pip.
             # which means we have to reinstall dependencies everytime and specify --exists-action w to avoid "already exists" errors
             # Avoid --install-option since the setuptools version found will be different the first time and the following times
             execute_process(
-              COMMAND ${CATKIN_SYS_PIP} -q install -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req" --download-cache "${CMAKE_BINARY_DIR}/pip-cache" --target "${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@" --exists-action w
+              COMMAND ${CATKIN_SYS_PIP} -q install ${OPT_SYSTEM} -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req" --download-cache "${CMAKE_BINARY_DIR}/pip-cache" --target "${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@" --exists-action w
               WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
               RESULT_VARIABLE PIP_RESULT
               OUTPUT_VARIABLE PIP_VARIABLE
@@ -73,13 +166,14 @@ function(catkin_pip_setup_prefix ws_prefix)
             )
             message(STATUS "    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}")
             if (PIP_RESULT)
-                message(STATUS "Command ${CATKIN_SYS_PIP} install -r \"${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req\" --download-cache \"${CMAKE_BINARY_DIR}/pip-cache\" --target \"${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@\" --exists-action w FAILED")
+                message(STATUS "Command ${CATKIN_SYS_PIP} install ${OPT_SYSTEM} -r \"${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req\" --download-cache \"${CMAKE_BINARY_DIR}/pip-cache\" --target \"${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@\" --exists-action w FAILED")
                 message(FATAL_ERROR "${PIP_ERROR}")
             endif()
-        elseif ($ENV{ROS_DISTRO} STREQUAL "kinetic")  # assuming xenial system pip
+        else ()  # assuming latest pip
             # We need to find a pip command that works for pip versions (kinetic supports xenial which is pip v8.1.1)
+            # Careful --system is a debian porting extension. This will not work if the system pip command loads the pip package of pip itself, after the environment has been setup...
             execute_process(
-              COMMAND ${CATKIN_SYS_PIP} -q install --system -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req" --cache-dir "${CMAKE_BINARY_DIR}/pip-cache" --target "${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@" --exists-action w
+              COMMAND ${CATKIN_SYS_PIP} -q install ${OPT_SYSTEM} -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req" --cache-dir "${CMAKE_BINARY_DIR}/pip-cache" --target "${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@" --exists-action w
               WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
               RESULT_VARIABLE PIP_RESULT
               OUTPUT_VARIABLE PIP_VARIABLE
@@ -87,14 +181,16 @@ function(catkin_pip_setup_prefix ws_prefix)
             )
             message(STATUS "    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}")
             if (PIP_RESULT)
-                message(STATUS "Command ${CATKIN_SYS_PIP} install --system -r \"${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req\" --cache-dir \"${CMAKE_BINARY_DIR}/pip-cache\" --target \"${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@\" --exists-action w FAILED")
+                message(STATUS "Command ${CATKIN_SYS_PIP} install ${OPT_SYSTEM} -r \"${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req\" --cache-dir \"${CMAKE_BINARY_DIR}/pip-cache\" --target \"${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@\" --exists-action w FAILED")
                 message(FATAL_ERROR "${PIP_ERROR}")
             endif()
         endif()
 
 
         set(CATKIN_PIP python -m pip)  # to make sure we use our recently downloaded pip version (its entrypoints were not installed by old pip/setuptools)
+
         unset(CATKIN_SYS_PIP CACHE)  # we dont need this any longer
+        # We are now using the latest pip from pip package, and not the system one.
 
         # Fixing security since python 2.7.6 on trusty is broken : https://stackoverflow.com/questions/29099404/ssl-insecureplatform-error-when-using-requests-package
         # Also reinstalling pip to finally get it in bin/
