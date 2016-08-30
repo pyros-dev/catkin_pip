@@ -2,6 +2,15 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.14 (2016-08-30)
+-------------------
+* Merge pull request `#44 <https://github.com/asmodehn/catkin_pip/issues/44>`_ from asmodehn/pip_system
+  Now checking for pip --system option before using.
+* Now checking for pip --system option before using.
+  cleanup some cmake status messages.
+* improving pip detection
+* Contributors: AlexV, alexv
+
 0.1.13 (2016-08-28)
 -------------------
 * fixing install rule for moved script.
