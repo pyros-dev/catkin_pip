@@ -62,8 +62,6 @@ catkin_add_env_hooks(42.site_packages SHELLS bash DIRECTORY ${CATKIN_PIP_ENV_HOO
 catkin_pip_setup_prefix(${CATKIN_PIP_ENV})
 
 # Setting up python site-packages directory in devel workspace
-
-message(STATUS "    ... Creating pip packages prefix ...")
 # If needed we create the directory (to avoid later errors)
 # It is required on isolated builds
 file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@)
