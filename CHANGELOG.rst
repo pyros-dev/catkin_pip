@@ -2,6 +2,13 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.15 (2016-09-01)
+-------------------
+* now transferring paths from pth in devel site-packages to pythonpath shell env, to handle egg-link and workspace overlaying together...
+* adding current devel space dist-packages via envhook to get it even if env not sourced... is it a good idea ?
+* officially not supporting broken old pip on EOL saucy.
+* Contributors: AlexV, alexv
+
 0.1.14 (2016-08-30)
 -------------------
 * Merge pull request `#44 <https://github.com/asmodehn/catkin_pip/issues/44>`_ from asmodehn/pip_system
