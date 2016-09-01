@@ -16,6 +16,13 @@
 # We should enable site-package only on devel space.
 # Install space should behave like packages, everything in debian layout.
 
+# Somehow It seems we need to also (re)add dist-packages here to get package tests to work with ROS packages in same workspace
+# Especially when running tests with catkin_pip from source... there seem to be some workflow issue due to catkin cache environment...
+# Anyway it doesnt hurt to have it here as well.
+# this is usual for catkin -> no echo. This might actually be a fix for catkin not setting this before running tests.
+# echo "Prepending @CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@ to PYTHONPATH"
+PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/pythonpath_prepend.bash" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@")
+
 # We combine our devel workspace path with site-packages (pip default) location, before attempting to prepend to the python path
 # Careful : echo is only possible if we are a bash script (not used by env.sh)
 echo "Prepending @CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ to PYTHONPATH"

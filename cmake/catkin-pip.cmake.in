@@ -41,6 +41,7 @@ endif()
 set(CATKIN_PIP_ENV ${CMAKE_BINARY_DIR}/catkin_pip_env CACHE PATH "The path containing the python environment for catkin_pip dependencies" )
 set(CATKIN_PIP_NO_DEPS True CACHE BOOL "Whether we want to retrieve python dependencies and requirements for packages" )
 set(CATKIN_PIP_PYTHON_INSTALL_DIR @CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@)
+set(CATKIN_PYTHON_INSTALL_DIR @CATKIN_GLOBAL_PYTHON_DESTINATION@)
 
 # These are set on include time by catkin-pip and point to catkin-pip folders
 if ( NOT CATKIN_PIP_SCRIPTS_PATH )
