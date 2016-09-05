@@ -25,14 +25,14 @@ PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/pythonpath_prepend.bash" "@CATKIN_DEVEL_
 
 # We combine our devel workspace path with site-packages (pip default) location, before attempting to prepend to the python path
 # Careful : echo is only possible if we are a bash script (not used by env.sh)
-echo "Prepending @CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ to PYTHONPATH"
+# echo "Prepending @CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ to PYTHONPATH"
 PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/pythonpath_prepend.bash" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@")
 
 # Prepending here our easy-install.pth content into PYTHONPATH, for overlayed workspace to get it before the workspace path
 # Python pth/.egg behavior doesnt work well with workspace overlays, based on PYTHONPATH
 if [ -f "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@/easy-install.pth" ];then
     while read p; do
-        echo "Prepending $p to PYTHONPATH"
+        # echo "Prepending $p to PYTHONPATH"
         PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/pythonpath_prepend.bash" "$p")
     done <"@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@/easy-install.pth"
 fi
