@@ -2,6 +2,12 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.16 (2016-09-05)
+-------------------
+* now also checking for --system for pip > 6.0.0.
+* small improvements for travis checks
+* Contributors: AlexV, alexv
+
 0.1.15 (2016-09-01)
 -------------------
 * now transferring paths from pth in devel site-packages to pythonpath shell env, to handle egg-link and workspace overlaying together...
