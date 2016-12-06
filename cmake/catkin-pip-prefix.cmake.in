@@ -144,15 +144,15 @@ function(catkin_pip_setup_prefix ws_prefix)
 
         message(STATUS "    ... Retrieving catkin_pip requirements using system pip ...")
 
-        if (${CATKIN_SYS_PIP_VERSION} VERSION_LESS 6.0.0)
-            if(${CATKIN_SYS_PIP_HAS_SYSTEM})
-                # if --system is present, it means the default behavior has been changed to --user (by debian/ubuntu)
-                # and we have to specify --system in order to use --target
-                set(OPT_SYSTEM "--system")
-            else(${CATKIN_SYS_PIP_HAS_SYSTEM})
-                set(OPT_SYSTEM "")
-            endif(${CATKIN_SYS_PIP_HAS_SYSTEM})
+        if(${CATKIN_SYS_PIP_HAS_SYSTEM})
+            # if --system is present, it means the default behavior has been changed to --user (by debian/ubuntu)
+            # and we have to specify --system in order to use --target
+            set(OPT_SYSTEM "--system")
+        else(${CATKIN_SYS_PIP_HAS_SYSTEM})
+            set(OPT_SYSTEM "")
+        endif(${CATKIN_SYS_PIP_HAS_SYSTEM})
 
+        if (${CATKIN_SYS_PIP_VERSION} VERSION_LESS 6.0.0)
             # We need to find a pip command that works for old pip versions (indigo supports trusty which is pip v1.5.4)
             # Note --target here means we cannot check if a package is already installed or not before installing, using old pip.
             # which means we have to reinstall dependencies everytime and specify --exists-action w to avoid "already exists" errors
