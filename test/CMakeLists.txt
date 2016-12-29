@@ -21,6 +21,7 @@ include(${CATKIN_DEVEL_PREFIX}/share/catkin_pip/cmake/catkin-pip.cmake)
 catkin_pip_requirements(${CMAKE_CURRENT_SOURCE_DIR}/test_requirements.txt --ignore-installed)
 
 message(STATUS "PATH $ENV{PATH}")
+message(STATUS "PYTHONPATH $ENV{PYTHONPATH}")
 
 # Make sure we get the right cookiecutter
 find_program( CATKIN_COOKIECUTTER NAMES cookiecutter PATHS ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_BIN_DESTINATION} NO_DEFAULT_PATH)
@@ -32,7 +33,7 @@ endif()
 
 message(STATUS "    ... Getting cookiecutter-pipproject template from cookiecutter ...")
 execute_process(
-  COMMAND ${CATKIN_COOKIECUTTER} --no-input https://github.com/wdm0006/cookiecutter-pipproject.git
+  COMMAND ${CATKIN_ENV} ${CATKIN_COOKIECUTTER} --no-input https://github.com/wdm0006/cookiecutter-pipproject.git
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pipproject
   RESULT_VARIABLE PIP_RESULT
   OUTPUT_VARIABLE PIP_VARIABLE
@@ -62,6 +63,10 @@ if (CATKIN_ENABLE_TESTING)
     # Nose Tests should work
     ########################
 
+    # Testing project itself
     add_subdirectory(pipproject)
+
+    # Testing environment setup by catkin_pip
+    catkin_add_nosetests(catkin_pip_nosetests)
 
 endif()

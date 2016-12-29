@@ -18,13 +18,14 @@ set(catkin_pip_runcmd_included true)
 
 function(catkin_pip_runcmd)
 
-    set(PIP_PACKAGE_INSTALL_COMMAND ${ARGN})
+    set(CATKIN_PIP_COMMAND ${ARGN})
 
-    string(REPLACE ";" " " PIP_PACKAGE_INSTALL_CMDSTR "${PIP_PACKAGE_INSTALL_COMMAND}")
-    message(STATUS "    ... Running ${PIP_PACKAGE_INSTALL_CMDSTR} ...")
+    string(REPLACE ";" " " CATKIN_PIP_CMDSTR "${CATKIN_ENV} ${CATKIN_PIP_COMMAND}")
+    message(STATUS "    ... Running ${CATKIN_PIP_CMDSTR} ...")
 
     execute_process(
-      COMMAND ${PIP_PACKAGE_INSTALL_COMMAND}
+      # Note we need to use catkin_env to make sure our envhook is properly loaded
+      COMMAND ${CATKIN_ENV} ${CATKIN_PIP_COMMAND}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
       RESULT_VARIABLE PIP_RESULT
       OUTPUT_VARIABLE PIP_VARIABLE
@@ -33,7 +34,7 @@ function(catkin_pip_runcmd)
 
     message(STATUS "    ... Done ... [${PIP_RESULT}]: ${PIP_VARIABLE}")
     if (PIP_RESULT)
-        message(STATUS "Command ${PIP_PACKAGE_INSTALL_CMDSTR} FAILED !")
+        message(STATUS "Command ${CATKIN_PIP_CMDSTR} FAILED !")
         message(FATAL_ERROR "${PIP_ERROR}")
     endif()
 

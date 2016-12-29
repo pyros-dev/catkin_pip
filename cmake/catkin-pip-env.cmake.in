@@ -15,7 +15,7 @@ if(catkin_pip_env_included)
 endif(catkin_pip_env_included)
 set(catkin_pip_env_included true)
 
-function(catkin_pip_check_env config_prefix)
+function(catkin_pip_check_env_OBSOLETE config_prefix)
     # Make sure the catkin python package directory for the workspace is in python path
     # This is only needed if the user didn't source the current workspace setup.bash.
     # This happens the first time when using catkin_pip in workspace
@@ -23,6 +23,7 @@ function(catkin_pip_check_env config_prefix)
     string(FIND "$ENV{PYTHONPATH}" ${CATKIN_DEVEL_PREFIX}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@ FOUND_WPPPATH)
     string(FIND "$ENV{PATH}" ${config_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@ FOUND_SPATH)
 
+    # TODO : instead of this, a proper use of CATKIN_ENV would mak things more stable...
     if ( ( FOUND_PPATH LESS 0 ) OR ( FOUND_PPPATH LESS 0 ) OR ( FOUND_SPATH LESS 0 ) )
         message(AUTHOR_WARNING "Incomplete catkin-pip setup detected."
         "This is expected if you use catkin-pip from source, and did not source the current develspace yet."

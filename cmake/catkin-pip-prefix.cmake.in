@@ -124,7 +124,8 @@ endfunction(find_catkin_system_pip)
 function(catkin_pip_setup_prefix ws_prefix)
 
     # Setting up our environment (for devel space only)
-    catkin_pip_check_env(${ws_prefix})
+    #catkin_pip_check_env(${ws_prefix})
+    # TODO : make this an env hook and use it via CATKIN_ENV
 
     # Trying to find our own pip
     # Careful this creates a CACHE variable that we need to recreate here in case people clean devel without cleaning build
@@ -158,7 +159,7 @@ function(catkin_pip_setup_prefix ws_prefix)
             # which means we have to reinstall dependencies everytime and specify --exists-action w to avoid "already exists" errors
             # Avoid --install-option since the setuptools version found will be different the first time and the following times
             execute_process(
-              COMMAND ${CATKIN_SYS_PIP} -q install ${OPT_SYSTEM} -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req" --download-cache "${CMAKE_BINARY_DIR}/pip-cache" --target "${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@" --exists-action w
+              COMMAND ${CATKIN_ENV} ${CATKIN_SYS_PIP} -q install ${OPT_SYSTEM} -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req" --download-cache "${CMAKE_BINARY_DIR}/pip-cache" --target "${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@" --exists-action w
               WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
               RESULT_VARIABLE PIP_RESULT
               OUTPUT_VARIABLE PIP_VARIABLE
@@ -173,7 +174,7 @@ function(catkin_pip_setup_prefix ws_prefix)
             # We need to find a pip command that works for pip versions (kinetic supports xenial which is pip v8.1.1)
             # Careful --system is a debian porting extension. This will not work if the system pip command loads the pip package of pip itself, after the environment has been setup...
             execute_process(
-              COMMAND ${CATKIN_SYS_PIP} -q install ${OPT_SYSTEM} -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req" --cache-dir "${CMAKE_BINARY_DIR}/pip-cache" --target "${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@" --exists-action w
+              COMMAND ${CATKIN_ENV} ${CATKIN_SYS_PIP} -q install ${OPT_SYSTEM} -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-base.req" --cache-dir "${CMAKE_BINARY_DIR}/pip-cache" --target "${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@" --exists-action w
               WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
               RESULT_VARIABLE PIP_RESULT
               OUTPUT_VARIABLE PIP_VARIABLE
