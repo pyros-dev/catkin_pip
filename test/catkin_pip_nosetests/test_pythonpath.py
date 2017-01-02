@@ -41,6 +41,9 @@ def test_extra_paths():
     if os.path.exists('/opt/ros/indigo/lib/python2.7/dist-packages'):
         assert '/opt/ros/indigo/lib/python2.7/dist-packages' in sys.path, "{p} not in {sp}".format(p='/opt/ros/indigo/lib/python2.7/dist-packages', sp=sys.path)
         # TODO : It seems env_cached.sh append dist-packages path at the end of python_path somehow... We should investigate.
+        # HINT : only sourcing /opt/ros/indigo/setup.bash seems fine (dist-packages added at beginning of sys.path)
+        # HINT : env_cached.sh seems fine... maybe it comes from the way nosetests/py.test is launched ?
+        # HINT : following same process (building and running tests) with rospy_tutorials doesnt show the broken behavior. Something in catkin_pip breaking it ?
         #assert len(sys.path) == len(set(sys.path))  # check unicity of paths
 
     if os.path.exists(os.path.join(ws, 'lib/python2.7/dist-packages')):
