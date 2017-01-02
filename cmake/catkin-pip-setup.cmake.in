@@ -11,12 +11,6 @@ endif(catkin_pip_setup_included)
 set(catkin_pip_setup_included true)
 
 # protecting against missing cmake file
-include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-env.cmake" RESULT_VARIABLE CATKIN_PIP_ENV_FOUND )
-IF ( NOT CATKIN_PIP_ENV_FOUND )
-    message ( FATAL_ERROR "{CMAKE_CURRENT_LIST_DIR}/catkin-pip-env.cmake Not Found !!!" )
-ENDIF ( NOT CATKIN_PIP_ENV_FOUND )
-
-# protecting against missing cmake file
 include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-runcmd.cmake" RESULT_VARIABLE CATKIN_PIP_RUNCMD_FOUND )
 IF ( NOT CATKIN_PIP_RUNCMD_FOUND )
     message ( FATAL_ERROR "{CMAKE_CURRENT_LIST_DIR}/catkin-pip-runcmd.cmake Not Found !!!" )
@@ -43,11 +37,8 @@ function(catkin_pip_python_setup)
     set(CATKIN_PIP_PACKAGE_PATH ${package_path})
 
     # sourcing envhooks to keep coherence between cmake run and shell run (especially for tests)
-    message(AUTHOR_WARNING "$ENV{PYTHONPATH}")
-
-    catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --no-dependencies --prefix "${CATKIN_DEVEL_PREFIX}")
-
-    message(AUTHOR_WARNING "$ENV{PYTHONPATH}")
+    # DUPLICATED with catkin_pip_setup
+    #catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --no-dependencies --prefix "${CATKIN_DEVEL_PREFIX}")
 
     # BEGIN : This is from catkin_python_setup
     # we follow same process but with slightly different scripts

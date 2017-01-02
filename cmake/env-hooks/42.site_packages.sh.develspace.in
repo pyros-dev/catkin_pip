@@ -11,27 +11,27 @@
 
 # Setting up the catkin environment itself
 # This needs to be in a different prefix, to be able to generate an install dir with setuptools, yet clear of any catkin_pip artifacts.
-echo "Inserting @CATKIN_PIP_ENV@/@CATKIN_PYTHON_INSTALL_DIR@ in front of PYTHONPATH"
-PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/pythonpath_prepend.bash" "@CATKIN_PIP_ENV@/@CATKIN_PYTHON_INSTALL_DIR@" )
-echo "Inserting @CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ before @CATKIN_PIP_ENV@/@CATKIN_PYTHON_INSTALL_DIR@ into PYTHONPATH"
-PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/pythonpath_prepend.bash" "@CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" "@CATKIN_PIP_ENV@/@CATKIN_PYTHON_INSTALL_DIR@")
+#echo "Inserting @CATKIN_PIP_ENV@/@CATKIN_PYTHON_INSTALL_DIR@ in front of PYTHONPATH"
+PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_PIP_ENV@/@CATKIN_PYTHON_INSTALL_DIR@" "${PYTHONPATH}")
+#echo "Inserting @CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ before @CATKIN_PIP_ENV@/@CATKIN_PYTHON_INSTALL_DIR@ into PYTHONPATH"
+PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" "${PYTHONPATH}" "@CATKIN_PIP_ENV@/@CATKIN_PYTHON_INSTALL_DIR@")
 
 # Adding bin/ into the path
-echo "Inserting @CATKIN_PIP_ENV@/@CATKIN_GLOBAL_BIN_DESTINATION@ in front of PATH"
-PATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.bash" "@CATKIN_PIP_ENV@/@CATKIN_GLOBAL_BIN_DESTINATION@")
+#echo "Inserting @CATKIN_PIP_ENV@/@CATKIN_GLOBAL_BIN_DESTINATION@ in front of PATH"
+PATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_PIP_ENV@/@CATKIN_GLOBAL_BIN_DESTINATION@" "${PATH}")
 
 # Somehow It seems we need to also (re)add dist-packages here to get package tests to work with ROS packages in same workspace
 # Especially when running tests with catkin_pip from source... there seem to be some workflow issue due to catkin cache environment...
 # Anyway it doesnt hurt to have it here as well.
 # this is usual for catkin -> no echo. This might actually be a fix for catkin not setting this before running tests.
-echo "Inserting @CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@ in front of PYTHONPATH"
-PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/pythonpath_prepend.bash" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@" )
+#echo "Inserting @CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@ in front of PYTHONPATH"
+PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@" "${PYTHONPATH}")
 # Problem : before which workspace ? we might break workspace overlay order here
 
 # We combine our build path (catkin_pip_env) with site-packages (pip default) location, before attempting to prepend to the python path
 # Careful : echo is only possible if we are in a bash script (not used by env.sh)
-echo "Inserting @CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ before @CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@ into PYTHONPATH"
-PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/pythonpath_prepend.bash" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@")
+#echo "Inserting @CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ before @CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@ into PYTHONPATH"
+PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" "${PYTHONPATH}" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@")
 
 # Prepending here our easy-install.pth content into PYTHONPATH, for overlayed workspace to get it before the workspace path
 # Somehow Python pth/.egg behavior doesnt work well with workspace overlays, based on PYTHONPATH.
@@ -39,7 +39,7 @@ PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/pythonpath_prepend.bash" "@CATKIN_DEVEL_
 #if [ -f "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@/easy-install.pth" ];then
 #   while read p; do
 #       #echo "Inserting $p before "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" into PYTHONPATH"
-#       PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/pythonpath_prepend.bash" "$p" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@")
+#       PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "$p" "${PYTHONPATH}" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@")
 #   done <"@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@/easy-install.pth"
 #fi
 

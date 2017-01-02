@@ -31,7 +31,6 @@ endif()
 catkin_package(
   CFG_EXTRAS
   catkin-pip.cmake
-  catkin-pip-env.cmake
   catkin-pip-runcmd.cmake
   catkin-pip-setup.cmake
   catkin-pip-prefix.cmake
@@ -43,8 +42,7 @@ catkin_package(
 # to be found in devel space
 configure_file(cmake/catkin-pip-base.req ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/catkin-pip-base.req COPYONLY)
 configure_file(cmake/catkin-pip-fixups.req ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/catkin-pip-fixups.req COPYONLY)
-configure_file(cmake/scripts/path_prepend.bash ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/scripts/path_prepend.bash COPYONLY)
-configure_file(cmake/scripts/pythonpath_prepend.bash ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/scripts/pythonpath_prepend.bash COPYONLY)
+configure_file(cmake/scripts/path_prepend.sh ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/scripts/path_prepend.sh COPYONLY)
 configure_file(cmake/env-hooks/42.site_packages.sh.installspace.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/env-hooks/42.site_packages.sh.installspace.in COPYONLY)
 configure_file(cmake/env-hooks/42.site_packages.sh.develspace.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/env-hooks/42.site_packages.sh.develspace.in COPYONLY)
 configure_file(cmake/env-hooks/42.site_packages.bash.develspace.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/env-hooks/42.site_packages.bash.develspace.in COPYONLY)
@@ -60,16 +58,15 @@ install(FILES
 )
 
 install(PROGRAMS
-    cmake/scripts/path_prepend.bash
-    cmake/scripts/pythonpath_prepend.bash
+    cmake/scripts/path_prepend.sh
     DESTINATION
     ${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/scripts
 )
 
 # We install in cmake folder the files that are needed by cmake code
 install(FILES
-#TMP
-#    cmake/env-hooks/42.site_packages.sh.develspace.in
+    cmake/env-hooks/42.site_packages.sh.develspace.in
+    cmake/env-hooks/42.site_packages.sh.installspace.in
     cmake/env-hooks/42.site_packages.bash.develspace.in
     DESTINATION
     ${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/env-hooks

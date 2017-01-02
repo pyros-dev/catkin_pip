@@ -22,11 +22,15 @@ cd testbuild
 cmake ../test -DCMAKE_INSTALL_PREFIX=./install
 if [ "$ROS_FLOW" == "devel" ]; then
     make -j1
+    echo PYTHONPATH = $PYTHONPATH
     source devel/setup.bash
     echo PYTHONPATH = $PYTHONPATH
     rospack profile
+    echo PYTHONPATH = $PYTHONPATH
     make -j1 tests
+    echo PYTHONPATH = $PYTHONPATH
     make -j1 run_tests
+    echo PYTHONPATH = $PYTHONPATH
     catkin_test_results .
 elif [ "$ROS_FLOW" == "install" ]; then
     make -j1 install
