@@ -2,6 +2,17 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.17 (2017-01-13)
+-------------------
+* now always ignore-installed when installing requirements.
+* pinned pip to 8.1.2 because of https://github.com/asmodehn/catkin_pip/issues/58
+* Merge pull request `#57 <https://github.com/asmodehn/catkin_pip/issues/57>`_ from asmodehn/devel
+  upgrading gopher_devel
+* Merge pull request `#56 <https://github.com/asmodehn/catkin_pip/issues/56>`_ from asmodehn/gopher-devel
+  drop some echoing
+* drop some echoing
+* Contributors: AlexV, Daniel Stonier, alexv
+
 0.1.16 (2016-09-05)
 -------------------
 * now also checking for --system for pip > 6.0.0.
