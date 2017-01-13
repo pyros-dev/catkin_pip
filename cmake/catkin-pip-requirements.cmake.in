@@ -28,6 +28,6 @@ function(catkin_pip_requirements requirements_txt)
     catkin_pip_setup_prefix(${CATKIN_PIP_ENV})
 
     # runnig the pip command (configure time)
-    catkin_pip_runcmd(${CATKIN_PIP} install ${ARGN} -r ${requirements_txt} --src ${CMAKE_SOURCE_DIR} --exists-action b --prefix "${CATKIN_DEVEL_PREFIX}")
+    catkin_pip_runcmd(${CATKIN_PIP} install ${ARGN} -r ${requirements_txt} --ignore-installed --src ${CMAKE_SOURCE_DIR} --exists-action b --prefix "${CATKIN_DEVEL_PREFIX}")
 
 endfunction()
