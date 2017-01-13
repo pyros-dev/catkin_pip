@@ -2,8 +2,8 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.17 (2017-01-13)
+-------------------
 * now always ignore-installed when installing requirements.
 * pinned pip to 8.1.2 because of https://github.com/asmodehn/catkin_pip/issues/58
 * Merge pull request `#57 <https://github.com/asmodehn/catkin_pip/issues/57>`_ from asmodehn/devel
