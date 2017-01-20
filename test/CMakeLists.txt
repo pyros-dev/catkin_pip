@@ -31,31 +31,68 @@ else()
     message(STATUS "cookiecutter found at ${CATKIN_COOKIECUTTER}")
 endif()
 
-message(STATUS "    ... Getting cookiecutter-pipproject template from cookiecutter ...")
-execute_process(
-  COMMAND ${CATKIN_ENV} ${CATKIN_COOKIECUTTER} --no-input https://github.com/wdm0006/cookiecutter-pipproject.git
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pipproject
-  RESULT_VARIABLE PIP_RESULT
-  OUTPUT_VARIABLE PIP_VARIABLE
-)
-message(STATUS "    ... Done ...")
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pipproject/mypippkg")
+    message(STATUS "    ... Getting cookiecutter-pipproject template from cookiecutter ...")
+    execute_process(
+      COMMAND ${CATKIN_ENV} ${CATKIN_COOKIECUTTER} --no-input https://github.com/wdm0006/cookiecutter-pipproject.git
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pipproject
+      RESULT_VARIABLE PIP_RESULT
+      OUTPUT_VARIABLE PIP_VARIABLE
+    )
+    message(STATUS "    ... Done ...")
+endif()
 
-#
-# Configuring catkin-pip extras from source by ourselves
-# we should reproduce catkin behavior here
-#
-# set (DEVELSPACE True)
-# set (INSTALLSPACE False)
-# configure_file( ../cmake/catkin-pip-setup.cmake.in ${CATKIN_DEVEL_PREFIX}/share/catkin_pip/cmake/catkin-pip-setup.cmake @ONLY)
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pylibrary/python-nameless")
+    message(STATUS "    ... Getting cookiecutter-pylibrary template from cookiecutter ...")
+    execute_process(
+      COMMAND ${CATKIN_ENV} ${CATKIN_COOKIECUTTER} --no-input https://github.com/ionelmc/cookiecutter-pylibrary
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pylibrary
+      RESULT_VARIABLE PIP_RESULT
+      OUTPUT_VARIABLE PIP_VARIABLE
+    )
+    message(STATUS "    ... Done ...")
+endif()
 
-# set (DEVELSPACE False)
-# set (INSTALLSPACE True)
-# configure_file( ../cmake/catkin-pip-setup.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/catkin_generated/installspace/catkin-pip-setup.cmake @ONLY)
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pypackage/python_boilerplate")
+    message(STATUS "    ... Getting cookiecutter-pypackage template from cookiecutter ...")
+    execute_process(
+      COMMAND ${CATKIN_ENV} ${CATKIN_COOKIECUTTER} --no-input https://github.com/audreyr/cookiecutter-pypackage
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pypackage
+      RESULT_VARIABLE PIP_RESULT
+      OUTPUT_VARIABLE PIP_VARIABLE
+    )
+    message(STATUS "    ... Done ...")
+endif()
+
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pypackage-minimal/cookiecutter_pypackage_minimal")
+    message(STATUS "    ... Getting cookiecutter-pypackage-minimal template from cookiecutter ...")
+    execute_process(
+    # TMP : fork to get proper default package name. upstream : https://github.com/kragniz/cookiecutter-pypackage-minimal
+      COMMAND ${CATKIN_ENV} ${CATKIN_COOKIECUTTER} --no-input https://github.com/asmodehn/cookiecutter-pypackage-minimal
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pypackage-minimal
+      RESULT_VARIABLE PIP_RESULT
+      OUTPUT_VARIABLE PIP_VARIABLE
+    )
+    message(STATUS "    ... Done ...")
+endif()
 
 
 #
 # and make sure they still work with catkin by building them all as subprojects
 #
+
+# Testing project itself
+add_subdirectory(pipproject)
+
+# Testing project itself
+add_subdirectory(pylibrary)
+
+# Testing project itself
+add_subdirectory(pypackage)
+
+# Testing project itself
+add_subdirectory(pypackage-minimal)
+
 
 if (CATKIN_ENABLE_TESTING)
 
@@ -63,10 +100,7 @@ if (CATKIN_ENABLE_TESTING)
     # Nose Tests should work
     ########################
 
-    # Testing project itself
-    add_subdirectory(pipproject)
-
     # Testing environment setup by catkin_pip
-    catkin_add_nosetests(catkin_pip_nosetests)
+    catkin_add_pytests(catkin_pip_pytest --build-dir ${CMAKE_BINARY_DIR})
 
 endif()

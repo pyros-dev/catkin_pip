@@ -28,5 +28,6 @@ catkin_package()
 ## Unit tests
 if (CATKIN_ENABLE_TESTING)
     catkin_add_nosetests(${PIP_PROJECT_DIR}/tests)
-    catkin_add_pytests(${PIP_PROJECT_DIR}/tests)
+    # disabling pytest for now since it fails if there is no test detected (no tests implemented at the moment).
+    # catkin_add_pytests(${PIP_PROJECT_DIR}/tests)
 endif()

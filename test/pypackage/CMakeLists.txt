@@ -5,7 +5,7 @@ project(python_boilerplate)
 set (PIP_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/python_boilerplate)
 
 # NEEDED ONLY FOR TESTING INDEPENDENTLY : Setting up catkin-pip from source via symlink
-add_subdirectory(catkin_pip)
+# add_subdirectory(catkin_pip)
 
 find_package(catkin REQUIRED COMPONENTS catkin_pip)
 
