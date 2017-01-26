@@ -25,10 +25,10 @@ IF ( NOT CATKIN_PIP_REQUIREMENTS_FOUND )
 ENDIF ( NOT CATKIN_PIP_REQUIREMENTS_FOUND )
 
 # protecting against missing cmake file dependency
-include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake" RESULT_VARIABLE CATKIN_PIP_SETUP_FOUND )
-IF ( NOT CATKIN_PIP_SETUP_FOUND )
-    message ( FATAL_ERROR "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake Not Found !!!" )
-ENDIF ( NOT CATKIN_PIP_SETUP_FOUND )
+include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-package.cmake" RESULT_VARIABLE CATKIN_PIP_PACKAGE_FOUND )
+IF ( NOT CATKIN_PIP_PACKAGE_FOUND )
+    message ( FATAL_ERROR "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-package.cmake Not Found !!!" )
+ENDIF ( NOT CATKIN_PIP_PACKAGE_FOUND )
 
 # Setting our paths to package env-hooks provided by catkin-pip
 if ( NOT CATKIN_PIP_ENV_HOOKS_PATH )

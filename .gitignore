@@ -3,3 +3,4 @@ build
 testbuild
 test/mypippkg
 .idea
+*.pyc

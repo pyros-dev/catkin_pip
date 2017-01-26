@@ -101,6 +101,15 @@ if (CATKIN_ENABLE_TESTING)
     ########################
 
     # Testing environment setup by catkin_pip
-    catkin_add_pytests(catkin_pip_pytest --build-dir ${CMAKE_BINARY_DIR})
+    # We need to add all subprojects as dependencies for this test
+    catkin_add_pytests(
+        catkin_pip_pytest
+        --build-dir ${CMAKE_BINARY_DIR}
+        DEPENDENCIES
+        ${mypippkg_PIP_TARGET}                      # from pipproject
+        ${nameless_PIP_TARGET}                      # from pylibrary
+        ${python_boilerplate_PIP_TARGET}            # from pypackage
+        ${cookiecutter_pypackage_minimal_PIP_TARGET}      # from pypackage-minimal
+    )
 
 endif()

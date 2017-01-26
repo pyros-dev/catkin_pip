@@ -1,4 +1,4 @@
-message(STATUS "Loading catkin-pip-setup.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
+message(STATUS "Loading catkin-pip-package.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
 
 if ( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
 	message ( FATAL_ERROR " CMAKE MINIMUM BACKWARD COMPATIBILITY REQUIRED : 2.8 !" )
@@ -75,7 +75,10 @@ function(catkin_pip_python_setup)
 
 endfunction()
 
-function(catkin_pip_setup)
+# TODO : we now create an actual cmake target -> rename to catkin_pip_target ?
+function(catkin_pip_package package_name)
+
+    set(${PROJECT_NAME}_PIP_TARGET ${package_name} CACHE STRING "Make target generated to install this pip package as --editable for development")
 
     set (extra_macro_args ${ARGN})
 
@@ -94,20 +97,26 @@ function(catkin_pip_setup)
     # Note when installing in editable mode (for development) we shouldnt care about already installed versions.
     # However : https://github.com/asmodehn/catkin_pip/issues/58
     if(CATKIN_PIP_NO_DEPS)
-        catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --no-dependencies --prefix "${CATKIN_DEVEL_PREFIX}" --ignore-installed)
+        catkin_pip_install_devel_target(${package_name} ${package_path} --no-dependencies --ignore-installed)
+        #catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --no-dependencies --prefix "${CATKIN_DEVEL_PREFIX}" --ignore-installed)
     else()
-        catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --prefix "${CATKIN_DEVEL_PREFIX}" --ignore-installed)
+        catkin_pip_install_devel_target(${package_name} ${package_path} --ignore-installed)
+        #catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --prefix "${CATKIN_DEVEL_PREFIX}" --ignore-installed)
     endif()
 
     if(NOT EXISTS ${package_path}/setup.py)
         message(FATAL_ERROR "catkin_pip_setup() called without 'setup.py' in project folder '${package_path}'")
     endif()
 
+    # Probably better to do that here (dont do anything "special" for python)
     catkin_pip_python_setup()
 
     # TODO : we might want to generate a package.xml on the fly from setup.py contents...
 
     # Hijacking catkin scripts again
     #set(_PACKAGE_XML_DIRECTORY ${package_path})
+
+    # Here we plug back into usual catkin package build flow
+    catkin_package()
 
 endfunction()

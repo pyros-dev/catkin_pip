@@ -39,3 +39,41 @@ function(catkin_pip_runcmd)
     endif()
 
 endfunction()
+
+
+function(catkin_pip_install_devel_target package_name package_path)
+    set(CATKIN_PIP_INSTALL_DEVEL_OUTPUTS
+        # ${CATKIN_DEVEL_PREFIX}/${CATKIN_PIP_PYTHON_INSTALL_DIR}/easy-install.pth
+        # CAREFUL with multiple outputs : https://cmake.org/Bug/view.php?id=15116
+        ${CATKIN_DEVEL_PREFIX}/${CATKIN_PIP_PYTHON_INSTALL_DIR}/${package_name}.egg-link
+    )
+
+    set(CATKIN_PIP_COMMAND ${CATKIN_PIP} install -e ${package_path} --prefix "${CATKIN_DEVEL_PREFIX}" ${ARGN})
+    # TODO : change to use --target to allow installing duplicate packages... Ref https://github.com/pypa/pip/issues/4243
+
+    string(REPLACE ";" " " CATKIN_PIP_CMDSTR "${CATKIN_ENV} ${CATKIN_PIP_COMMAND}")
+
+    add_custom_command(
+      OUTPUT ${CATKIN_PIP_INSTALL_DEVEL_OUTPUTS}
+      # Note we need to use catkin_env to make sure our envhook is properly loaded
+      COMMAND ${CATKIN_ENV} ${CATKIN_PIP_COMMAND}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      DEPENDS "${package_path}"  # file level dependency : package needs to be in the path
+      COMMENT "${CATKIN_PIP_CMDSTR}"
+      VERBATIM
+    )
+
+    add_custom_target(${package_name} DEPENDS ${CATKIN_PIP_INSTALL_DEVEL_OUTPUTS})  # file level dependency : we need the output of the custom command
+
+    if (CATKIN_PIP_DEVEL_TARGETS)
+        add_dependencies(${package_name} ${CATKIN_PIP_DEVEL_TARGETS})  # target level dependency to prevent concurrency
+    endif()
+
+    # To have all target install one after the other (even if user attempts concurrent run)
+    # since pip doesnt support concurrent runs
+    set( CATKIN_PIP_DEVEL_TARGETS
+      ${CATKIN_PIP_DEVEL_TARGETS} ${package_name}
+      CACHE INTERNAL "List of targets for pip for devel workspace"
+    )
+
+endfunction()

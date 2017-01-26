@@ -32,7 +32,7 @@ catkin_package(
   CFG_EXTRAS
   catkin-pip.cmake
   catkin-pip-runcmd.cmake
-  catkin-pip-setup.cmake
+  catkin-pip-package.cmake
   catkin-pip-prefix.cmake
   catkin-pip-requirements.cmake
   pytest.cmake

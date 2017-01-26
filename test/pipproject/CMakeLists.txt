@@ -15,19 +15,16 @@ catkin_pip_requirements(${PIP_PROJECT_DIR}/requirements.txt --ignore-installed)
 # However this also means that existing packages in the workspace will not be used to satisfy requirements,
 # and will be reinstalled everytime...
 
-# This replace catkin_python_setup()
+# This replace both catkin_python_setup() and catkin_package()
 # For devel, this will install all your unsatisfied pip dependencies.
 # Upon install, this will bark if some dependencies are not already satisfied (by ROS).
-catkin_pip_setup(${PIP_PROJECT_DIR})
+catkin_pip_package(mypippkg ${PIP_PROJECT_DIR})
 
 # CAREFUL : all projects for test here will share the same workspace. pip might have conflicts...
 
-# Here we plug back into usual catkin package build flow
-catkin_package()
-
 ## Unit tests
 if (CATKIN_ENABLE_TESTING)
-    catkin_add_nosetests(${PIP_PROJECT_DIR}/tests)
+    catkin_add_nosetests(${PIP_PROJECT_DIR}/tests DEPENDENCIES mypippkg)
     # disabling pytest for now since it fails if there is no test detected (no tests implemented at the moment).
-    # catkin_add_pytests(${PIP_PROJECT_DIR}/tests)
+    # catkin_add_pytests(${PIP_PROJECT_DIR}/tests DEPENDENCIES mypippkg)
 endif()
