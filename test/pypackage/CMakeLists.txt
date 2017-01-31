@@ -9,6 +9,9 @@ set (PIP_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/python_boilerplate)
 
 find_package(catkin REQUIRED COMPONENTS catkin_pip)
 
+# Installing ROS dependencies from package.xml
+catkin_pip_rosdep_install()
+
 # For development, we need to install the pip dependencies in the workspace being created
 # Upon install, this will not do anything. All requirements should be satisfied by ROS dependencies system.
 # => pip dependencies will work from source only

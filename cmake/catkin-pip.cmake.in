@@ -19,6 +19,12 @@ endif(catkin_pip_main_included)
 set(catkin_pip_main_included true)
 
 # protecting against missing cmake file dependency
+include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-rosdep-install.cmake" RESULT_VARIABLE CATKIN_PIP_ROSDEP_INSTALL_FOUND )
+IF ( NOT CATKIN_PIP_ROSDEP_INSTALL_FOUND )
+    message ( FATAL_ERROR "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-rosdep-install.cmake Not Found !!!" )
+ENDIF ( NOT CATKIN_PIP_ROSDEP_INSTALL_FOUND )
+
+# protecting against missing cmake file dependency
 include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-requirements.cmake" RESULT_VARIABLE CATKIN_PIP_REQUIREMENTS_FOUND )
 IF ( NOT CATKIN_PIP_REQUIREMENTS_FOUND )
     message ( FATAL_ERROR "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-requirements.cmake Not Found !!!" )

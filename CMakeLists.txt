@@ -35,6 +35,7 @@ catkin_package(
   catkin-pip-package.cmake
   catkin-pip-prefix.cmake
   catkin-pip-requirements.cmake
+  catkin-pip-rosdep-install.cmake
   pytest.cmake
   nosetests.cmake
 )

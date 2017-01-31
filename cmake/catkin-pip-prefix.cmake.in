@@ -116,10 +116,6 @@ endfunction(find_catkin_system_pip)
 
 function(catkin_pip_setup_prefix ws_prefix)
 
-    # Setting up our environment (for devel space only)
-    #catkin_pip_check_env(${ws_prefix})
-    # TODO : make this an env hook and use it via CATKIN_ENV
-
     # Trying to find our own pip
     # Careful this creates a CACHE variable that we need to recreate here in case people clean devel without cleaning build
     unset(CATKIN_PIP CACHE)
