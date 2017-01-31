@@ -12,8 +12,9 @@
    <buildtool_depend>catkin</buildtool_depend>
    <build_depend version_gte="0.1.16">catkin_pip</build_depend>
 
-   <!-- dependencies needed to solve build problems -->
+   <!-- dependencies needed to solve build problems (kinetic only) -->
    <build_depend>libffi-dev</build_depend>
+   <build_depend>libssl-dev</build_depend>
 
 </package>
 
