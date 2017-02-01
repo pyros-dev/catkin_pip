@@ -18,4 +18,5 @@ def test_easyinstall_content(devel_space, git_working_tree):
         ]:
             assert os.path.join(git_working_tree, 'test', python_pkg) in editable_paths, "{0} not in easy-install.pth".format(os.path.join(git_working_tree, 'test', python_pkg))
 
-
+        # Note if not in the file, it means it s already in PYTHONPATH : Ref https://github.com/pypa/pip/issues/4261
+        # Get pip fix, or fix this test for it...

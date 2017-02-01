@@ -11,3 +11,5 @@ import site
 def test_site():
     for p in site.getsitepackages():
         assert p in sys.path, "site packages directory {p} not found in {sys.path}".format(**locals())
+
+# TODO : verify that "python -m site" from the shell actually would return something, after sourcing setup.sh => HOW ?
