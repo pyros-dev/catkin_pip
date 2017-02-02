@@ -81,16 +81,22 @@ endif()
 # and make sure they still work with catkin by building them all as subprojects
 #
 
+
 # Testing project itself
+# We need to call rosdep for each packages (to install dependencies if there are any)
+catkin_pip_runcmd(rosdep install --from-paths "pipproject" -y)
 add_subdirectory(pipproject)
 
 # Testing project itself
+catkin_pip_runcmd(rosdep install --from-paths "pylibrary" -y)
 add_subdirectory(pylibrary)
 
 # Testing project itself
+catkin_pip_runcmd(rosdep install --from-paths "pypackage" -y)
 add_subdirectory(pypackage)
 
 # Testing project itself
+catkin_pip_runcmd(rosdep install --from-paths "pypackage-minimal" -y)
 add_subdirectory(pypackage-minimal)
 
 
