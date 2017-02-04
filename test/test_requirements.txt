@@ -1,1 +1,1 @@
-cookiecutter==1.5.0
+cookiecutter==1.5.1
