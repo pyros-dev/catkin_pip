@@ -4,11 +4,21 @@
 # and prepends it to the beginning of the second argument (a ':' separated list of path)
 # It returns the new list.
 
+# lets be safe : Ref : http://www.davidpashley.com/articles/writing-robust-shell-scripts/
+set -o nounset
+set -o noglob
+# set -o errexit  # for development only
+# tested with dash on ubuntu trusty
+
 if [ $# -gt 3 -o $# -lt 1 ]; then
     echo "Usage : path_prepend <arg_path> <path_list> [<path_before>]"
-    exit 127
+    exit 127  # TODO this breaks calling script (with source setup.bash) -> FIX IT
 fi
 if [ $# -ge 1 ]; then
+    if [ -z "$1" ]; then  # to protect against empty arg
+        echo "ERROR: Attempting to prepend an empty argument"
+        exit 63  # TODO this breaks calling script (with source setup.bash) -> FIX IT (easy test by changing -z -> -n)
+    fi
     # The path to insert
     ARG="$1"
 fi
@@ -34,7 +44,7 @@ else
             [ -z "${LIST:-}" ] && LIST=${ARG} || LIST=${LIST}:${ARG}
             #echo $LIST
         fi
-        if [ $p != $ARG ]; then
+        if [ X$p != X$ARG ]; then
             [ -z "${LIST:-}" ] && LIST=${p} || LIST=${LIST}:${p}
             #echo $LIST
         fi
