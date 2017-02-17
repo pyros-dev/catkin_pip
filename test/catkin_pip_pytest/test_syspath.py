@@ -43,7 +43,8 @@ def test_sys_path_editable(git_working_tree, devel_space):
         assert ss in sys.path, "{p} not in {sp}".format(p=ss, sp=sys.path)
 
         # Lets keep it simple and rely on python way of handling easy-install.pth and egg-link before we modify it...
-        # It seems that by default the eggs path are aded after the pythonpaths...
+        # By default the eggs path are added after the pythonpaths. We need opposite behavior for ROS python (due to how devel workspace works)
+        # this is handle by both catkin_pip for ROS usage and pyros_setup for python usage.
 
         # if os.path.exists(os.path.join(devel_space, 'lib/python2.7/site-packages')):
         #     assert sys.path.index(ss) < sys.path.index(os.path.join(devel_space, 'lib/python2.7/site-packages')), "{p1} not before {p2}".format(p1=ss, p2=os.path.join(devel_space, 'lib/python2.7/site-packages'))

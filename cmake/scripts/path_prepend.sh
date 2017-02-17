@@ -11,12 +11,12 @@ set -o noglob
 # tested with dash on ubuntu trusty
 
 if [ $# -gt 3 -o $# -lt 1 ]; then
-    echo "Usage : path_prepend <arg_path> <path_list> [<path_before>]"
+    # echo "Usage : path_prepend <arg_path> <path_list> [<path_before>]"  # TMP : we cannot echo anything in the way the script is used
     exit 127  # TODO this breaks calling script (with source setup.bash) -> FIX IT
 fi
 if [ $# -ge 1 ]; then
     if [ -z "$1" ]; then  # to protect against empty arg
-        echo "ERROR: Attempting to prepend an empty argument"
+        # echo "ERROR: Attempting to prepend an empty argument"  # TMP : we cannot echo anything in the way the script is used
         exit 63  # TODO this breaks calling script (with source setup.bash) -> FIX IT (easy test by changing -z -> -n)
     fi
     # The path to insert
