@@ -3,7 +3,6 @@ from __future__ import print_function
 
 import os
 import sys
-import site
 
 
 def test_sys_path(devel_space):
@@ -37,23 +36,33 @@ def test_sys_path_editable(git_working_tree, devel_space):
     print(sys.path)
 
     # Verifying the pip editable installed package location is in python path
-    ss = os.path.join(git_working_tree, 'test', 'pipproject', 'mypippkg')
 
-    if os.path.exists(ss):
-        assert ss in sys.path, "{p} not in {sp}".format(p=ss, sp=sys.path)
+    for python_pkg in [
+        os.path.join('pipproject', 'mypippkg'),
+        os.path.join('pylibrary', 'python-nameless', 'src'),
+        os.path.join('pypackage', 'python_boilerplate'),
+        os.path.join('pypackage-minimal', 'cookiecutter_pypackage_minimal'),
+    ]:
 
-        # Lets keep it simple and rely on python way of handling easy-install.pth and egg-link before we modify it...
-        # By default the eggs path are added after the pythonpaths. We need opposite behavior for ROS python (due to how devel workspace works)
-        # this is handle by both catkin_pip for ROS usage and pyros_setup for python usage.
+        ss = os.path.join(git_working_tree, 'test', python_pkg)
 
-        # if os.path.exists(os.path.join(devel_space, 'lib/python2.7/site-packages')):
-        #     assert sys.path.index(ss) < sys.path.index(os.path.join(devel_space, 'lib/python2.7/site-packages')), "{p1} not before {p2}".format(p1=ss, p2=os.path.join(devel_space, 'lib/python2.7/site-packages'))
-        #
-        # if os.path.exists(os.path.join(devel_space, 'lib/python2.7/dist-packages')):
-        #     assert sys.path.index(ss) < sys.path.index(os.path.join(devel_space, 'lib/python2.7/dist-packages')), "{p1} not before {p2}".format(p1=ss, p2=os.path.join(devel_space, 'lib/python2.7/dist-packages'))
-        #
-        # if os.path.exists('/opt/ros/indigo/lib/python2.7/dist-packages'):
-        #     assert sys.path.index(ss) < sys.path.index('/opt/ros/indigo/lib/python2.7/dist-packages'), "{p1} not before {p2}".format(p1=ss, p2='/opt/ros/indigo/lib/python2.7/dist-packages')
+        if os.path.exists(ss):
+            assert ss in sys.path, "{p} not in {sp}".format(p=ss, sp=sys.path)
+
+            # By default the egg-links path are added after the pythonpaths.
+            # We need opposite behavior for ROS python (due to how devel workspace works)
+            # this is handle by both catkin_pip for ROS usage and pyros_setup for python usage.
+
+            if os.path.exists(os.path.join(devel_space, 'lib/python2.7/site-packages')):
+                assert sys.path.index(ss) < sys.path.index(os.path.join(devel_space, 'lib/python2.7/site-packages')), "{p1} not before {p2}".format(p1=ss, p2=os.path.join(devel_space, 'lib/python2.7/site-packages'))
+
+            if os.path.exists(os.path.join(devel_space, 'lib/python2.7/dist-packages')):
+                assert sys.path.index(ss) < sys.path.index(os.path.join(devel_space, 'lib/python2.7/dist-packages')), "{p1} not before {p2}".format(p1=ss, p2=os.path.join(devel_space, 'lib/python2.7/dist-packages'))
+
+            if os.path.exists('/opt/ros/indigo/lib/python2.7/dist-packages'):
+                assert sys.path.index(ss) < sys.path.index('/opt/ros/indigo/lib/python2.7/dist-packages'), "{p1} not before {p2}".format(p1=ss, p2='/opt/ros/indigo/lib/python2.7/dist-packages')
 
 
-    #TODO : verify the position of the catkin_pip_env paths (bin? and site-packages)
+        #TODO : verify the position of the catkin_pip_env paths (bin? and site-packages)
+
+        # TODO : check overlay / underlay order
