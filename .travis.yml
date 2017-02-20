@@ -13,19 +13,19 @@ env:
   # This will check any ROS distro supported on this OS
   # checking devel and install separately so that they don't influence each other (dependencies, path, env, etc.)
   matrix:
-    - CI_ROS_DISTRO=indigo ROS_FLOW=devel
-    - CI_ROS_DISTRO=indigo ROS_FLOW=install
-    - CI_ROS_DISTRO=jade ROS_FLOW=devel
-    - CI_ROS_DISTRO=jade ROS_FLOW=install
-    - CI_ROS_DISTRO=kinetic ROS_FLOW=devel
-    - CI_ROS_DISTRO=kinetic ROS_FLOW=install
+    - ROS_DISTRO=indigo ROS_FLOW=devel
+    - ROS_DISTRO=indigo ROS_FLOW=install
+    - ROS_DISTRO=jade ROS_FLOW=devel
+    - ROS_DISTRO=jade ROS_FLOW=install
+    - ROS_DISTRO=kinetic ROS_FLOW=devel
+    - ROS_DISTRO=kinetic ROS_FLOW=install
   # TODO : test all possible flows (installing deps on devel or not, etc.)
 
 before_install:
   # Getting docker ros image
-  - docker pull ros:${CI_ROS_DISTRO}-ros-core
+  - docker pull ros:${ROS_DISTRO}-ros-core
   # Running as daemon
-  - docker run --name ${CONTAINER_NAME} -d -t ros:${CI_ROS_DISTRO}-ros-core /bin/bash | tee container.id
+  - docker run --name ${CONTAINER_NAME} -d -t ros:${ROS_DISTRO}-ros-core /bin/bash | tee container.id
   # Checking current container
   - docker ps -a
   - docker exec -ti ${CONTAINER_NAME} hostname
@@ -41,15 +41,15 @@ install:
   # copying local clone to the running container (volume is currently broken)
   - docker cp . ${CONTAINER_NAME}:/git_clone
   # Installing package dependencies
-  - docker exec -ti ${CONTAINER_NAME} rosdep install --default-yes --from-paths /git_clone --rosdistro $CI_ROS_DISTRO
+  - docker exec -ti ${CONTAINER_NAME} rosdep install --default-yes --from-paths /git_clone --rosdistro $ROS_DISTRO
 
 # full ROS setup, build and test
 script:
   - CONTAINER_ID=$(cat container.id)
   - docker ps -a
-  - docker exec -ti ${CONTAINER_NAME} /bin/bash -c "source /opt/ros/$CI_ROS_DISTRO/setup.bash && rospack profile"
+  - docker exec -ti ${CONTAINER_NAME} /bin/bash -c "source /opt/ros/$ROS_DISTRO/setup.bash && rospack profile"
   # Passing env vars here since passing in docker run currently breaks (2016-08-25)
-  - docker exec -ti ${CONTAINER_NAME} /bin/bash -c "export CI_ROS_DISTRO=$CI_ROS_DISTRO && export ROS_FLOW=$ROS_FLOW && /git_clone/travis_checks.bash"
+  - docker exec -ti ${CONTAINER_NAME} /bin/bash -c "export ROS_DISTRO=$ROS_DISTRO && export ROS_FLOW=$ROS_FLOW && /git_clone/travis_checks.bash"
   - docker stop "${CONTAINER_ID}"
 
 notifications:

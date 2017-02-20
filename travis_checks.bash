@@ -15,7 +15,7 @@ cd $DIR
 # For travis docker, this is already done by the entrypoint in docker image.
 # However when using 'docker exec' we still need to source it ourselves.
 # Also it is mandatory when this script is run directly by the developer.
-source /opt/ros/$CI_ROS_DISTRO/setup.bash
+source /opt/ros/$ROS_DISTRO/setup.bash
 
 mkdir -p testbuild
 cd testbuild
