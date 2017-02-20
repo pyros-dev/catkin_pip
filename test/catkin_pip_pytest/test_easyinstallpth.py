@@ -5,9 +5,8 @@ import os
 import pytest
 
 
-@pytest.mark.skip(reason="Test broken because of https://github.com/pypa/pip/issues/4261")
 def test_easyinstall_content(devel_space, git_working_tree):
-    easy_install_pth_path = os.path.join(devel_space, 'lib','python2.7','site-packages','easy-install.pth')
+    easy_install_pth_path = os.path.join(devel_space, 'lib', 'python2.7', 'site-packages', 'easy-install.pth')
     assert os.path.exists(easy_install_pth_path)
     with open(easy_install_pth_path) as easy_install_pth:
         editable_paths = easy_install_pth.read().splitlines()

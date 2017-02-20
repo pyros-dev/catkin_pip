@@ -38,6 +38,6 @@ elif [ "$ROS_FLOW" == "install" ]; then
     echo PYTHONPATH = $PYTHONPATH
     rospack profile
     # TMP disabling test from now, since mypippkg has no tests
-    #nosetests mypippkg
-    #python -m pytest --pyargs mypippkg
+    nosetests mypippkg
+    python -m pytest --pyargs mypippkg
 fi

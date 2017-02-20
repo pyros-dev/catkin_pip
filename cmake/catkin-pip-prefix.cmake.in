@@ -124,12 +124,13 @@ function(catkin_pip_setup_prefix ws_prefix)
     find_program(CATKIN_PIP NAMES pip pip2 pip2.7 PATHS ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@ NO_DEFAULT_PATH)
 
     if (CATKIN_PIP)
-        message(STATUS "    ... Catkin pip was found at ${CATKIN_PIP} ...")
         set(CATKIN_PIP "${CATKIN_PIP} -q")  # we can add all default basic options here.
     else ()
         # If not found, it means we need to do the whole setup...
         unset(CATKIN_PIP CACHE)
+        # TODO:  cleanup if unnecessary message (the find_program already outputs something
         message(STATUS "    ... Catkin pip was not found in ${ws_prefix}/@CATKIN_GLOBAL_BIN_DESTINATION@ ...")
+
         # Assuming Ubuntu Trusty here. platform detection is another hurdle
         set(CMAKE_SYSTEM_PREFIX_PATH / /usr /usr/local)
 

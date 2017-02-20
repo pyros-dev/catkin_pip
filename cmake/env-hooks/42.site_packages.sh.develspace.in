@@ -19,10 +19,8 @@ set -o noglob
 
 # Setting up the catkin environment itself
 # This needs to be in a different prefix, to be able to generate an install dir with setuptools, yet clear of any catkin_pip artifacts.
-#echo "Inserting @CATKIN_PIP_ENV@/@CATKIN_PYTHON_INSTALL_DIR@ in front of PYTHONPATH"
-PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_PIP_ENV@/@CATKIN_PYTHON_INSTALL_DIR@" "${PYTHONPATH}")  || ${PYTHONPATH}  # to be safe if path_prepend fails
-#echo "Inserting @CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ before @CATKIN_PIP_ENV@/@CATKIN_PYTHON_INSTALL_DIR@ into PYTHONPATH"
-PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" "${PYTHONPATH}" "@CATKIN_PIP_ENV@/@CATKIN_PYTHON_INSTALL_DIR@")  || ${PYTHONPATH}  # to be safe if path_prepend fails
+#echo "Inserting @CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ in front of PYTHONPATH"
+PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" "${PYTHONPATH}")  || ${PYTHONPATH}  # to be safe if path_prepend fails
 
 # Adding bin/ into the path
 #echo "Inserting @CATKIN_PIP_ENV@/@CATKIN_GLOBAL_BIN_DESTINATION@ in front of PATH"
