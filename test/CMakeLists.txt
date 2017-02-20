@@ -34,7 +34,8 @@ endif()
 if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pipproject/mypippkg")
     message(STATUS "    ... Getting cookiecutter-pipproject template from cookiecutter ...")
     execute_process(
-      COMMAND ${CATKIN_ENV} ${CATKIN_COOKIECUTTER} --no-input https://github.com/wdm0006/cookiecutter-pipproject.git
+      # TMP waiting for PR
+      COMMAND ${CATKIN_ENV} ${CATKIN_COOKIECUTTER} --no-input https://github.com/asmodehn/cookiecutter-pipproject.git --checkout adding_test_sample
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pipproject
       RESULT_VARIABLE PIP_RESULT
       OUTPUT_VARIABLE PIP_VARIABLE
@@ -84,6 +85,7 @@ endif()
 
 # Testing project itself
 # We need to call rosdep for each packages (to install dependencies if there are any)
+# note $ROS_DISTRO must be already defined in the environment
 catkin_pip_runcmd(rosdep install --from-paths "pipproject" -y)
 add_subdirectory(pipproject)
 

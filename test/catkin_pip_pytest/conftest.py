@@ -12,6 +12,21 @@ def build_dir(request):
 
 
 @pytest.fixture
+def build_dir(request):
+    # current dir should be the build directory (binary dir for cmake)
+    # otherwise cmake tests commands are broken
+    return os.getcwd()
+
+
+@pytest.fixture
+def catkin_pip_env_dir(request):
+    # lets find catkin_pip_env space in current dir (cwd should be the build directory)
+    # expected setup.sh
+    cpe = os.path.join(build_dir(request), 'catkin_pip_env')
+    return cpe
+
+
+@pytest.fixture
 def git_working_tree(request):
 
     mod_path_split = os.path.abspath(__file__).split(os.sep)
@@ -43,8 +58,11 @@ def devel_space(request):
 
 
 @pytest.fixture
-def build_dir(request):
-    # current dir should be the build directory (binary dir for cmake)
-    # otherwise cmake tests commands are broken
-    return os.getcwd()
+def install_space(request):
+    # lets find devel space in current dir (cwd should be the build directory)
+    # expected setup.sh
+    assert os.path.exists(os.path.abspath(os.path.join('install', 'setup.sh'))), "install/setup.bash not found in {0}".format(os.getcwd())
+    ws = os.path.abspath('install')
+    return ws
+
 

@@ -3,40 +3,59 @@ from __future__ import print_function
 
 import os
 import sys
+import pytest
+import importlib
 
 
-def test_sys_path(devel_space):
+def in_sys_path_ordered(*arg_paths):
+    """
+    asserts that path1 is before path2 in sys.path
+    :param arg_paths: the arguments are a list of path
+    :return: True if all paths appear in sys.path, and in the arguments order. False otherwise.
+    """
+    return all(p in sys.path for p in arg_paths) and \
+           all([sys.path.index(p) < sys.path.index(q) for p, q in zip(arg_paths,arg_paths[1:])]
+               if len(arg_paths) else True)
+
+
+def test_devel_space_in_sys_path(devel_space):
     print(sys.path)
 
     # Verifying relative path order
-    if os.path.exists('/opt/ros/indigo/lib/python2.7/dist-packages'):
-        assert '/opt/ros/indigo/lib/python2.7/dist-packages' in sys.path, "{p} not in {sp}".format(p='/opt/ros/indigo/lib/python2.7/dist-packages', sp=sys.path)
-        # TODO : It seems env_cached.sh append dist-packages path at the end of python_path somehow... We should investigate.
-        # HINT : only sourcing /opt/ros/indigo/setup.bash seems fine (dist-packages added at beginning of sys.path)
-        # HINT : env_cached.sh seems fine... maybe it comes from the way nosetests/py.test is launched ?
-        # HINT : following same process (building and running tests) with rospy_tutorials doesnt show the broken behavior. Something in catkin_pip breaking it ?
-        #assert len(sys.path) == len(set(sys.path))  # check unicity of paths
+    assert in_sys_path_ordered(
+        os.path.join(devel_space, 'lib/python2.7/site-packages'),
+        os.path.join(devel_space, 'lib/python2.7/dist-packages'),
+    ), "{site_pkgs} not appearing before {dist_pkgs} in sys.path".format(
+        site_pkgs=os.path.join(devel_space, 'lib/python2.7/site-packages'),
+        dist_pkgs=os.path.join(devel_space, 'lib/python2.7/dist-packages')
+    )
 
-    if os.path.exists(os.path.join(devel_space, 'lib/python2.7/dist-packages')):
-        assert os.path.join(devel_space, 'lib/python2.7/dist-packages') in sys.path, "{p} not in {sp}".format(p=os.path.join(devel_space, 'lib/python2.7/dist-packages'), sp=sys.path)
-        if os.path.exists('/opt/ros/indigo/lib/python2.7/dist-packages'):
-            assert sys.path.index(os.path.join(devel_space, 'lib/python2.7/dist-packages')) < sys.path.index('/opt/ros/indigo/lib/python2.7/dist-packages'), "{p1} not before {p2} in {sp}".format(p1=os.path.join(devel_space, 'lib/python2.7/dist-packages'), p2='/opt/ros/indigo/lib/python2.7/dist-packages', sp=sys.path)
 
-    if os.path.exists(os.path.join(devel_space, 'lib/python2.7/site-packages')):
-        assert os.path.join(devel_space, 'lib/python2.7/site-packages') in sys.path, "{p} not in {sp}".format(p=os.path.join(devel_space, 'lib/python2.7/site-packages'), sp=sys.path)
+def test_catkin_pip_env_dir_in_sys_path(catkin_pip_env_dir):
+    print(sys.path)
 
-        if os.path.exists(os.path.join(devel_space, 'lib/python2.7/dist-packages')):
-            assert sys.path.index(os.path.join(devel_space, 'lib/python2.7/site-packages')) < sys.path.index(os.path.join(devel_space, 'lib/python2.7/dist-packages')), "{p1} not before {p2} in {sp}".format(p1=os.path.join(devel_space, 'lib/python2.7/site-packages'), p2=os.path.join(devel_space, 'lib/python2.7/dist-packages'), sp=sys.path)
-
-        if os.path.exists('/opt/ros/indigo/lib/python2.7/dist-packages'):
-            assert sys.path.index(os.path.join(devel_space, 'lib/python2.7/site-packages')) < sys.path.index('/opt/ros/indigo/lib/python2.7/dist-packages'), "{p1} not before {p2} in {sp}".format(p1=os.path.join(devel_space, 'lib/python2.7/site-packages'), p2='/opt/ros/indigo/lib/python2.7/dist-packages', sp=sys.path)
+    # Verifying relative path order
+    assert in_sys_path_ordered(
+        os.path.join(catkin_pip_env_dir, 'lib/python2.7/site-packages'),
+    ), "{site_pkgs} not appearing in sys.path".format(
+        site_pkgs=os.path.join(catkin_pip_env_dir, 'lib/python2.7/site-packages')
+    )
 
 
 def test_sys_path_editable(git_working_tree, devel_space):
     print(sys.path)
 
-    # Verifying the pip editable installed package location is in python path
+    def pkg_path_in_sys_path(pkg_path, before=[]):
+        assert os.path.exists(pkg_path), "{pkg_path} does not exist".format(**locals())
 
+        # By default the egg-links path are added after the pythonpaths.
+        # We need opposite behavior for ROS python (due to how devel workspace works)
+        # this is handle by both catkin_pip for ROS usage and pyros_setup for python usage.
+
+        assert in_sys_path_ordered(*([pkg_path] + before)),\
+            "paths not appearing in sys.path in the expected order : {p}".format(p=([pkg_path] + before))
+
+    # Verifying the pip editable installed package location is in python path
     for python_pkg in [
         os.path.join('pipproject', 'mypippkg'),
         os.path.join('pylibrary', 'python-nameless', 'src'),
@@ -46,23 +65,7 @@ def test_sys_path_editable(git_working_tree, devel_space):
 
         ss = os.path.join(git_working_tree, 'test', python_pkg)
 
-        if os.path.exists(ss):
-            assert ss in sys.path, "{p} not in {sp}".format(p=ss, sp=sys.path)
-
-            # By default the egg-links path are added after the pythonpaths.
-            # We need opposite behavior for ROS python (due to how devel workspace works)
-            # this is handle by both catkin_pip for ROS usage and pyros_setup for python usage.
-
-            if os.path.exists(os.path.join(devel_space, 'lib/python2.7/site-packages')):
-                assert sys.path.index(ss) < sys.path.index(os.path.join(devel_space, 'lib/python2.7/site-packages')), "{p1} not before {p2}".format(p1=ss, p2=os.path.join(devel_space, 'lib/python2.7/site-packages'))
-
-            if os.path.exists(os.path.join(devel_space, 'lib/python2.7/dist-packages')):
-                assert sys.path.index(ss) < sys.path.index(os.path.join(devel_space, 'lib/python2.7/dist-packages')), "{p1} not before {p2}".format(p1=ss, p2=os.path.join(devel_space, 'lib/python2.7/dist-packages'))
-
-            if os.path.exists('/opt/ros/indigo/lib/python2.7/dist-packages'):
-                assert sys.path.index(ss) < sys.path.index('/opt/ros/indigo/lib/python2.7/dist-packages'), "{p1} not before {p2}".format(p1=ss, p2='/opt/ros/indigo/lib/python2.7/dist-packages')
-
-
-        #TODO : verify the position of the catkin_pip_env paths (bin? and site-packages)
-
-        # TODO : check overlay / underlay order
+        pkg_path_in_sys_path(ss, [
+            os.path.join(devel_space, 'lib/python2.7/site-packages'),
+            os.path.join(devel_space, 'lib/python2.7/dist-packages')
+        ])
