@@ -62,4 +62,4 @@ export PATH
 # resetting shell options (especially useful if sourced)
 set +o nounset
 set +o noglob
-set +o errexit  # for development only
+# set +o errexit  # for development only
