@@ -1,5 +1,3 @@
-message(STATUS "Loading catkin-pip-requirements.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
-
 if ( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
 	message ( FATAL_ERROR " CMAKE MINIMUM BACKWARD COMPATIBILITY REQUIRED : 2.8 !" )
 endif( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
@@ -9,6 +7,9 @@ if(catkin_pip_requirements_included)
   return()
 endif(catkin_pip_requirements_included)
 set(catkin_pip_requirements_included true)
+
+message(STATUS "Loading catkin-pip-requirements.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
+
 
 # protecting against missing cmake file
 include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-prefix.cmake" RESULT_VARIABLE CATKIN_PIP_PREFIX_FOUND )

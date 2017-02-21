@@ -1,13 +1,6 @@
-message(STATUS "Loading catkin-pip-runcmd.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
-
 if ( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
 	message ( FATAL_ERROR " CMAKE MINIMUM BACKWARD COMPATIBILITY REQUIRED : 2.8 !" )
 endif( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
-
-#
-# Important : This script is included by multiple cmake scripts at configure and build time
-# So it needs to be idempotent (no change if called multiple time with same settings/environment)
-#
 
 # Enforcing one time include https://cmake.org/Wiki/CMake_Performance_Tips#Use_an_include_guard
 if(catkin_pip_runcmd_included)
@@ -15,11 +8,19 @@ if(catkin_pip_runcmd_included)
 endif(catkin_pip_runcmd_included)
 set(catkin_pip_runcmd_included true)
 
+message(STATUS "Loading catkin-pip-runcmd.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
+
+#
+# Important : This script is included by multiple cmake scripts at configure and build time
+# So it needs to be idempotent (no change if called multiple time with same settings/environment)
+#
+
 
 function(catkin_pip_runcmd)
 
     set(CATKIN_PIP_COMMAND ${ARGN})
 
+    # TODO : refactor to use separate arguments, like catkin_pip_install_devel_target
     string(REPLACE ";" " " CATKIN_PIP_CMDSTR "${CATKIN_ENV} ${CATKIN_PIP_COMMAND}")
     message(STATUS "    ... Running ${CATKIN_PIP_CMDSTR} ...")
 
@@ -37,5 +38,48 @@ function(catkin_pip_runcmd)
         message(STATUS "Command ${CATKIN_PIP_CMDSTR} FAILED !")
         message(FATAL_ERROR "${PIP_ERROR}")
     endif()
+
+endfunction()
+
+
+function(catkin_pip_install_devel_target package_name package_path)
+    set(CATKIN_PIP_INSTALL_DEVEL_OUTPUTS
+        # ${CATKIN_DEVEL_PREFIX}/${CATKIN_PIP_PYTHON_INSTALL_DIR}/easy-install.pth
+        # CAREFUL with multiple outputs : https://cmake.org/Bug/view.php?id=15116
+        ${CATKIN_DEVEL_PREFIX}/${CATKIN_PIP_PYTHON_INSTALL_DIR}/${package_name}.egg-link
+    )
+
+    string(REPLACE ";" " " ARGN_STR "${ARGN}")
+
+    # note setlock because of https://github.com/pypa/pip/issues/2361
+    # set(CATKIN_PIP_CMD ${CATKIN_ENV})
+    # set(CATKIN_PIP_CMD_ARGS_STR "setlock ${CATKIN_PIP_ENV}/catkin_pip.lock ${CATKIN_PIP} install -e ${package_path} --prefix ${CATKIN_DEVEL_PREFIX} ${ARGN_STR}")
+    # separate_arguments(CATKIN_PIP_CMD_ARGS_LIST UNIX_COMMAND ${CATKIN_PIP_CMD_ARGS_STR})
+    # TODO : change to use --target to allow installing duplicate packages with pip>=9.0.0 ... Ref https://github.com/pypa/pip/issues/4243
+
+    # TMP : since PYTHONPATH breaks pip install --editable Ref : https://github.com/pypa/pip/issues/4261
+    set(CATKIN_PIP_CMD /bin/bash)  # Ubuntu (Linux?) only
+    set(CATKIN_PIP_CMD_ARGS_STR "-c 'export PYTHONPATH=${CATKIN_DEVEL_PREFIX}/${CATKIN_PIP_PYTHON_INSTALL_DIR}\; setlock ${CATKIN_PIP_ENV}/catkin_pip.lock ${CATKIN_PIP} install -e ${package_path} --prefix ${CATKIN_DEVEL_PREFIX} ${ARGN_STR}'")
+    separate_arguments(CATKIN_PIP_CMD_ARGS_LIST UNIX_COMMAND ${CATKIN_PIP_CMD_ARGS_STR})
+
+    # Note that catkin_env is called first. That is because we do not trust catkin_env return code and async behavior.
+    # However we have to assume it doesn't alter the environment in a way that breaks setlock.
+    # Hint : on ubuntu trusty, I noticed the lock file stay there after execution, however the mutex behavior works fine.
+
+    add_custom_command(
+      OUTPUT ${CATKIN_PIP_INSTALL_DEVEL_OUTPUTS}
+
+      # Note we are using setlock to avoid concurrent pip calls (if make runs target in parallel)
+      # Note we override PYTHONPATH to workaround a pip bug
+      # Note we need to use catkin_env to make sure our envhook is properly loaded
+
+      COMMAND ${CATKIN_PIP_CMD} ${CATKIN_PIP_CMD_ARGS_LIST}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      DEPENDS "${package_path}"  # file level dependency : package needs to be in the path
+      COMMENT "${CATKIN_PIP_CMD} ${CATKIN_PIP_CMD_ARGS_STR}"
+      VERBATIM
+    )
+
+    add_custom_target(${package_name} ALL DEPENDS ${CATKIN_PIP_INSTALL_DEVEL_OUTPUTS})  # file level dependency : we need the output of the custom command
 
 endfunction()

@@ -1,0 +1,18 @@
+<package>
+   <name>cookiecutter_pypackage_minimal</name>
+   <version>0.0.1</version>
+   <description>
+      An opinionated, minimal cookiecutter template for Python packages
+   </description>
+   <maintainer email="asmodehn@gmail.com">AlexV</maintainer>
+   <author>Louis Taylor</author>
+   <license>MIT</license>
+   <url type="repository">https://github.com/asmodehn/cookiecutter-pypackage-minimal.git</url>
+   <!-- <url type="repository">https://github.com/kragniz/cookiecutter-pypackage-minimal.git</url> //-->
+
+   <buildtool_depend>catkin</buildtool_depend>
+   <build_depend version_gte="0.1.16">catkin_pip</build_depend>
+
+</package>
+
+

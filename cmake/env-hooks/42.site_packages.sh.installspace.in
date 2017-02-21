@@ -3,8 +3,16 @@
 # If using a sh script, this can make a lot of issues...
 # Reference to address these from a Bourne shell http://stackoverflow.com/a/29835459
 
+# lets be safe : Ref : http://www.davidpashley.com/articles/writing-robust-shell-scripts/
+set -o nounset
+set -o noglob
+# set -o errexit  # for development only
+# tested with dash on ubuntu trusty
+
 # In install space we only need the catkin_pip environment setup.
 # Install space should behave like packages, everything in debian layout.
+
+# CAREFUL : sourcing install.setup.bash will also source devel/setup.bash if folder exists...
 
 # Setting up the catkin environment itself
 # This needs to be in a different prefix, to be able to generate an install dir with setuptools, yet clear of any catkin_pip artifacts.
@@ -17,3 +25,8 @@ PATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_PIP_ENV@/@CATKIN_GLO
 # Exporting is required to make sure we get the new value in children processes (catkin_make, test runs, etc.)
 export PYTHONPATH
 export PATH
+
+# resetting shell options (especially useful if sourced)
+set +o nounset
+set +o noglob
+# set +o errexit  # for development only
