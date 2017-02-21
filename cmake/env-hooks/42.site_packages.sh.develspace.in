@@ -19,37 +19,49 @@ set -o noglob
 
 # Setting up the catkin environment itself
 # This needs to be in a different prefix, to be able to generate an install dir with setuptools, yet clear of any catkin_pip artifacts.
-#echo "Inserting @CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ in front of PYTHONPATH"
-PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" "${PYTHONPATH}")  || ${PYTHONPATH}  # to be safe if path_prepend fails
+if [ -d "@CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" ]; then
+    #echo "Inserting @CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ in front of PYTHONPATH"
+    PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_PIP_ENV@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" "${PYTHONPATH}")  || ${PYTHONPATH}  # to be safe if path_prepend fails
+fi
 
 # Adding bin/ into the path
-#echo "Inserting @CATKIN_PIP_ENV@/@CATKIN_GLOBAL_BIN_DESTINATION@ in front of PATH"
-PATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_PIP_ENV@/@CATKIN_GLOBAL_BIN_DESTINATION@" "${PATH}")   || ${PATH}  # to be safe if path_prepend fails
+if [ -d "@CATKIN_PIP_ENV@/@CATKIN_GLOBAL_BIN_DESTINATION@" ]; then
+    #echo "Inserting @CATKIN_PIP_ENV@/@CATKIN_GLOBAL_BIN_DESTINATION@ in front of PATH"
+    PATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_PIP_ENV@/@CATKIN_GLOBAL_BIN_DESTINATION@" "${PATH}")   || ${PATH}  # to be safe if path_prepend fails
+fi
 
 # Somehow It seems we need to also (re)add dist-packages here to get package tests to work with ROS packages in same workspace
 # Especially when running tests with catkin_pip from source... there seem to be some workflow issue due to catkin cache environment...
 # Anyway it doesnt hurt to have it here as well.
 # this is usual for catkin -> no echo. This might actually be a fix for catkin not setting this before running tests.
-#echo "Inserting @CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@ in front of PYTHONPATH"
-PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@" "${PYTHONPATH}")   || ${PYTHONPATH}  # to be safe if path_prepend fails
-# Problem : before which workspace ? we might break workspace overlay order here
+
+if [ -d "@CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@" ]; then
+    #echo "Inserting @CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@ in front of PYTHONPATH"
+    PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@" "${PYTHONPATH}")   || ${PYTHONPATH}  # to be safe if path_prepend fails
+    # Problem : before which workspace ? we might break workspace overlay order here
+fi
 
 # We combine our build path (catkin_pip_env) with site-packages (pip default) location, before attempting to prepend to the python path
 # Careful : echo is only possible if we are in a bash script (not used by env.sh)
-#echo "Inserting @CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ before @CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@ into PYTHONPATH"
-PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" "${PYTHONPATH}" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@")   || ${PYTHONPATH}  # to be safe if path_prepend fails
 
-# Prepending here our easy-install.pth content into PYTHONPATH, for overlayed workspace to get it before the workspace path
-# Somehow Python pth/.egg behavior doesnt work well with workspace overlays, based on PYTHONPATH.
-# However be aware of : https://github.com/pypa/pip/issues/3160
-# And : https://github.com/pypa/pip/issues/4261
-if [ -f "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@/easy-install.pth" ]; then
-    # Ref : http://stackoverflow.com/questions/4165135/how-to-use-while-read-bash-to-read-the-last-line-in-a-file-if-there-s-no-new
-    while IFS='' read -r DEVEL_PKG_PATH || [ -n "$DEVEL_PKG_PATH" ]; do
-       #echo "Inserting $DEVEL_PKG_PATH before "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" into PYTHONPATH"
-       PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "$DEVEL_PKG_PATH" "${PYTHONPATH}" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@")  || ${PYTHONPATH}  # to be safe if path_prepend fails
-   done <"@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@/easy-install.pth"
+if [ -d "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" ]; then
+    #echo "Inserting @CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@ before @CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@ into PYTHONPATH"
+    PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" "${PYTHONPATH}" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PYTHON_INSTALL_DIR@")   || ${PYTHONPATH}  # to be safe if path_prepend fails
 fi
+
+# NOT DOING THIS any longer : it half-works but somehow doesnt change behavior when using catkin cmake scripts : usual python way, editable links are after python path
+# TO FIX IT : use pyros_setup
+# # Prepending here our easy-install.pth content into PYTHONPATH, for overlayed workspace to get it before the workspace path
+# # Somehow Python pth/.egg behavior doesnt work well with workspace overlays, based on PYTHONPATH.
+# # However be aware of : https://github.com/pypa/pip/issues/3160
+# # And : https://github.com/pypa/pip/issues/4261
+# if [ -f "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@/easy-install.pth" ]; then
+#     # Ref : http://stackoverflow.com/questions/4165135/how-to-use-while-read-bash-to-read-the-last-line-in-a-file-if-there-s-no-new
+#     while IFS='' read -r DEVEL_PKG_PATH || [ -n "$DEVEL_PKG_PATH" ]; do
+#        #echo "Inserting $DEVEL_PKG_PATH before "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" into PYTHONPATH"
+#        PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "$DEVEL_PKG_PATH" "${PYTHONPATH}" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@")  || ${PYTHONPATH}  # to be safe if path_prepend fails
+#    done <"@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@/easy-install.pth"
+# fi
 
 
 # Exporting is required to make sure we get the new value in children processes (catkin_make, test runs, etc.)

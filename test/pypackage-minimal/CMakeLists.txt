@@ -19,7 +19,7 @@ catkin_pip_package(cookiecutter_pypackage_minimal ${PIP_PROJECT_DIR})
 # CAREFUL : all projects for test here will share the same workspace. pip might have conflicts...
 
 ## Unit tests
-# if (CATKIN_ENABLE_TESTING)
-#     catkin_add_nosetests(${PIP_PROJECT_DIR}/tests DEPENDENCIES cookiecutter_pypackage_minimal)
-#     catkin_add_pytests(${PIP_PROJECT_DIR}/tests DEPENDENCIES cookiecutter_pypackage_minimal)
-# endif()
+if (CATKIN_ENABLE_TESTING)
+    catkin_add_nosetests(${PIP_PROJECT_DIR}/tests DEPENDENCIES cookiecutter_pypackage_minimal)
+    catkin_add_pytests(${PIP_PROJECT_DIR}/tests DEPENDENCIES cookiecutter_pypackage_minimal)
+endif()

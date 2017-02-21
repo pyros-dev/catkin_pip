@@ -32,7 +32,7 @@ if [ $# -eq 3 ]; then
 fi
 
 # if PATH is empty
-if [ -z "$LIST" -o ]; then
+if [ -z "$LIST" ]; then
     LIST="$ARG"
 else
     # we move it from tail to head of paths in PATH list
@@ -40,7 +40,7 @@ else
     LIST=""
     for p in $PATH_LIST; do
         if [ X"$p" = X"${BEFORE:-}" ]; then
-            #echo "BEFORE FOUND"
+            BEFORE_FOUND=1  # to mark we have found BEFORE
             [ -z "${LIST:-}" ] && LIST=${ARG} || LIST=${LIST}:${ARG}
             #echo $LIST
         fi
@@ -50,7 +50,7 @@ else
         fi
     done
     # we prepend ARG here, after we made sure it is not in LIST any longer
-    if [ -z ${BEFORE:-} ]; then
+    if [ -z "${BEFORE:-}" -o -z "${BEFORE_FOUND:-}" ]; then  # if there was no before or if it was not found, we put it in front
         [ -z "${LIST:-}" ] && LIST="$ARG" || LIST="$ARG":"${LIST}"
     fi
 fi

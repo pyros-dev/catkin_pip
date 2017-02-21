@@ -57,7 +57,7 @@ def test_devel_dist_in_sys_path(devel_space):
     1/0
 
 
-# this should pass only if started from cmake, ie. the ROS way via catkin_pip
+@pytest.mark.xfail(strict=True, reason="dist-packages does not exist in our example since all packages use catkin_pip")
 def test_devel_site_before_devel_dist_in_sys_path(devel_space):
     print(sys.path)
 
@@ -94,6 +94,7 @@ def test_devel_dist_before_catkin_pip_site_in_sys_path(catkin_pip_env_dir, devel
     )
 
 
+@pytest.mark.xfail(strict=True, reason="With usual python and catkin cmake scripts, editable links are added so sys.path after pythonpath.")
 def test_sys_path_editable(git_working_tree, devel_space):
     print(sys.path)
 

@@ -1,2 +1,2 @@
 cookiecutter
-pyros-setup
+pyros-setup>=0.2.0

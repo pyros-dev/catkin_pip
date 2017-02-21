@@ -34,8 +34,7 @@ endif()
 if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pipproject/mypippkg")
     message(STATUS "    ... Getting cookiecutter-pipproject template from cookiecutter ...")
     execute_process(
-      # TMP waiting for PR
-      COMMAND ${CATKIN_ENV} ${CATKIN_COOKIECUTTER} --no-input https://github.com/asmodehn/cookiecutter-pipproject.git --checkout adding_test_sample
+      COMMAND ${CATKIN_ENV} ${CATKIN_COOKIECUTTER} --no-input https://github.com/wdm0006/cookiecutter-pipproject.git
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pipproject
       RESULT_VARIABLE PIP_RESULT
       OUTPUT_VARIABLE PIP_VARIABLE
@@ -69,7 +68,7 @@ if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pypackage-minimal/cookiecutter_pypac
     message(STATUS "    ... Getting cookiecutter-pypackage-minimal template from cookiecutter ...")
     execute_process(
     # TMP : fork to get proper default package name. upstream : https://github.com/kragniz/cookiecutter-pypackage-minimal
-      COMMAND ${CATKIN_ENV} ${CATKIN_COOKIECUTTER} --no-input https://github.com/asmodehn/cookiecutter-pypackage-minimal
+      COMMAND ${CATKIN_ENV} ${CATKIN_COOKIECUTTER} --no-input https://github.com/asmodehn/cookiecutter-pypackage-minimal --checkout adding_test
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pypackage-minimal
       RESULT_VARIABLE PIP_RESULT
       OUTPUT_VARIABLE PIP_VARIABLE
@@ -152,7 +151,7 @@ if (CATKIN_ENABLE_TESTING)
 
     # Because we need to validate that pyros fixes editable pkg path ordering for us
     catkin_add_pytests(catkin_pip_pytest/test_syspath_pyros.py
-        --build-dir ${CMAKE_BINARY_DIR}
+        --capture=no --build-dir ${CMAKE_BINARY_DIR}
         DEPENDENCIES
         ${mypippkg_PIP_TARGET}                      # from pipproject
         ${nameless_PIP_TARGET}                      # from pylibrary
