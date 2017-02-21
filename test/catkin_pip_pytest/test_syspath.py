@@ -2,23 +2,63 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import os
-import sys
 import pytest
-import importlib
+import sys
+
+
+"""
+This module is a test for catkin_pip.
+It is expected to run FROM CMAKE with pytest, from the build directory
+Ex : If you ran ./travis_checks.bash that is /home/alexv/Projects/ros_pyros_ws/src/catkin_pip/testbuild
+"""
 
 
 def in_sys_path_ordered(*arg_paths):
     """
-    asserts that path1 is before path2 in sys.path
+    Checks if arg_paths are listed int he same order as in sys.path
     :param arg_paths: the arguments are a list of path
     :return: True if all paths appear in sys.path, and in the arguments order. False otherwise.
     """
     return all(p in sys.path for p in arg_paths) and \
-           all([sys.path.index(p) < sys.path.index(q) for p, q in zip(arg_paths,arg_paths[1:])]
+           all([sys.path.index(p) < sys.path.index(q) for p, q in zip(arg_paths, arg_paths[1:])]
                if len(arg_paths) else True)
 
 
-def test_devel_space_in_sys_path(devel_space):
+#
+# TESTS
+#
+
+def test_catkin_pip_env_dir_in_sys_path(catkin_pip_env_dir):
+    print(sys.path)
+    assert in_sys_path_ordered(
+        os.path.join(catkin_pip_env_dir, 'lib/python2.7/site-packages'),
+    ), "{site_pkgs} not appearing in sys.path".format(
+        site_pkgs=os.path.join(catkin_pip_env_dir, 'lib/python2.7/site-packages')
+    )
+
+
+def test_devel_site_in_sys_path(devel_space):
+    print(sys.path)
+    assert in_sys_path_ordered(
+        os.path.join(devel_space, 'lib/python2.7/site-packages'),
+    ), "{site_pkgs} not in sys.path".format(
+        site_pkgs=os.path.join(devel_space, 'lib/python2.7/site-packages')
+    )
+
+
+@pytest.mark.xfail(strict=True, reason="dist-packages does not exist in our example since all packages use catkin_pip")
+def test_devel_dist_in_sys_path(devel_space):
+    print(sys.path)
+    assert in_sys_path_ordered(
+        os.path.join(devel_space, 'lib/python2.7/dist-packages'),
+    ), "{dist_pkgs} in sys.path".format(
+        dist_pkgs=os.path.join(devel_space, 'lib/python2.7/dist-packages')
+    )
+    1/0
+
+
+# this should pass only if started from cmake, ie. the ROS way via catkin_pip
+def test_devel_site_before_devel_dist_in_sys_path(devel_space):
     print(sys.path)
 
     # Verifying relative path order
@@ -31,47 +71,30 @@ def test_devel_space_in_sys_path(devel_space):
     )
 
 
-def test_catkin_pip_env_dir_in_sys_path(catkin_pip_env_dir):
+def test_devel_site_before_catkin_pip_site_in_sys_path(catkin_pip_env_dir, devel_space):
     print(sys.path)
-
-    # Verifying relative path order
     assert in_sys_path_ordered(
+        os.path.join(devel_space, 'lib/python2.7/site-packages'),
         os.path.join(catkin_pip_env_dir, 'lib/python2.7/site-packages'),
-    ), "{site_pkgs} not appearing in sys.path".format(
-        site_pkgs=os.path.join(catkin_pip_env_dir, 'lib/python2.7/site-packages')
+    ), "{site_pkgs} not appearing before {catkin_pkgs} in sys.path".format(
+        site_pkgs=os.path.join(devel_space, 'lib/python2.7/site-packages'),
+        catkin_pkgs=os.path.join(catkin_pip_env_dir, 'lib/python2.7/site-packages')
+    )
+
+
+@pytest.mark.xfail(strict=True, reason="dist-packages does not exist in our example since all packages use catkin_pip")
+def test_devel_dist_before_catkin_pip_site_in_sys_path(catkin_pip_env_dir, devel_space):
+    print(sys.path)
+    assert in_sys_path_ordered(
+        os.path.join(devel_space, 'lib/python2.7/dist-packages'),
+        os.path.join(catkin_pip_env_dir, 'lib/python2.7/site-packages'),
+    ), "{dist_pkgs} not appearing before {catkin_pkgs} in sys.path".format(
+        dist_pkgs=os.path.join(devel_space, 'lib/python2.7/dist-packages'),
+        catkin_pkgs=os.path.join(catkin_pip_env_dir, 'lib/python2.7/site-packages')
     )
 
 
 def test_sys_path_editable(git_working_tree, devel_space):
-    print(sys.path)
-
-    # IMPORTANT : Without pyros_setup configuration activated,
-    # the develop packages are set in sys.path AFTER the site-packages and dist-packages
-    # This is because of incompatibilities between ROS and python ways of handling PYTHONPATH.
-    # It is usually not a problem, unless :
-    #  - you are working in a devel space with catkin_pip and expect to use a editable package from there
-    #  - you have the same package installed somewhere else in the PYTHONPATH
-    #    And in that case it might end up being *before* the source dir in sys.path
-    #
-    # => Without pyros_setup, the installed version will be preferred
-    # This is the python (and tools) way of working, since PYTHONPATH purpose is to override file-based setup,
-    # like editable packages.
-    #
-    # => With pyros_setup, the devel version will be preferred
-    # This is the ROS way of working, since PYTHONPATH order determine the order of folder when looking for a package.
-    #
-    # Both will work fine in most cases, but one might want to keep this corner case in mind...
-
-    import pyros_setup
-
-    # We need to pass the proper workspace here
-    pyros_setup.configurable_import().configure({
-        'WORKSPACES': [
-            devel_space
-        ],  # This should be the same as pytest devel_space fixture
-        'DISTRO': pyros_setup.DETECTED_DISTRO,
-    }).activate()
-
     print(sys.path)
 
     def pkg_path_in_sys_path(pkg_path, before=[]):
@@ -96,5 +119,5 @@ def test_sys_path_editable(git_working_tree, devel_space):
 
         pkg_path_in_sys_path(ss, [
             os.path.join(devel_space, 'lib/python2.7/site-packages'),
-            os.path.join(devel_space, 'lib/python2.7/dist-packages')
+            # os.path.join(devel_space, 'lib/python2.7/dist-packages')  # no dist-packages folder since all our examples are using catkin_pip
         ])
