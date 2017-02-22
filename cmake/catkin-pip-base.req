@@ -2,6 +2,6 @@
 # It is better here to pin packages to a verified version, especially since we are explointing a borderline usecase
 # However this means we need a short maintenance cycle to not be outdated by python folks...
 
-pip==8.1.2  # pip > 9.0 tries to remove system packages data, even if we specify /home/alexv/ROS/gopher_bootstrap/build/catkin_pip_env/bin/pip install -e /home/alexv/ROS/gopher_bootstrap/src/pyros --ignore-installed --no-dependencies --prefix /home/alexv/ROS/gopher_bootstrap/devel
+pip==9.0.1
 # Issue : https://github.com/asmodehn/catkin_pip/issues/58
-setuptools==33.1.1
+setuptools==34.2.0
