@@ -93,32 +93,3 @@ def test_devel_dist_before_catkin_pip_site_in_sys_path(catkin_pip_env_dir, devel
         catkin_pkgs=os.path.join(catkin_pip_env_dir, 'lib/python2.7/site-packages')
     )
 
-
-@pytest.mark.xfail(strict=True, reason="With usual python and catkin cmake scripts, editable links are added so sys.path after pythonpath.")
-def test_sys_path_editable(git_working_tree, devel_space):
-    print(sys.path)
-
-    def pkg_path_in_sys_path(pkg_path, before=[]):
-        assert os.path.exists(pkg_path), "{pkg_path} does not exist".format(**locals())
-
-        # By default the egg-links path are added after the pythonpaths.
-        # We need opposite behavior for ROS python (due to how devel workspace and underlays work)
-        # This is handle by both catkin_pip for ROS usage and pyros_setup for python usage.
-
-        assert in_sys_path_ordered(*([pkg_path] + before)),\
-            "paths not appearing in sys.path in the expected order : {p}".format(p=([pkg_path] + before))
-
-    # Verifying the pip editable installed package location is in python path
-    for python_pkg in [
-        os.path.join('pipproject', 'mypippkg'),
-        os.path.join('pylibrary', 'python-nameless', 'src'),
-        os.path.join('pypackage', 'python_boilerplate'),
-        os.path.join('pypackage-minimal', 'cookiecutter_pypackage_minimal'),
-    ]:
-
-        ss = os.path.join(git_working_tree, 'test', python_pkg)
-
-        pkg_path_in_sys_path(ss, [
-            os.path.join(devel_space, 'lib/python2.7/site-packages'),
-            # os.path.join(devel_space, 'lib/python2.7/dist-packages')  # no dist-packages folder since all our examples are using catkin_pip
-        ])

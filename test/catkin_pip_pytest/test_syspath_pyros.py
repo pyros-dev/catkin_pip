@@ -56,8 +56,3 @@ def test_devel_site_before_catkin_pip_site_in_sys_path(pyros, catkin_pip_env_dir
 def test_devel_dist_before_catkin_pip_site_in_sys_path(pyros, catkin_pip_env_dir, devel_space):
     return test_syspath.test_devel_dist_before_catkin_pip_site_in_sys_path(catkin_pip_env_dir, devel_space)
 
-
-# Using Pyros_setup is the only way to get this to work as expected.
-# That is getting devel packages in sys.path before ROS workspaces from PYTHONPATH.
-def test_sys_path_editable(pyros, git_working_tree, devel_space):
-    return test_syspath.test_sys_path_editable(git_working_tree, devel_space)

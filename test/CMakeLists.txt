@@ -108,14 +108,6 @@ if (CATKIN_ENABLE_TESTING)
     #########
 
     # Testing one by one to make sure pyros_setup import doesnt influence test it shouldnt influence...
-    catkin_add_pytests(catkin_pip_pytest/test_easyinstallpth.py
-        --build-dir ${CMAKE_BINARY_DIR}
-        DEPENDENCIES
-        ${mypippkg_PIP_TARGET}                      # from pipproject
-        ${nameless_PIP_TARGET}                      # from pylibrary
-        ${python_boilerplate_PIP_TARGET}            # from pypackage
-        ${cookiecutter_pypackage_minimal_PIP_TARGET}      # from pypackage-minimal
-    )
     catkin_add_pytests(catkin_pip_pytest/test_path.py
         --build-dir ${CMAKE_BINARY_DIR}
         DEPENDENCIES
