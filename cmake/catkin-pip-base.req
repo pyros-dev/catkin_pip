@@ -3,5 +3,4 @@
 # However this means we need a short maintenance cycle to not be outdated by python folks...
 
 pip==9.0.1
-# Issue : https://github.com/asmodehn/catkin_pip/issues/58
 setuptools==34.2.0

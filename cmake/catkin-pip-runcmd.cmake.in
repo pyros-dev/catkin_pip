@@ -44,19 +44,14 @@ endfunction()
 
 function(catkin_pip_install_devel_target package_name package_path)
     set(CATKIN_PIP_INSTALL_DEVEL_OUTPUTS
-        # ${CATKIN_DEVEL_PREFIX}/${CATKIN_PIP_PYTHON_INSTALL_DIR}/easy-install.pth
         # CAREFUL with multiple outputs : https://cmake.org/Bug/view.php?id=15116
-        ${CATKIN_DEVEL_PREFIX}/${CATKIN_PIP_PYTHON_INSTALL_DIR}/${package_name}.egg-link
+        ${CATKIN_DEVEL_PREFIX}/${CATKIN_PIP_PYTHON_INSTALL_DIR}/${package_name}
     )
 
     string(REPLACE ";" " " ARGN_STR "${ARGN}")
 
-    # note setlock because of https://github.com/pypa/pip/issues/2361
-    # TODO : change to use --target to allow installing duplicate packages with pip>=9.0.0 ... Ref https://github.com/pypa/pip/issues/4243
-
-
     set(CATKIN_PIP_CMD ${CATKIN_ENV})
-    set(CATKIN_PIP_CMD_ARGS_STR "setlock ${CATKIN_PIP_ENV}/catkin_pip.lock ${CATKIN_PIP} install ${package_path} --prefix ${CATKIN_DEVEL_PREFIX} ${ARGN_STR}")
+    set(CATKIN_PIP_CMD_ARGS_STR "${CATKIN_PIP} install ${package_path} --prefix ${CATKIN_DEVEL_PREFIX} ${ARGN_STR}")
     separate_arguments(CATKIN_PIP_CMD_ARGS_LIST UNIX_COMMAND ${CATKIN_PIP_CMD_ARGS_STR})
 
     # Note that catkin_env is called first. That is because we do not trust catkin_env return code and async behavior.
@@ -72,7 +67,7 @@ function(catkin_pip_install_devel_target package_name package_path)
 
       COMMAND ${CATKIN_PIP_CMD} ${CATKIN_PIP_CMD_ARGS_LIST}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      DEPENDS "${package_path}"  # file level dependency : package needs to be in the path
+      DEPENDS "${package_path}/setup.py"  # file level dependency : package setup.py needs to exists
       COMMENT "${CATKIN_PIP_CMD} ${CATKIN_PIP_CMD_ARGS_STR}"
       VERBATIM
     )
