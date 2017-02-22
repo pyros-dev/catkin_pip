@@ -56,15 +56,8 @@ function(catkin_pip_install_devel_target package_name package_path)
 
 
     set(CATKIN_PIP_CMD ${CATKIN_ENV})
-    set(CATKIN_PIP_CMD_ARGS_STR "setlock ${CATKIN_PIP_ENV}/catkin_pip.lock ${CATKIN_PIP} install -e ${package_path} --prefix ${CATKIN_DEVEL_PREFIX} ${ARGN_STR}")
-    # IF WE ARE PASSING EDITABLE PKG PATHS INTO PYTHONPATH we need to work around bug :
-    # PYTHONPATH breaks pip install --editable Ref : https://github.com/pypa/pip/issues/4261
-    # set(CATKIN_PIP_CMD_ARGS_STR "-c 'export PYTHONPATH=${CATKIN_DEVEL_PREFIX}/${CATKIN_PIP_PYTHON_INSTALL_DIR}:${CATKIN_PIP_ENV}/${CATKIN_PIP_PYTHON_INSTALL_DIR}\; ${CATKIN_PIP_CMD_ARGS_STR}'")
-    # set(CATKIN_PIP_CMD /bin/bash)  # Ubuntu (Linux?) only  # Also we are probably missing some other CATKIN_ENV setup...
-
-
+    set(CATKIN_PIP_CMD_ARGS_STR "setlock ${CATKIN_PIP_ENV}/catkin_pip.lock ${CATKIN_PIP} install ${package_path} --prefix ${CATKIN_DEVEL_PREFIX} ${ARGN_STR}")
     separate_arguments(CATKIN_PIP_CMD_ARGS_LIST UNIX_COMMAND ${CATKIN_PIP_CMD_ARGS_STR})
-
 
     # Note that catkin_env is called first. That is because we do not trust catkin_env return code and async behavior.
     # However we have to assume it doesn't alter the environment in a way that breaks setlock.
