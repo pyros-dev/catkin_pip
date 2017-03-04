@@ -2,8 +2,8 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.18 (2017-03-04)
+-------------------
 * Pin pytest to latest version 3.0.5
 * Pin pytest-timeout to latest version 1.2.0
 * Pin nose to latest version 1.3.7
