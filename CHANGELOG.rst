@@ -2,6 +2,16 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Pin pytest to latest version 3.0.5
+* Pin pytest-timeout to latest version 1.2.0
+* Pin nose to latest version 1.3.7
+* Pin pytest-cov to latest version 2.4.0
+* Pin cookiecutter to latest version 1.5.0
+* adding pyup checks for dependencies
+* Contributors: AlexV, alexv, pyup-bot
+
 0.1.17 (2017-01-13)
 -------------------
 * now always ignore-installed when installing requirements.
