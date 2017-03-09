@@ -5,3 +5,4 @@ test/.cache
 testbuild
 test/pipproject/mypippkg
 .idea
+*.pyc

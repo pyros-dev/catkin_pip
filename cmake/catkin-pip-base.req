@@ -1,4 +1,7 @@
 # Basic tools to install, simulating virtualenv creation behavior.
-# Not setting any version here to force catkin-pip to follow python and not remain stuck on deprecated versions.
-pip==8.1.2  # pip > 9.0 tries to remove egg-info/entry_points.txt from /opt/yujin/amd64/indigo-devel/lib/python2.7/dist-packages/pyros-... even if we specify /home/alexv/ROS/gopher_bootstrap/build/catkin_pip_env/bin/pip install -e /home/alexv/ROS/gopher_bootstrap/src/pyros --ignore-installed --no-dependencies --prefix /home/alexv/ROS/gopher_bootstrap/devel
-setuptools
+# It is better here to pin packages to a verified version, especially since we are explointing a borderline usecase
+# However this means we need a short maintenance cycle to not be outdated by python folks...
+
+pip==8.1.2  # pip > 9.0 tries to remove system packages data, even if we specify /home/alexv/ROS/gopher_bootstrap/build/catkin_pip_env/bin/pip install -e /home/alexv/ROS/gopher_bootstrap/src/pyros --ignore-installed --no-dependencies --prefix /home/alexv/ROS/gopher_bootstrap/devel
+# Issue : https://github.com/asmodehn/catkin_pip/issues/58
+setuptools==33.1.1

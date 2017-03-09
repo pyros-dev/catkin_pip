@@ -1,5 +1,3 @@
-message(STATUS "Loading catkin-pip-setup.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
-
 if ( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
 	message ( FATAL_ERROR " CMAKE MINIMUM BACKWARD COMPATIBILITY REQUIRED : 2.8 !" )
 endif( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
@@ -10,11 +8,8 @@ if(catkin_pip_setup_included)
 endif(catkin_pip_setup_included)
 set(catkin_pip_setup_included true)
 
-# protecting against missing cmake file
-include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-env.cmake" RESULT_VARIABLE CATKIN_PIP_ENV_FOUND )
-IF ( NOT CATKIN_PIP_ENV_FOUND )
-    message ( FATAL_ERROR "{CMAKE_CURRENT_LIST_DIR}/catkin-pip-env.cmake Not Found !!!" )
-ENDIF ( NOT CATKIN_PIP_ENV_FOUND )
+message(STATUS "Loading catkin-pip-package.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
+
 
 # protecting against missing cmake file
 include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-runcmd.cmake" RESULT_VARIABLE CATKIN_PIP_RUNCMD_FOUND )
@@ -41,6 +36,10 @@ function(catkin_pip_python_setup)
 
     # Setting up variables for scripts configuration (in a function to keep it here)
     set(CATKIN_PIP_PACKAGE_PATH ${package_path})
+
+    # sourcing envhooks to keep coherence between cmake run and shell run (especially for tests)
+    # DUPLICATED with catkin_pip_setup
+    #catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --no-dependencies --prefix "${CATKIN_DEVEL_PREFIX}")
 
     # BEGIN : This is from catkin_python_setup
     # we follow same process but with slightly different scripts
@@ -77,7 +76,10 @@ function(catkin_pip_python_setup)
 
 endfunction()
 
-function(catkin_pip_setup)
+# TODO : we now create an actual cmake target -> rename to catkin_pip_target ?
+function(catkin_pip_package package_name)
+
+    set(${PROJECT_NAME}_PIP_TARGET ${package_name} CACHE STRING "Make target generated to install this pip package as --editable for development")
 
     set (extra_macro_args ${ARGN})
 
@@ -93,21 +95,29 @@ function(catkin_pip_setup)
     # Note : environment should already be setup at configure time for devel
 
     # Then we can run the pip command
+    # Note when installing in editable mode (for development) we shouldnt care about already installed versions.
+    # However : https://github.com/asmodehn/catkin_pip/issues/58
     if(CATKIN_PIP_NO_DEPS)
-        catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --no-dependencies --prefix "${CATKIN_DEVEL_PREFIX}")
+        catkin_pip_install_devel_target(${package_name} ${package_path} --no-dependencies --ignore-installed)
+        #catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --no-dependencies --prefix "${CATKIN_DEVEL_PREFIX}" --ignore-installed)
     else()
-        catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --prefix "${CATKIN_DEVEL_PREFIX}")
+        catkin_pip_install_devel_target(${package_name} ${package_path} --ignore-installed)
+        #catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --prefix "${CATKIN_DEVEL_PREFIX}" --ignore-installed)
     endif()
 
     if(NOT EXISTS ${package_path}/setup.py)
         message(FATAL_ERROR "catkin_pip_setup() called without 'setup.py' in project folder '${package_path}'")
     endif()
 
+    # Probably better to do that here (dont do anything "special" for python)
     catkin_pip_python_setup()
 
     # TODO : we might want to generate a package.xml on the fly from setup.py contents...
 
     # Hijacking catkin scripts again
     #set(_PACKAGE_XML_DIRECTORY ${package_path})
+
+    # Here we plug back into usual catkin package build flow
+    catkin_package()
 
 endfunction()
