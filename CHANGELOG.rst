@@ -2,8 +2,8 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.0 (2017-03-14)
+------------------
 * Merge branch 'devel' into gopher-devel
 * now using catkin_pip_runcmd to retrieve cookiecutter package samples.
 * removing install envhook. seems to break things.
