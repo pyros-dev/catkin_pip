@@ -32,48 +32,19 @@ else()
 endif()
 
 if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pipproject/mypippkg")
-    message(STATUS "    ... Getting cookiecutter-pipproject template from cookiecutter ...")
-    execute_process(
-      COMMAND ${CATKIN_ENV} ${CATKIN_COOKIECUTTER} --no-input https://github.com/wdm0006/cookiecutter-pipproject.git
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pipproject
-      RESULT_VARIABLE PIP_RESULT
-      OUTPUT_VARIABLE PIP_VARIABLE
-    )
-    message(STATUS "    ... Done ...")
+    catkin_pip_runcmd(${CATKIN_COOKIECUTTER} --no-input https://github.com/wdm0006/cookiecutter-pipproject.git -o pipproject)
 endif()
 
 if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pylibrary/python-nameless")
-    message(STATUS "    ... Getting cookiecutter-pylibrary template from cookiecutter ...")
-    execute_process(
-      COMMAND ${CATKIN_ENV} ${CATKIN_COOKIECUTTER} --no-input https://github.com/ionelmc/cookiecutter-pylibrary
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pylibrary
-      RESULT_VARIABLE PIP_RESULT
-      OUTPUT_VARIABLE PIP_VARIABLE
-    )
-    message(STATUS "    ... Done ...")
+    catkin_pip_runcmd(${CATKIN_COOKIECUTTER} --no-input https://github.com/ionelmc/cookiecutter-pylibrary -o pylibrary)
 endif()
 
 if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pypackage/python_boilerplate")
-    message(STATUS "    ... Getting cookiecutter-pypackage template from cookiecutter ...")
-    execute_process(
-      COMMAND ${CATKIN_ENV} ${CATKIN_COOKIECUTTER} --no-input https://github.com/audreyr/cookiecutter-pypackage
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pypackage
-      RESULT_VARIABLE PIP_RESULT
-      OUTPUT_VARIABLE PIP_VARIABLE
-    )
-    message(STATUS "    ... Done ...")
+    catkin_pip_runcmd( ${CATKIN_COOKIECUTTER} --no-input https://github.com/audreyr/cookiecutter-pypackage -o pypackage)
 endif()
 
 if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pypackage-minimal/cookiecutter_pypackage_minimal")
-    message(STATUS "    ... Getting cookiecutter-pypackage-minimal template from cookiecutter ...")
-    execute_process(
-    # TMP : fork to get proper default package name. upstream : https://github.com/kragniz/cookiecutter-pypackage-minimal
-      COMMAND ${CATKIN_ENV} ${CATKIN_COOKIECUTTER} --no-input https://github.com/asmodehn/cookiecutter-pypackage-minimal --checkout adding_test
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pypackage-minimal
-      RESULT_VARIABLE PIP_RESULT
-      OUTPUT_VARIABLE PIP_VARIABLE
-    )
-    message(STATUS "    ... Done ...")
+    catkin_pip_runcmd( ${CATKIN_COOKIECUTTER} --no-input https://github.com/kragniz/cookiecutter-pypackage-minimal -o pypackage-minimal)
 endif()
 
 
