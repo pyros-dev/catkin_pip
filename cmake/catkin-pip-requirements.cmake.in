@@ -28,6 +28,14 @@ function(catkin_pip_requirements requirements_txt)
     catkin_pip_setup_prefix(${CATKIN_PIP_ENV})
 
     # runnig the pip command (configure time)
-    catkin_pip_runcmd(${CATKIN_PIP} install ${ARGN} -r ${requirements_txt} --ignore-installed --src ${CMAKE_SOURCE_DIR} --exists-action b --prefix "${CATKIN_DEVEL_PREFIX}")
+    catkin_pip_runcmd(${CATKIN_PIP} install ${ARGN} -r ${requirements_txt} --ignore-installed --src ${CMAKE_SOURCE_DIR} --exists-action b --prefix "${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_SHARE_DESTINATION}/${PROJECT_NAME}") ## somehow we could not use CATKIN_PACKAGE_SHARE_DESTINATION here
+
+    install(DIRECTORY ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_SHARE_DESTINATION}/${PROJECT_NAME}/${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION}
+            DESTINATION ${CATKIN_GLOBAL_SHARE_DESTINATION}/${PROJECT_NAME}/${CATKIN_PIP_GLOBAL_PYTHON_DESTINATION})
+    # for devel
+    set (CATKIN_PIP_GLOBAL_PYTHON_DESTINATION "lib/python2.7/site-packages") #  ???? why we need at here????
+    configure_file(${CATKIN_PIP_TEMPLATES_PATH}/python.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_LIBEXEC_DESTINATION}/${PROJECT_NAME}/python)
+    # for install
+    install(CODE "configure_file(${CATKIN_PIP_TEMPLATES_PATH}/python.in ${CATKIN_GLOBAL_LIBEXEC_DESTINATION}/${PROJECT_NAME}/python)")
 
 endfunction()

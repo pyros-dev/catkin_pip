@@ -65,6 +65,7 @@ function(catkin_pip_python_setup)
           ${INSTALL_SCRIPT}
           @ONLY)
       endif()
+      configure_file(${CATKIN_PIP_TEMPLATES_PATH}/python.in cmake/python.in @ONLY)
 
       # generate python script which gets executed at install time
       configure_file(${catkin_EXTRAS_DIR}/templates/safe_execute_install.cmake.in
