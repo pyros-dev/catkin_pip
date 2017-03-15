@@ -1,8 +1,14 @@
-message(STATUS "Loading catkin-pip.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
-
 if ( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
 	message ( FATAL_ERROR " CMAKE MINIMUM BACKWARD COMPATIBILITY REQUIRED : 2.8 !" )
 endif( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
+
+# Enforcing one time include https://cmake.org/Wiki/CMake_Performance_Tips#Use_an_include_guard
+if(catkin_pip_main_included)
+  return()
+endif(catkin_pip_main_included)
+set(catkin_pip_main_included true)
+
+message(STATUS "Loading catkin-pip.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
 
 # Setting required policies
 # required to be able to do "if (True)"
@@ -12,12 +18,6 @@ endif( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
 #     ENDIF()
 # ENDFOREACH()
 
-# Enforcing one time include https://cmake.org/Wiki/CMake_Performance_Tips#Use_an_include_guard
-if(catkin_pip_main_included)
-  return()
-endif(catkin_pip_main_included)
-set(catkin_pip_main_included true)
-
 # protecting against missing cmake file dependency
 include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-requirements.cmake" RESULT_VARIABLE CATKIN_PIP_REQUIREMENTS_FOUND )
 IF ( NOT CATKIN_PIP_REQUIREMENTS_FOUND )
@@ -25,10 +25,10 @@ IF ( NOT CATKIN_PIP_REQUIREMENTS_FOUND )
 ENDIF ( NOT CATKIN_PIP_REQUIREMENTS_FOUND )
 
 # protecting against missing cmake file dependency
-include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake" RESULT_VARIABLE CATKIN_PIP_SETUP_FOUND )
-IF ( NOT CATKIN_PIP_SETUP_FOUND )
-    message ( FATAL_ERROR "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-setup.cmake Not Found !!!" )
-ENDIF ( NOT CATKIN_PIP_SETUP_FOUND )
+include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-package.cmake" RESULT_VARIABLE CATKIN_PIP_PACKAGE_FOUND )
+IF ( NOT CATKIN_PIP_PACKAGE_FOUND )
+    message ( FATAL_ERROR "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-package.cmake Not Found !!!" )
+ENDIF ( NOT CATKIN_PIP_PACKAGE_FOUND )
 
 # Setting our paths to package env-hooks provided by catkin-pip
 if ( NOT CATKIN_PIP_ENV_HOOKS_PATH )
@@ -49,23 +49,19 @@ if ( NOT CATKIN_PIP_SCRIPTS_PATH )
     set (CATKIN_PIP_SCRIPTS_PATH ${CMAKE_CURRENT_LIST_DIR}/scripts CACHE PATH "scripts path")
 endif()
 
+# Setting up python site-packages directory in devel workspace
+# If needed we create the directory (to avoid later errors)
+# It is required on isolated builds and for env-hooks
+file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@)
+
 # Since we need the envhook as soon as a package is using catkin-pip from source.
-# TODO : investigate, maybe we can simplify this by using CATKIN_ENV
-catkin_add_env_hooks(42.site_packages SHELLS sh DIRECTORY ${CATKIN_PIP_ENV_HOOKS_PATH} SKIP_INSTALL)
-# TODO : validate if we need both ?
-catkin_add_env_hooks(42.site_packages SHELLS bash DIRECTORY ${CATKIN_PIP_ENV_HOOKS_PATH} SKIP_INSTALL)
-# SKIP_INSTALL because we definitely do not want it ending up in all deb packages built with catkin_pip.
-# If we need paths in install space, they should somehow be stored in generated scripts (make or others)
+catkin_add_env_hooks(42.site_packages SHELLS sh DIRECTORY ${CATKIN_PIP_ENV_HOOKS_PATH})
+# If we need paths in install space, they should somehow be stored in generated scripts (make or others) as much as possible
 # TODO : cmake should include this file only once per workspace, so the env hook is not recreated for every package that uses catkin_pip if they are in same workspace...
 
 
 # Setting up catkin prefix in catkin_pip_env
 catkin_pip_setup_prefix(${CATKIN_PIP_ENV})
-
-# Setting up python site-packages directory in devel workspace
-# If needed we create the directory (to avoid later errors)
-# It is required on isolated builds
-file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@)
 
 #
 # Install Space should have same behavior as package build

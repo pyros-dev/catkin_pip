@@ -2,6 +2,120 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.2.0 (2017-03-14)
+------------------
+* Merge branch 'devel' into gopher-devel
+* now using catkin_pip_runcmd to retrieve cookiecutter package samples.
+* removing install envhook. seems to break things.
+  we dont want the install envhook to be created for catkin_pip since the target build env does not exist.
+* Merge pull request `#61 <https://github.com/asmodehn/catkin_pip/issues/61>`_ from asmodehn/refactor_envs
+  Refactor envs
+* adding docs to make decision clear regarding catkin / pyros_setup behavior.
+* fixing up install devel command since we do not pass editable pkg path into pythonpath anymore.
+* Merge branch 'gopher-devel' into refactor_envs
+* Merge pull request `#76 <https://github.com/asmodehn/catkin_pip/issues/76>`_ from asmodehn/easyinstall_fix
+  Easyinstall fix
+* commenting install tests... we dont have any.
+* always adding the catkin_pip_env path to pythonpath to be able to find basic tools from the first time around.
+* envhooks now not adding to pythonpath from pth files. too confusing.
+  envhooks now not adding non existent paths to pythonpath. maybe good idea to match site module behavior.
+  fixing tests.
+* improved tests. added test for check with pyros_setup and interractive debugging
+* fixed broken tests. now needs pyros-setup to get .pth paths before workspaces.
+  cosmetics.
+* improved tests and fix all.
+  added actual test for pytest to pipproject.
+* cleaning up command args when running pip install --editable to clean python path and workaround pip bug...
+* replacing CI_ROS_DISTRO var by ROS_DISTRO, to have it set for calls to rosdep.
+* more exhaustive test for sys_path
+* commenting echoes from script since it cannot echo without breaking things anyway.
+* reviewing shell script to make them a tiny more robust...
+* removed useless bash envhook, fixed easy-install parse to include last line even if no empty line at end of file.
+* Merge pull request `#77 <https://github.com/asmodehn/catkin_pip/issues/77>`_ from asmodehn/pyup-update-pytest-3.0.5-to-3.0.6
+  Update pytest to 3.0.6
+* Merge pull request `#86 <https://github.com/asmodehn/catkin_pip/issues/86>`_ from asmodehn/pyup-update-cookiecutter-1.5.0-to-1.5.1
+  Update cookiecutter to 1.5.1
+* Update cookiecutter from 1.5.0 to 1.5.1
+* moved rosdep install out of catkin_pip, only used for tests.
+  temporarily skipping broken test because of pip behavior...
+* improved concurrency handling for pip by using setlock from daemontools.
+  improved status message output.
+* adding libssl-dev as dependency forpypackage
+* adding catkin_pip function to call rosdep install. attempting fix for pypackage tests.
+* adding libffi-dev as build_depend for python_boilerplate
+* API changed ! redesigned workflow by doing "pip install -e package" during make stage instead of configure. All tests passing.
+* Update pytest from 3.0.5 to 3.0.6
+* reverted to pip 8.1.2
+  changes added in prevision of switching to pip 9.X when --ignore-installed working...
+* added comment about sourcing install/setup.bash
+* improved test cases to check the content of easy-install.pth
+* adding cookiecutter pypackage-minimal for tests
+* adding cookiecutter pypackage for tests
+* adding cookiecutter pylibrary for testing
+* adding result of investigation for unexpected dist-packages in sys.path tail... still WIP
+* now handling environment setup only via catkin_env from env-hooks.
+  made pure sh envhook to allow implementing other shells.
+* WIP refactoring how we setup configure / build / devel/ install enironments
+* improved path_prepend shell script
+* Contributors: AlexV, alexv, pyup-bot
+
+* removing install envhook. seems to break things.
+  we dont want the install envhook to be created for catkin_pip since the target build env does not exist.
+* Merge pull request `#61 <https://github.com/asmodehn/catkin_pip/issues/61>`_ from asmodehn/refactor_envs
+  Refactor envs
+* adding docs to make decision clear regarding catkin / pyros_setup behavior.
+* fixing up install devel command since we do not pass editable pkg path into pythonpath anymore.
+* Merge branch 'gopher-devel' into refactor_envs
+* Merge pull request `#76 <https://github.com/asmodehn/catkin_pip/issues/76>`_ from asmodehn/easyinstall_fix
+  Easyinstall fix
+* commenting install tests... we dont have any.
+* always adding the catkin_pip_env path to pythonpath to be able to find basic tools from the first time around.
+* envhooks now not adding to pythonpath from pth files. too confusing.
+  envhooks now not adding non existent paths to pythonpath. maybe good idea to match site module behavior.
+  fixing tests.
+* improved tests. added test for check with pyros_setup and interractive debugging
+* fixed broken tests. now needs pyros-setup to get .pth paths before workspaces.
+  cosmetics.
+* improved tests and fix all.
+  added actual test for pytest to pipproject.
+* cleaning up command args when running pip install --editable to clean python path and workaround pip bug...
+* replacing CI_ROS_DISTRO var by ROS_DISTRO, to have it set for calls to rosdep.
+* more exhaustive test for sys_path
+* commenting echoes from script since it cannot echo without breaking things anyway.
+* reviewing shell script to make them a tiny more robust...
+* removed useless bash envhook, fixed easy-install parse to include last line even if no empty line at end of file.
+* moved rosdep install out of catkin_pip, only used for tests.
+  temporarily skipping broken test because of pip behavior...
+* improved concurrency handling for pip by using setlock from daemontools.
+  improved status message output.
+* adding libssl-dev as dependency forpypackage
+* adding catkin_pip function to call rosdep install. attempting fix for pypackage tests.
+* adding libffi-dev as build_depend for python_boilerplate
+* API changed ! redesigned workflow by doing "pip install -e package" during make stage instead of configure. All tests passing.
+* reverted to pip 8.1.2
+  changes added in prevision of switching to pip 9.X when --ignore-installed working...
+* added comment about sourcing install/setup.bash
+* improved test cases to check the content of easy-install.pth
+* adding cookiecutter pypackage-minimal for tests
+* adding cookiecutter pypackage for tests
+* adding cookiecutter pylibrary for testing
+* adding result of investigation for unexpected dist-packages in sys.path tail... still WIP
+* now handling environment setup only via catkin_env from env-hooks.
+  made pure sh envhook to allow implementing other shells.
+* WIP refactoring how we setup configure / build / devel/ install enironments
+* improved path_prepend shell script
+* Contributors: AlexV, alexv
+
+0.1.18 (2017-03-04)
+-------------------
+* Pin pytest to latest version 3.0.5
+* Pin pytest-timeout to latest version 1.2.0
+* Pin nose to latest version 1.3.7
+* Pin pytest-cov to latest version 2.4.0
+* Pin cookiecutter to latest version 1.5.0
+* adding pyup checks for dependencies
+* Contributors: AlexV, alexv, pyup-bot
+
 0.1.17 (2017-01-13)
 -------------------
 * now always ignore-installed when installing requirements.
