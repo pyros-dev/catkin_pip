@@ -26,9 +26,5 @@
   <!-- xenial 8.1.1-2ubuntu0.2 -->
   <depend version_gte="1.5.4">python-pip</depend>
 
-  <!-- used to prevent pip errors due to make concurrency -->
-  <!-- trusty 0.76 -->
-  <depend version_gte="0.76">daemontools</depend>
-
   <test_depend version_gte="1.9.1">git</test_depend>
 </package>
