@@ -20,10 +20,12 @@
 
   <!-- saucy 1.4.1 BROKEN + EOL => NOT SUPPORTED -->
   <!-- trusty 1.5.4-1ubuntu4 -->
-  <!-- utopic 1.5.6-2 -->
-  <!-- vivid 1.5.6-5ubuntu2 -->
-  <!-- wily 1.5.6-7ubuntu1.2 -->
+  <!-- utopic 1.5.6-2 EOL => NOT SUPPORTED -->
+  <!-- vivid 1.5.6-5ubuntu2 => NOT SUPPORTED -->
+  <!-- wily 1.5.6-7ubuntu1.2 => NOT SUPPORTED -->
   <!-- xenial 8.1.1-2ubuntu0.2 -->
+  <!-- yakkety 8.1.2-2 -->
+  <!-- zesty 9.0.1-2 => currently BROKEN https://github.com/asmodehn/catkin_pip/issues/58 -->
   <depend version_gte="1.5.4">python-pip</depend>
 
   <test_depend version_gte="1.9.1">git</test_depend>

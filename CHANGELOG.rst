@@ -2,8 +2,18 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.2.0 (2017-03-14)
+0.2.0 (2017-03-17)
 ------------------
+* removing dependency on daemontools (not available on fedora)
+* setlock -> flock
+* Merge pull request `#95 <https://github.com/asmodehn/catkin_pip/issues/95>`_ from k-okada/install_data
+  data should not install right under the CMAKE_INSTALL_PREFIX
+* fixing syntax for ros distro autodetection when building this package.
+* Merge pull request `#97 <https://github.com/asmodehn/catkin_pip/issues/97>`_ from asmodehn/gopher-devel
+  Preparing next release 0.2
+* install data
+* Contributors: AlexV, Kei Okada, alexv
+
 * Merge branch 'devel' into gopher-devel
 * now using catkin_pip_runcmd to retrieve cookiecutter package samples.
 * removing install envhook. seems to break things.
