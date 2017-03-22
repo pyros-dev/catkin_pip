@@ -1,6 +1,18 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(catkin_pip)
 
+# Attempting auto detection of ros install if needed
+# sourcing a ros workspace would have already fill up the CMAKE_PREFIX_PATH
+if ( NOT CMAKE_PREFIX_PATH )
+    if (EXISTS "/opt/ros/kinetic")
+        set(CMAKE_PREFIX_PATH "/opt/ros/kinetic")
+    elseif (EXISTS "/opt/ros/jade")
+        set(CMAKE_PREFIX_PATH "/opt/ros/jade")
+    elseif (EXISTS "/opt/ros/indigo")
+        set(CMAKE_PREFIX_PATH "/opt/ros/indigo")
+    endif ()
+endif ()
+
 find_package(catkin REQUIRED)
 
 #
@@ -19,9 +31,8 @@ endif()
 catkin_package(
   CFG_EXTRAS
   catkin-pip.cmake
-  catkin-pip-env.cmake
   catkin-pip-runcmd.cmake
-  catkin-pip-setup.cmake
+  catkin-pip-package.cmake
   catkin-pip-prefix.cmake
   catkin-pip-requirements.cmake
   pytest.cmake
@@ -31,9 +42,8 @@ catkin_package(
 # to be found in devel space
 configure_file(cmake/catkin-pip-base.req ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/catkin-pip-base.req COPYONLY)
 configure_file(cmake/catkin-pip-fixups.req ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/catkin-pip-fixups.req COPYONLY)
-configure_file(cmake/scripts/pythonpath_prepend.bash ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/scripts/pythonpath_prepend.bash COPYONLY)
+configure_file(cmake/scripts/path_prepend.sh ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/scripts/path_prepend.sh COPYONLY)
 configure_file(cmake/env-hooks/42.site_packages.sh.develspace.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/env-hooks/42.site_packages.sh.develspace.in COPYONLY)
-configure_file(cmake/env-hooks/42.site_packages.bash.develspace.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/env-hooks/42.site_packages.bash.develspace.in COPYONLY)
 #configure_file(cmake/templates/python_setuptools_install.bat.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/templates/python_setuptools_install.bat.in COPYONLY)
 configure_file(cmake/templates/python_setuptools_install.sh.in ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/templates/python_setuptools_install.sh.in COPYONLY)
 
@@ -46,7 +56,7 @@ install(FILES
 )
 
 install(PROGRAMS
-    cmake/scripts/pythonpath_prepend.bash
+    cmake/scripts/path_prepend.sh
     DESTINATION
     ${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/scripts
 )
@@ -54,7 +64,6 @@ install(PROGRAMS
 # We install in cmake folder the files that are needed by cmake code
 install(FILES
     cmake/env-hooks/42.site_packages.sh.develspace.in
-    cmake/env-hooks/42.site_packages.bash.develspace.in
     DESTINATION
     ${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake/env-hooks
 )

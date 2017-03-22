@@ -1,0 +1,17 @@
+<package>
+   <name>python_nameless</name>
+   <version>0.0.1</version>
+   <description>
+      Enhanced cookiecutter template for Python libraries.
+   </description>
+   <maintainer email="asmodehn@gmail.com">AlexV</maintainer>
+   <author>Ionel Cristian Mărieș</author>
+   <license>BSD</license>
+   <url type="repository">https://github.com/ionelmc/cookiecutter-pylibrary.git</url>
+
+   <buildtool_depend>catkin</buildtool_depend>
+   <build_depend version_gte="0.1.16">catkin_pip</build_depend>
+
+</package>
+
+

@@ -1,5 +1,8 @@
 doc/html
 build
+.cache
+test/.cache
 testbuild
-test/mypippkg
+test/pipproject/mypippkg
 .idea
+*.pyc

@@ -1,10 +1,5 @@
 _generate_function_if_testing_is_disabled("catkin_add_pytests")
 
-include ( "${CMAKE_CURRENT_LIST_DIR}/nosetests.cmake" RESULT_VARIABLE CATKIN_PIP_NOSETESTS_FOUND )
-IF ( NOT CATKIN_PIP_NOSETESTS_FOUND )
-    message ( FATAL_ERROR "${CMAKE_CURRENT_LIST_DIR}/nosetests.cmake Not Found !!!" )
-ENDIF ( NOT CATKIN_PIP_NOSETESTS_FOUND )
-
 #
 # Add Python pytest tests.
 #
@@ -79,7 +74,7 @@ function(catkin_add_pytests path)
   get_filename_component(output_path "${output_path}" ABSOLUTE)
   set(cmd "${CMAKE_COMMAND} -E make_directory ${output_path}")
   set(tests "${_path_name}")
-  set(cmd ${cmd} "PYTHONPATH=$ENV{PYTHONPATH} ${CATKIN_PIP_PYTEST} --timeout=${_pytest_TIMEOUT} ${tests} --junit-xml ${output_path}/pytests-${output_file_name}.xml ${_covarg}")
+  set(cmd ${cmd} "${CATKIN_ENV} ${CATKIN_PIP_PYTEST} --timeout=${_pytest_TIMEOUT} ${tests} --junit-xml ${output_path}/pytests-${output_file_name}.xml ${_covarg}")
   catkin_run_tests_target("pytests" ${output_file_name} "pytests-${output_file_name}.xml" COMMAND ${cmd} DEPENDENCIES ${_pytest_DEPENDENCIES} WORKING_DIRECTORY ${_pytest_WORKING_DIRECTORY})
 endfunction()
 

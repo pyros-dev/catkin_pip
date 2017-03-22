@@ -21,6 +21,7 @@ include(${CATKIN_DEVEL_PREFIX}/share/catkin_pip/cmake/catkin-pip.cmake)
 catkin_pip_requirements(${CMAKE_CURRENT_SOURCE_DIR}/test_requirements.txt --ignore-installed)
 
 message(STATUS "PATH $ENV{PATH}")
+message(STATUS "PYTHONPATH $ENV{PYTHONPATH}")
 
 # Make sure we get the right cookiecutter
 find_program( CATKIN_COOKIECUTTER NAMES cookiecutter PATHS ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_BIN_DESTINATION} NO_DEFAULT_PATH)
@@ -30,38 +31,103 @@ else()
     message(STATUS "cookiecutter found at ${CATKIN_COOKIECUTTER}")
 endif()
 
-message(STATUS "    ... Getting cookiecutter-pipproject template from cookiecutter ...")
-execute_process(
-  COMMAND ${CATKIN_COOKIECUTTER} --no-input https://github.com/wdm0006/cookiecutter-pipproject.git
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/pipproject
-  RESULT_VARIABLE PIP_RESULT
-  OUTPUT_VARIABLE PIP_VARIABLE
-)
-message(STATUS "    ... Done ...")
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pipproject/mypippkg")
+    catkin_pip_runcmd(${CATKIN_COOKIECUTTER} --no-input https://github.com/wdm0006/cookiecutter-pipproject.git -o pipproject)
+endif()
 
-#
-# Configuring catkin-pip extras from source by ourselves
-# we should reproduce catkin behavior here
-#
-# set (DEVELSPACE True)
-# set (INSTALLSPACE False)
-# configure_file( ../cmake/catkin-pip-setup.cmake.in ${CATKIN_DEVEL_PREFIX}/share/catkin_pip/cmake/catkin-pip-setup.cmake @ONLY)
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pylibrary/python-nameless")
+    catkin_pip_runcmd(${CATKIN_COOKIECUTTER} --no-input https://github.com/ionelmc/cookiecutter-pylibrary -o pylibrary)
+endif()
 
-# set (DEVELSPACE False)
-# set (INSTALLSPACE True)
-# configure_file( ../cmake/catkin-pip-setup.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/catkin_generated/installspace/catkin-pip-setup.cmake @ONLY)
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pypackage/python_boilerplate")
+    catkin_pip_runcmd( ${CATKIN_COOKIECUTTER} --no-input https://github.com/audreyr/cookiecutter-pypackage -o pypackage)
+endif()
+
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/pypackage-minimal/cookiecutter_pypackage_minimal")
+    catkin_pip_runcmd( ${CATKIN_COOKIECUTTER} --no-input https://github.com/kragniz/cookiecutter-pypackage-minimal -o pypackage-minimal)
+endif()
 
 
 #
 # and make sure they still work with catkin by building them all as subprojects
 #
 
+
+# Testing project itself
+# We need to call rosdep for each packages (to install dependencies if there are any)
+# note $ROS_DISTRO must be already defined in the environment
+catkin_pip_runcmd(rosdep install --from-paths "pipproject" -y)
+add_subdirectory(pipproject)
+
+# Testing project itself
+catkin_pip_runcmd(rosdep install --from-paths "pylibrary" -y)
+add_subdirectory(pylibrary)
+
+# Testing project itself
+catkin_pip_runcmd(rosdep install --from-paths "pypackage" -y)
+add_subdirectory(pypackage)
+
+# Testing project itself
+catkin_pip_runcmd(rosdep install --from-paths "pypackage-minimal" -y)
+add_subdirectory(pypackage-minimal)
+
+
 if (CATKIN_ENABLE_TESTING)
 
-    ########################
-    # Nose Tests should work
-    ########################
+    #########
+    # Pytests
+    #########
 
-    add_subdirectory(pipproject)
+    # Testing one by one to make sure pyros_setup import doesnt influence test it shouldnt influence...
+    catkin_add_pytests(catkin_pip_pytest/test_easyinstallpth.py
+        --build-dir ${CMAKE_BINARY_DIR}
+        DEPENDENCIES
+        ${mypippkg_PIP_TARGET}                      # from pipproject
+        ${nameless_PIP_TARGET}                      # from pylibrary
+        ${python_boilerplate_PIP_TARGET}            # from pypackage
+        ${cookiecutter_pypackage_minimal_PIP_TARGET}      # from pypackage-minimal
+    )
+    catkin_add_pytests(catkin_pip_pytest/test_path.py
+        --build-dir ${CMAKE_BINARY_DIR}
+        DEPENDENCIES
+        ${mypippkg_PIP_TARGET}                      # from pipproject
+        ${nameless_PIP_TARGET}                      # from pylibrary
+        ${python_boilerplate_PIP_TARGET}            # from pypackage
+        ${cookiecutter_pypackage_minimal_PIP_TARGET}      # from pypackage-minimal
+    )
+    catkin_add_pytests(catkin_pip_pytest/test_site.py
+        --build-dir ${CMAKE_BINARY_DIR}
+        DEPENDENCIES
+        ${mypippkg_PIP_TARGET}                      # from pipproject
+        ${nameless_PIP_TARGET}                      # from pylibrary
+        ${python_boilerplate_PIP_TARGET}            # from pypackage
+        ${cookiecutter_pypackage_minimal_PIP_TARGET}      # from pypackage-minimal
+    )
+    catkin_add_pytests(catkin_pip_pytest/test_import.py
+        --build-dir ${CMAKE_BINARY_DIR}
+        DEPENDENCIES
+        ${mypippkg_PIP_TARGET}                      # from pipproject
+        ${nameless_PIP_TARGET}                      # from pylibrary
+        ${python_boilerplate_PIP_TARGET}            # from pypackage
+        ${cookiecutter_pypackage_minimal_PIP_TARGET}      # from pypackage-minimal
+    )
+    catkin_add_pytests(catkin_pip_pytest/test_syspath.py
+        --build-dir ${CMAKE_BINARY_DIR}
+        DEPENDENCIES
+        ${mypippkg_PIP_TARGET}                      # from pipproject
+        ${nameless_PIP_TARGET}                      # from pylibrary
+        ${python_boilerplate_PIP_TARGET}            # from pypackage
+        ${cookiecutter_pypackage_minimal_PIP_TARGET}      # from pypackage-minimal
+    )
+
+    # Because we need to validate that pyros fixes editable pkg path ordering for us
+    catkin_add_pytests(catkin_pip_pytest/test_syspath_pyros.py
+        --capture=no --build-dir ${CMAKE_BINARY_DIR}
+        DEPENDENCIES
+        ${mypippkg_PIP_TARGET}                      # from pipproject
+        ${nameless_PIP_TARGET}                      # from pylibrary
+        ${python_boilerplate_PIP_TARGET}            # from pypackage
+        ${cookiecutter_pypackage_minimal_PIP_TARGET}      # from pypackage-minimal
+    )
 
 endif()

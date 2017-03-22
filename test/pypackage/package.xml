@@ -1,0 +1,21 @@
+<package>
+   <name>python_boilerplate</name>
+   <version>0.0.1</version>
+   <description>
+      Cookiecutter template for a Python package.
+   </description>
+   <maintainer email="asmodehn@gmail.com">AlexV</maintainer>
+   <author>Audrey Roy Greenfeld</author>
+   <license>BSD</license>
+   <url type="repository">https://github.com/audreyr/cookiecutter-pypackage.git</url>
+
+   <buildtool_depend>catkin</buildtool_depend>
+   <build_depend version_gte="0.1.16">catkin_pip</build_depend>
+
+   <!-- dependencies needed to solve build problems (kinetic only) -->
+   <build_depend>libffi-dev</build_depend>
+   <build_depend>libssl-dev</build_depend>
+
+</package>
+
+
