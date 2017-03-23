@@ -1,0 +1,7 @@
+update: all
+search: False
+
+requirements:
+  - cmake/catkin-pip-base.req
+  - cmake/catkin-pip-fixups.req
+  - test/test_requirements.txt

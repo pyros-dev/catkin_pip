@@ -1,14 +1,14 @@
 # Extra requirements, usually to fix some broken platform implementations...
 
-# Installs base packages a second time, from a recent pip, to setup all entrypoints and other latest setuptools bells and wistles properly
+# Installs base packages a second time, from a recent pip, to setup all entrypoints and other latest setuptools bells and whistles properly
 -r catkin-pip-base.req
 
 # Upgrading to use latest nose
-nose
+nose==1.3.7
 # Also install pytest since we support it
-pytest
-pytest-cov
-pytest-timeout
+pytest==3.0.6
+pytest-cov==2.4.0
+pytest-timeout==1.2.0
 
 # Fixing security since python 2.7.6 on trusty is broken : https://stackoverflow.com/questions/29099404/ssl-insecureplatform-error-when-using-requests-package
 # On trusty it seems that installing libgnutls28-dev fixes the issue...

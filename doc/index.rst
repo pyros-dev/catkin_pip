@@ -19,6 +19,7 @@ Overview
 
    readme_link
    catkin_pip_overview
+   catkin_pip_notes
    changelog_link
 
 

@@ -38,4 +38,4 @@ echo_and_run /usr/bin/env \
     build --build-base "@CMAKE_CURRENT_BINARY_DIR@" \
     install --single-version-externally-managed \
     $DESTDIR_ARG \
-    @SETUPTOOLS_ARG_EXTRA@ --prefix="@CMAKE_INSTALL_PREFIX@" --install-scripts="@CMAKE_INSTALL_PREFIX@/@CATKIN_GLOBAL_BIN_DESTINATION@"
+    @SETUPTOOLS_ARG_EXTRA@ --prefix="@CMAKE_INSTALL_PREFIX@" --install-scripts="@CMAKE_INSTALL_PREFIX@/@CATKIN_GLOBAL_BIN_DESTINATION@" --install-data="@CMAKE_INSTALL_PREFIX@/@CATKIN_GLOBAL_SHARE_DESTINATION@"
