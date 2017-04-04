@@ -51,17 +51,18 @@ fi
 
 # NOT DOING THIS any longer : it half-works but somehow doesnt change behavior when using catkin cmake scripts : usual python way, editable links are after python path
 # TO FIX IT : use pyros_setup
-# # Prepending here our easy-install.pth content into PYTHONPATH, for overlayed workspace to get it before the workspace path
-# # Somehow Python pth/.egg behavior doesnt work well with workspace overlays, based on PYTHONPATH.
-# # However be aware of : https://github.com/pypa/pip/issues/3160
-# # And : https://github.com/pypa/pip/issues/4261
-# if [ -f "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@/easy-install.pth" ]; then
-#     # Ref : http://stackoverflow.com/questions/4165135/how-to-use-while-read-bash-to-read-the-last-line-in-a-file-if-there-s-no-new
-#     while IFS='' read -r DEVEL_PKG_PATH || [ -n "$DEVEL_PKG_PATH" ]; do
-#        #echo "Inserting $DEVEL_PKG_PATH before "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" into PYTHONPATH"
-#        PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "$DEVEL_PKG_PATH" "${PYTHONPATH}" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@")  || ${PYTHONPATH}  # to be safe if path_prepend fails
-#    done <"@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@/easy-install.pth"
-# fi
+# REVISION : we should not rely on pyros-setup. FIX THIS HERE !
+# Prepending here our easy-install.pth content into PYTHONPATH, for overlayed workspace to get it before the workspace path
+# Somehow Python pth/.egg behavior doesnt work well with workspace overlays, based on PYTHONPATH.
+# However be aware of : https://github.com/pypa/pip/issues/3160
+# And : https://github.com/pypa/pip/issues/4261
+if [ -f "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@/easy-install.pth" ]; then
+    # Ref : http://stackoverflow.com/questions/4165135/how-to-use-while-read-bash-to-read-the-last-line-in-a-file-if-there-s-no-new
+    while IFS='' read -r DEVEL_PKG_PATH || [ -n "$DEVEL_PKG_PATH" ]; do
+        #echo "Inserting $DEVEL_PKG_PATH before "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@" into PYTHONPATH"
+        PYTHONPATH=$("@CATKIN_PIP_SCRIPTS_PATH@/path_prepend.sh" "$DEVEL_PKG_PATH" "${PYTHONPATH}" "@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@")  || ${PYTHONPATH}  # to be safe if path_prepend fails
+    done <"@CATKIN_DEVEL_PREFIX@/@CATKIN_PIP_PYTHON_INSTALL_DIR@/easy-install.pth"
+fi
 
 
 # Exporting is required to make sure we get the new value in children processes (catkin_make, test runs, etc.)
