@@ -52,6 +52,8 @@ endif()
 # and make sure they still work with catkin by building them all as subprojects
 #
 
+# Testing project itself
+add_subdirectory(distutils-setup)
 
 # Testing project itself
 # We need to call rosdep for each packages (to install dependencies if there are any)
@@ -79,9 +81,19 @@ if (CATKIN_ENABLE_TESTING)
     #########
 
     # Testing one by one to make sure pyros_setup import doesnt influence test it shouldnt influence...
+    catkin_add_pytests(catkin_pip_pytest/test_install.py
+        --build-dir ${CMAKE_BINARY_DIR}
+        DEPENDENCIES
+        ${distutils_setup_PIP_TARGET}                      # from distutils-setup
+        ${mypippkg_PIP_TARGET}                      # from pipproject
+        ${nameless_PIP_TARGET}                      # from pylibrary
+        ${python_boilerplate_PIP_TARGET}            # from pypackage
+        ${cookiecutter_pypackage_minimal_PIP_TARGET}      # from pypackage-minimal
+    )
     catkin_add_pytests(catkin_pip_pytest/test_easyinstallpth.py
         --build-dir ${CMAKE_BINARY_DIR}
         DEPENDENCIES
+        ${distutils_setup_PIP_TARGET}                      # from distutils-setup
         ${mypippkg_PIP_TARGET}                      # from pipproject
         ${nameless_PIP_TARGET}                      # from pylibrary
         ${python_boilerplate_PIP_TARGET}            # from pypackage
@@ -90,6 +102,7 @@ if (CATKIN_ENABLE_TESTING)
     catkin_add_pytests(catkin_pip_pytest/test_path.py
         --build-dir ${CMAKE_BINARY_DIR}
         DEPENDENCIES
+        ${distutils_setup_PIP_TARGET}                      # from distutils-setup
         ${mypippkg_PIP_TARGET}                      # from pipproject
         ${nameless_PIP_TARGET}                      # from pylibrary
         ${python_boilerplate_PIP_TARGET}            # from pypackage
@@ -98,6 +111,7 @@ if (CATKIN_ENABLE_TESTING)
     catkin_add_pytests(catkin_pip_pytest/test_site.py
         --build-dir ${CMAKE_BINARY_DIR}
         DEPENDENCIES
+        ${distutils_setup_PIP_TARGET}                      # from distutils-setup
         ${mypippkg_PIP_TARGET}                      # from pipproject
         ${nameless_PIP_TARGET}                      # from pylibrary
         ${python_boilerplate_PIP_TARGET}            # from pypackage
@@ -106,6 +120,7 @@ if (CATKIN_ENABLE_TESTING)
     catkin_add_pytests(catkin_pip_pytest/test_import.py
         --build-dir ${CMAKE_BINARY_DIR}
         DEPENDENCIES
+        ${distutils_setup_PIP_TARGET}                      # from distutils-setup
         ${mypippkg_PIP_TARGET}                      # from pipproject
         ${nameless_PIP_TARGET}                      # from pylibrary
         ${python_boilerplate_PIP_TARGET}            # from pypackage
@@ -114,6 +129,7 @@ if (CATKIN_ENABLE_TESTING)
     catkin_add_pytests(catkin_pip_pytest/test_syspath.py
         --build-dir ${CMAKE_BINARY_DIR}
         DEPENDENCIES
+        ${distutils_setup_PIP_TARGET}                      # from distutils-setup
         ${mypippkg_PIP_TARGET}                      # from pipproject
         ${nameless_PIP_TARGET}                      # from pylibrary
         ${python_boilerplate_PIP_TARGET}            # from pypackage
@@ -124,6 +140,7 @@ if (CATKIN_ENABLE_TESTING)
     catkin_add_pytests(catkin_pip_pytest/test_syspath_pyros.py
         --capture=no --build-dir ${CMAKE_BINARY_DIR}
         DEPENDENCIES
+        ${distutils_setup_PIP_TARGET}                      # from distutils-setup
         ${mypippkg_PIP_TARGET}                      # from pipproject
         ${nameless_PIP_TARGET}                      # from pylibrary
         ${python_boilerplate_PIP_TARGET}            # from pypackage

@@ -15,6 +15,6 @@ catkin_pip_package(dstest ${PIP_PROJECT_DIR})
 
 ## Unit tests
 if (CATKIN_ENABLE_TESTING)
-    catkin_add_nosetests(${PIP_PROJECT_DIR}/tests DEPENDENCIES dstest)
-    catkin_add_pytests(${PIP_PROJECT_DIR}/tests DEPENDENCIES dstest)
+    catkin_add_nosetests(${PIP_PROJECT_DIR}/test DEPENDENCIES dstest)
+    catkin_add_pytests(${PIP_PROJECT_DIR}/test DEPENDENCIES dstest)
 endif()
