@@ -56,6 +56,9 @@ endif()
 add_subdirectory(distutils-setup)
 
 # Testing project itself
+add_subdirectory(setuptools-setup)
+
+# Testing project itself
 # We need to call rosdep for each packages (to install dependencies if there are any)
 # note $ROS_DISTRO must be already defined in the environment
 catkin_pip_runcmd(rosdep install --from-paths "pipproject" -y)
@@ -85,6 +88,7 @@ if (CATKIN_ENABLE_TESTING)
         --build-dir ${CMAKE_BINARY_DIR}
         DEPENDENCIES
         ${distutils_setup_PIP_TARGET}                      # from distutils-setup
+        ${setuptools_setup_PIP_TARGET}                      # from setuptools-setup
         ${mypippkg_PIP_TARGET}                      # from pipproject
         ${nameless_PIP_TARGET}                      # from pylibrary
         ${python_boilerplate_PIP_TARGET}            # from pypackage
@@ -94,6 +98,7 @@ if (CATKIN_ENABLE_TESTING)
         --build-dir ${CMAKE_BINARY_DIR}
         DEPENDENCIES
         ${distutils_setup_PIP_TARGET}                      # from distutils-setup
+        ${setuptools_setup_PIP_TARGET}                      # from setuptools-setup
         ${mypippkg_PIP_TARGET}                      # from pipproject
         ${nameless_PIP_TARGET}                      # from pylibrary
         ${python_boilerplate_PIP_TARGET}            # from pypackage
@@ -103,6 +108,7 @@ if (CATKIN_ENABLE_TESTING)
         --build-dir ${CMAKE_BINARY_DIR}
         DEPENDENCIES
         ${distutils_setup_PIP_TARGET}                      # from distutils-setup
+        ${setuptools_setup_PIP_TARGET}                      # from setuptools-setup
         ${mypippkg_PIP_TARGET}                      # from pipproject
         ${nameless_PIP_TARGET}                      # from pylibrary
         ${python_boilerplate_PIP_TARGET}            # from pypackage
@@ -112,6 +118,7 @@ if (CATKIN_ENABLE_TESTING)
         --build-dir ${CMAKE_BINARY_DIR}
         DEPENDENCIES
         ${distutils_setup_PIP_TARGET}                      # from distutils-setup
+        ${setuptools_setup_PIP_TARGET}                      # from setuptools-setup
         ${mypippkg_PIP_TARGET}                      # from pipproject
         ${nameless_PIP_TARGET}                      # from pylibrary
         ${python_boilerplate_PIP_TARGET}            # from pypackage
@@ -121,6 +128,7 @@ if (CATKIN_ENABLE_TESTING)
         --build-dir ${CMAKE_BINARY_DIR}
         DEPENDENCIES
         ${distutils_setup_PIP_TARGET}                      # from distutils-setup
+        ${setuptools_setup_PIP_TARGET}                      # from setuptools-setup
         ${mypippkg_PIP_TARGET}                      # from pipproject
         ${nameless_PIP_TARGET}                      # from pylibrary
         ${python_boilerplate_PIP_TARGET}            # from pypackage
@@ -130,6 +138,7 @@ if (CATKIN_ENABLE_TESTING)
         --build-dir ${CMAKE_BINARY_DIR}
         DEPENDENCIES
         ${distutils_setup_PIP_TARGET}                      # from distutils-setup
+        ${setuptools_setup_PIP_TARGET}                      # from setuptools-setup
         ${mypippkg_PIP_TARGET}                      # from pipproject
         ${nameless_PIP_TARGET}                      # from pylibrary
         ${python_boilerplate_PIP_TARGET}            # from pypackage
@@ -141,6 +150,7 @@ if (CATKIN_ENABLE_TESTING)
         --capture=no --build-dir ${CMAKE_BINARY_DIR}
         DEPENDENCIES
         ${distutils_setup_PIP_TARGET}                      # from distutils-setup
+        ${setuptools_setup_PIP_TARGET}                      # from setuptools-setup
         ${mypippkg_PIP_TARGET}                      # from pipproject
         ${nameless_PIP_TARGET}                      # from pylibrary
         ${python_boilerplate_PIP_TARGET}            # from pypackage
