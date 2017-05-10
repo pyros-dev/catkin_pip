@@ -17,4 +17,6 @@ catkin_pip_package(sstest ${PIP_PROJECT_DIR})
 if (CATKIN_ENABLE_TESTING)
     catkin_add_nosetests(${PIP_PROJECT_DIR}/test DEPENDENCIES sstest)
     catkin_add_pytests(${PIP_PROJECT_DIR}/test DEPENDENCIES sstest)
+    # Running embedded test from devel space
+    catkin_add_pytests(${PIP_PROJECT_DIR}/sstest/test DEPENDENCIES sstest)
 endif()

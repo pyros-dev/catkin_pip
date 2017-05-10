@@ -53,9 +53,11 @@ endif()
 #
 
 # Testing project itself
+catkin_pip_runcmd(rosdep install --from-paths "distutils-setup" -y)
 add_subdirectory(distutils-setup)
 
 # Testing project itself
+catkin_pip_runcmd(rosdep install --from-paths "setuptools-setup" -y)
 add_subdirectory(setuptools-setup)
 
 # Testing project itself

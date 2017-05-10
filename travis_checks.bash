@@ -38,6 +38,6 @@ elif [ "$ROS_FLOW" == "install" ]; then
     echo PYTHONPATH = $PYTHONPATH
     rospack profile
     # some test packages have embedded tests to validate installed package structure
-    python -m pytest --pyargs dstest
+    python -m nose dstest
     python -m pytest --pyargs sstest
 fi
