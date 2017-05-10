@@ -7,6 +7,6 @@ setup(name='distutils_setup',
       description='A python package that manages setup.py with distutils.',
       author='AlexV',
       author_email='asmodehn@gmail.com',
-      packages=['dstest'],
+      packages=['dstest', 'dstest.test'],
      )
 

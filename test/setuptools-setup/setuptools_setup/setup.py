@@ -7,6 +7,6 @@ setup(name='setuptools_setup',
       description='A python package that manages setup.py with setuptools.',
       author='AlexV',
       author_email='asmodehn@gmail.com',
-      packages=['sstest'],
+      packages=['sstest', 'sstest.test'],
      )
 
