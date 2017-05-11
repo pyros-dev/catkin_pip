@@ -88,6 +88,8 @@ def pyros():
     #
     # Both will work fine in most cases, but one might want to keep this corner case in mind...
 
+    # TODO : get rid of this. See https://github.com/asmodehn/catkin_pip/issues/106
+
     print("sys.path before pyros_setup {pyros_setup.__file__} :\n{sys.path}".format(**globals()))
 
     # We need to pass the proper workspace here
