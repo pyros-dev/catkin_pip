@@ -2,8 +2,8 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.1 (2017-05-11)
+------------------
 * Merge pull request `#115 <https://github.com/asmodehn/catkin_pip/issues/115>`_ from asmodehn/distutils
   Implementing distutils support
 * refining tests on install flow, to confirm which test framework is used.
