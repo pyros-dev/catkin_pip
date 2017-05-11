@@ -1,4 +1,5 @@
-<package>
+<?xml version="1.0"?>
+<package format="2">
    <name>python_nameless</name>
    <version>0.0.1</version>
    <description>

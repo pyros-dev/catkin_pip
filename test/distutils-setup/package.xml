@@ -1,17 +1,19 @@
 <?xml version="1.0"?>
 <package format="2">
-   <name>mypippkg</name>
+   <name>distutils_setup</name>
    <version>0.0.1</version>
    <description>
-      A python package that can be installed with pip.
+      A python package that manages setup.py with distutils.
    </description>
    <maintainer email="asmodehn@gmail.com">AlexV</maintainer>
-   <author>Will McGinnis</author>
+   <author>AlexV</author>
    <license>BSD</license>
-   <url type="repository">https://github.com/wdm0006/cookiecutter-pipproject.git</url>
 
    <buildtool_depend>catkin</buildtool_depend>
    <build_depend version_gte="0.1.2">catkin_pip</build_depend>
+
+   <!-- we depend on nose, following catkin preferences for distutils based packages -->
+   <depend>python-nose</depend>
 
 </package>
 
