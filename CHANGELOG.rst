@@ -2,6 +2,18 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.2.1 (2017-05-11)
+------------------
+* Merge pull request `#115 <https://github.com/asmodehn/catkin_pip/issues/115>`_ from asmodehn/distutils
+  Implementing distutils support
+* refining tests on install flow, to confirm which test framework is used.
+  upgrading catkin package format to advised format 2.
+* fixes to support distutils as well as setuptools.
+* adding setuptools_setup test project and tests to validate package structure after installation.
+* adding test to make sure "make install" does not trigger errors.
+* adding a basic package to test distutils based setup.py
+* Contributors: AlexV, yotabits
+
 0.2.0 (2017-03-17)
 ------------------
 * removing dependency on daemontools (not available on fedora)

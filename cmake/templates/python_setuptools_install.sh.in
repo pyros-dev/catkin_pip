@@ -10,8 +10,12 @@ if [ -n "$DESTDIR" ] ; then
             exit 1
     esac
     DESTDIR_ARG="--root=$DESTDIR"
+    # --root implies --single-version-externally-managed (but this option is not recognized by distutils)
+    # Ref : http://setuptools.readthedocs.io/en/latest/history.html?highlight=root#a11
 else
-    DESTDIR_ARG="--record=@CMAKE_INSTALL_PREFIX@/@PROJECT_NAME@.record"
+    # In this case we need to specify root to install in a way that is compatible with distutils (assumed by ROS),
+    # and set it to a sensible root value, to work with both setuptools and distutils when installing...
+    DESTDIR_ARG="--root=/"
 fi
 
 echo_and_run() { echo "+ $@" ; "$@" ; }
@@ -36,6 +40,6 @@ echo_and_run /usr/bin/env \
     "@PYTHON_EXECUTABLE@" \
     "@CATKIN_PIP_PACKAGE_PATH@/setup.py" \
     build --build-base "@CMAKE_CURRENT_BINARY_DIR@" \
-    install --single-version-externally-managed \
+    install \
     $DESTDIR_ARG \
     @SETUPTOOLS_ARG_EXTRA@ --prefix="@CMAKE_INSTALL_PREFIX@" --install-scripts="@CMAKE_INSTALL_PREFIX@/@CATKIN_GLOBAL_BIN_DESTINATION@" --install-data="@CMAKE_INSTALL_PREFIX@/@CATKIN_GLOBAL_SHARE_DESTINATION@"

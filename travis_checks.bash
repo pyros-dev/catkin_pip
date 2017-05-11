@@ -37,6 +37,7 @@ elif [ "$ROS_FLOW" == "install" ]; then
     source install/setup.bash
     echo PYTHONPATH = $PYTHONPATH
     rospack profile
-    # No tests embedded in installed version of catkin_pip
-    # We probably want to do some clever prerelease here...
+    # some test packages have embedded tests to validate installed package structure
+    python -m nose dstest
+    python -m pytest --pyargs sstest
 fi
