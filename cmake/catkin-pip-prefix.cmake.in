@@ -192,7 +192,7 @@ function(catkin_pip_setup_prefix ws_prefix)
         # To debug the python environment at this stage
         #catkin_pip_runcmd(${PYTHON_EXECUTABLE} -m site)
 
-        catkin_pip_runcmd(${CATKIN_PIP} install --ignore-installed -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-fixups.req" --src ${CMAKE_SOURCE_DIR} --exists-action b --prefix "${ws_prefix}")
+        catkin_pip_runcmd(${CATKIN_PIP} install --ignore-installed -r "${CATKIN_PIP_REQUIREMENTS_PATH}/catkin-pip-fixups.req" --src ${CMAKE_SOURCE_DIR} --exists-action b --target "${ws_prefix}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@")
 
         unset(CATKIN_PIP)
         # now we can finally use the simple "pip" entry_point (forcing cmake to find it)

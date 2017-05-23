@@ -56,7 +56,7 @@ function(catkin_pip_install_devel_target package_name package_path)
 
 
     set(CATKIN_PIP_CMD ${CATKIN_ENV})
-    set(CATKIN_PIP_CMD_ARGS_STR "flock ${CATKIN_PIP_ENV}/catkin_pip.lock ${CATKIN_PIP} install -e ${package_path} --prefix ${CATKIN_DEVEL_PREFIX} ${ARGN_STR}")
+    set(CATKIN_PIP_CMD_ARGS_STR "flock ${CATKIN_PIP_ENV}/catkin_pip.lock ${CATKIN_PIP} install ${package_path} --target ${CATKIN_DEVEL_PREFIX}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@ ${ARGN_STR}")
     # IF WE ARE PASSING EDITABLE PKG PATHS INTO PYTHONPATH we need to work around bug :
     # PYTHONPATH breaks pip install --editable Ref : https://github.com/pypa/pip/issues/4261
     # set(CATKIN_PIP_CMD_ARGS_STR "-c 'export PYTHONPATH=${CATKIN_DEVEL_PREFIX}/${CATKIN_PIP_PYTHON_INSTALL_DIR}:${CATKIN_PIP_ENV}/${CATKIN_PIP_PYTHON_INSTALL_DIR}\; ${CATKIN_PIP_CMD_ARGS_STR}'")
