@@ -23,6 +23,9 @@ _generate_function_if_testing_is_disabled("catkin_add_nosetests")
 #   tests (this option can only be used when the ``path`` argument is a
 #   file  but not when it is a directory)
 # :type WORKING_DIRECTORY: string
+# :param NOSE_OPT: additional options to be used to run pytest, this param
+#   should be used only if the other ones do not fulfill you requirements to
+#   properly run your pytests.
 #
 # @public
 #
@@ -34,7 +37,8 @@ function(catkin_add_nosetests path)
     return()
   endif()
 
-  cmake_parse_arguments(_nose "" "TIMEOUT;WORKING_DIRECTORY" "DEPENDENCIES" ${ARGN})
+
+  cmake_parse_arguments(_nose "" "TIMEOUT;WORKING_DIRECTORY;NOSE_OPT" "DEPENDENCIES" ${ARGN})
   if(NOT _nose_TIMEOUT)
     set(_nose_TIMEOUT 60)
   endif()
@@ -79,8 +83,8 @@ function(catkin_add_nosetests path)
   else()
     set(tests "${_path_name}")
   endif()
-  set(cmd ${cmd} "${CATKIN_ENV} ${CATKIN_PIP_NOSETESTS} -P --process-timeout=${_nose_TIMEOUT} ${tests} --with-xunit --xunit-file=${output_path}/nosetests-${output_file_name}.xml${_covarg}")
-  catkin_run_tests_target("nosetests" ${output_file_name} "nosetests-${output_file_name}.xml" COMMAND ${cmd} DEPENDENCIES ${_nose_DEPENDENCIES} WORKING_DIRECTORY ${_nose_WORKING_DIRECTORY})
+  set(cmd ${cmd} "${CATKIN_ENV} ${CATKIN_PIP_NOSETESTS} -P --process-timeout=${_nose_TIMEOUT} ${tests} ${_nose_NOSE_OPT} --with-xunit --xunit-file=${output_path}/nosetests-${output_file_name}.xml${_covarg}")
+  catkin_run_tests_target("nosetests" ${output_file_name}  "nosetests-${output_file_name}.xml" COMMAND ${cmd} DEPENDENCIES ${_nose_DEPENDENCIES} WORKING_DIRECTORY ${_nose_WORKING_DIRECTORY})
 endfunction()
 
 # Providing another catkin nosetests usage...
