@@ -23,6 +23,10 @@ _generate_function_if_testing_is_disabled("catkin_add_pytests")
 #   tests (this option can only be used when the ``path`` argument is a
 #   file  but not when it is a directory)
 # :type WORKING_DIRECTORY: string
+# :param PYTEST_OPT: additional options to be used to run pytest, this param
+#   should be used only if the other ones do not fullfill you requirements to
+#   properly run your pytests.
+# :type PYTEST_OPT: string
 #
 # @public
 #
@@ -34,7 +38,7 @@ function(catkin_add_pytests path)
     return()
   endif()
 
-  cmake_parse_arguments(_pytest "" "TIMEOUT;WORKING_DIRECTORY" "DEPENDENCIES" ${ARGN})
+  cmake_parse_arguments(_pytest "" "TIMEOUT;WORKING_DIRECTORY;PYTEST_OPT" "DEPENDENCIES" ${ARGN})
   if(NOT _pytest_TIMEOUT)
     set(_pytest_TIMEOUT 60)
   endif()
@@ -74,7 +78,7 @@ function(catkin_add_pytests path)
   get_filename_component(output_path "${output_path}" ABSOLUTE)
   set(cmd "${CMAKE_COMMAND} -E make_directory ${output_path}")
   set(tests "${_path_name}")
-  set(cmd ${cmd} "${CATKIN_ENV} ${CATKIN_PIP_PYTEST} --timeout=${_pytest_TIMEOUT} ${tests} --junit-xml ${output_path}/pytests-${output_file_name}.xml ${_covarg}")
+  set(cmd ${cmd} "${CATKIN_ENV} ${CATKIN_PIP_PYTEST} --timeout=${_pytest_TIMEOUT} ${tests} ${_pytest_PYTEST_OPT} --junit-xml ${output_path}/pytests-${output_file_name}.xml ${_covarg}")
   catkin_run_tests_target("pytests" ${output_file_name} "pytests-${output_file_name}.xml" COMMAND ${cmd} DEPENDENCIES ${_pytest_DEPENDENCIES} WORKING_DIRECTORY ${_pytest_WORKING_DIRECTORY})
 endfunction()
 
