@@ -2,6 +2,16 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#123 <https://github.com/asmodehn/catkin_pip/issues/123>`_ from yotabits/devel
+  Added option NOSE_OPT to catkin_add_nosetests func
+* Added option NOSE_OPT to catkin_add_nosetests func
+  In order to use some specific option for nosetests we now have a NOSE_OPT
+  parameter that allow to use some customs options for launching nosetests
+  The same has been done for pytests with the param PYTEST_OPT
+* Contributors: AlexV, Thomas
+
 0.2.1 (2017-05-11)
 ------------------
 * Merge pull request `#115 <https://github.com/asmodehn/catkin_pip/issues/115>`_ from asmodehn/distutils
