@@ -2,8 +2,8 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.2 (2017-05-30)
+------------------
 * Merge pull request `#123 <https://github.com/asmodehn/catkin_pip/issues/123>`_ from yotabits/devel
   Added option NOSE_OPT to catkin_add_nosetests func
 * Added option NOSE_OPT to catkin_add_nosetests func
