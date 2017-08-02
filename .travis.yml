@@ -28,11 +28,11 @@ matrix:
     - env: ROS_DISTRO="lunar"  PRERELEASE=true
 
 install:
-  - git clone https://github.com/ros-industrial/industrial_ci.git .ci_config
+  - git clone https://github.com/ros-industrial/industrial_ci.git test/.ci_config
 
 script:
-  - .ci_config/travis.sh
-#  - ./travis.sh  # Enable this when you have a package-local script
+  # Since we need to run the test/CMakeLists.txt with travis
+  - ./test/.ci_config/travis.sh
 
 notifications:
   email: false
