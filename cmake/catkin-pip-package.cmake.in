@@ -76,10 +76,8 @@ function(catkin_pip_python_setup)
 
 endfunction()
 
-# TODO : we now create an actual cmake target -> rename to catkin_pip_target ?
-function(catkin_pip_package package_name)
 
-    set(${PROJECT_NAME}_PIP_TARGET ${package_name} CACHE STRING "Make target generated to install this pip package as --editable for development")
+function(catkin_pip_target package_name)
 
     set (extra_macro_args ${ARGN})
 
@@ -91,6 +89,8 @@ function(catkin_pip_package package_name)
     else()
         set(package_path ${CMAKE_CURRENT_SOURCE_DIR})
     endif()
+
+    set(${PROJECT_NAME}_PIP_TARGET ${package_name} CACHE STRING "Make target generated to install this pip package as --editable for development")
 
     # Note : environment should already be setup at configure time for devel
 
@@ -114,10 +114,16 @@ function(catkin_pip_package package_name)
 
     # TODO : we might want to generate a package.xml on the fly from setup.py contents...
 
-    # Hijacking catkin scripts again
-    #set(_PACKAGE_XML_DIRECTORY ${package_path})
+endfunction()
+
+
+# BWCOMPAT : eventually get rid of that...
+macro(catkin_pip_package package_name)
+
+    catkin_pip_target(${package_name} ${ARGN})
 
     # Here we plug back into usual catkin package build flow
+    # CAREFUL : this will set variables into current scope.
     catkin_package()
 
-endfunction()
+endmacro()

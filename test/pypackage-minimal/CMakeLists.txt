@@ -11,10 +11,12 @@ find_package(catkin REQUIRED COMPONENTS catkin_pip)
 
 # no requirements file here
 
-# This replace both catkin_python_setup() and catkin_package()
+# This replace catkin_python_setup()
 # For devel, this will install all your unsatisfied pip dependencies.
 # Upon install, this will bark if some dependencies are not already satisfied (by ROS).
-catkin_pip_package(cookiecutter_pypackage_minimal ${PIP_PROJECT_DIR})
+catkin_pip_target(cookiecutter_pypackage_minimal ${PIP_PROJECT_DIR})
+
+catkin_package()
 
 # CAREFUL : all projects for test here will share the same workspace. pip might have conflicts...
 

@@ -12,7 +12,7 @@ def test_dynamic_import_devel_space_pkgs():
 
 
 # If all packages are in the sys.path, we can import them
-def test_dynamic_import_vedel_pkg():
+def test_dynamic_import_devel_pkg():
     importlib.import_module('mypippkg')
     importlib.import_module('nameless')
     importlib.import_module('python_boilerplate')
