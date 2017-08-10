@@ -150,4 +150,6 @@ if (CATKIN_ENABLE_TESTING)
         ${cookiecutter_pypackage_minimal_PIP_TARGET}      # from pypackage-minimal
     )
 
+    #TODO : a way to verified installed files from cmake ???
+
 endif()

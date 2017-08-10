@@ -13,6 +13,14 @@ catkin_pip_package(dstest ${PIP_PROJECT_DIR})
 
 # CAREFUL : all projects for test here will share the same workspace. pip might have conflicts...
 
+# Testing potential extra files installation
+install(FILES extra_installs/bin.txt DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+install(FILES extra_installs/etc.txt DESTINATION ${CATKIN_PACKAGE_ETC_DESTINATION})
+install(FILES extra_installs/include.txt DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+install(FILES extra_installs/lib.txt DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+install(FILES extra_installs/python.txt DESTINATION ${CATKIN_PACKAGE_PYTHON_DESTINATION})
+install(FILES extra_installs/share.txt DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+
 ## Unit tests
 if (CATKIN_ENABLE_TESTING)
     catkin_add_nosetests(${PIP_PROJECT_DIR}/test DEPENDENCIES dstest)
