@@ -19,6 +19,8 @@ env:
     - ROS_DISTRO=jade ROS_FLOW=install
     - ROS_DISTRO=kinetic ROS_FLOW=devel
     - ROS_DISTRO=kinetic ROS_FLOW=install
+    - ROS_DISTRO=lunar ROS_FLOW=devel
+    - ROS_DISTRO=lunar ROS_FLOW=install
   # TODO : test all possible flows (installing deps on devel or not, etc.)
 
 before_install:

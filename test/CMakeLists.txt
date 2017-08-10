@@ -22,6 +22,7 @@ catkin_pip_requirements(${CMAKE_CURRENT_SOURCE_DIR}/test_requirements.txt --igno
 
 message(STATUS "PATH $ENV{PATH}")
 message(STATUS "PYTHONPATH $ENV{PYTHONPATH}")
+message(STATUS "ROS_PACKAGE_PATH $ENV{ROS_PACKAGE_PATH}")
 
 # Make sure we get the right cookiecutter
 find_program( CATKIN_COOKIECUTTER NAMES cookiecutter PATHS ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_BIN_DESTINATION} NO_DEFAULT_PATH)
@@ -53,29 +54,29 @@ endif()
 #
 
 # Testing project itself
-catkin_pip_runcmd(rosdep install --from-paths "distutils-setup" -y)
+catkin_pip_runcmd(rosdep install --from-paths "distutils-setup" --ignore-src -y)
 add_subdirectory(distutils-setup)
 
 # Testing project itself
-catkin_pip_runcmd(rosdep install --from-paths "setuptools-setup" -y)
+catkin_pip_runcmd(rosdep install --from-paths "setuptools-setup" --ignore-src -y)
 add_subdirectory(setuptools-setup)
 
 # Testing project itself
 # We need to call rosdep for each packages (to install dependencies if there are any)
 # note $ROS_DISTRO must be already defined in the environment
-catkin_pip_runcmd(rosdep install --from-paths "pipproject" -y)
+catkin_pip_runcmd(rosdep install --from-paths "pipproject" --ignore-src -y)
 add_subdirectory(pipproject)
 
 # Testing project itself
-catkin_pip_runcmd(rosdep install --from-paths "pylibrary" -y)
+catkin_pip_runcmd(rosdep install --from-paths "pylibrary" --ignore-src -y)
 add_subdirectory(pylibrary)
 
 # Testing project itself
-catkin_pip_runcmd(rosdep install --from-paths "pypackage" -y)
+catkin_pip_runcmd(rosdep install --from-paths "pypackage" --ignore-src -y)
 add_subdirectory(pypackage)
 
 # Testing project itself
-catkin_pip_runcmd(rosdep install --from-paths "pypackage-minimal" -y)
+catkin_pip_runcmd(rosdep install --from-paths "pypackage-minimal" --ignore-src -y)
 add_subdirectory(pypackage-minimal)
 
 
