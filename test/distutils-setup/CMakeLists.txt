@@ -6,10 +6,12 @@ set (PIP_PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/distutils_setup)
 
 find_package(catkin REQUIRED COMPONENTS catkin_pip)
 
-# This replace both catkin_python_setup() and catkin_package()
+# This replace catkin_python_setup()
 # For devel, this will install all your unsatisfied pip dependencies.
 # Upon install, this will bark if some dependencies are not already satisfied (by ROS).
-catkin_pip_package(dstest ${PIP_PROJECT_DIR})
+catkin_pip_target(dstest ${PIP_PROJECT_DIR})
+
+catkin_package()
 
 # CAREFUL : all projects for test here will share the same workspace. pip might have conflicts...
 

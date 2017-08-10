@@ -15,10 +15,12 @@ catkin_pip_requirements(${PIP_PROJECT_DIR}/requirements.txt --ignore-installed)
 # However this also means that existing packages in the workspace will not be used to satisfy requirements,
 # and will be reinstalled everytime...
 
-# This replace both catkin_python_setup() and catkin_package()
+# This replace catkin_python_setup()
 # For devel, this will install all your unsatisfied pip dependencies.
 # Upon install, this will bark if some dependencies are not already satisfied (by ROS).
-catkin_pip_package(mypippkg ${PIP_PROJECT_DIR})
+catkin_pip_target(mypippkg ${PIP_PROJECT_DIR})
+
+catkin_package()
 
 # CAREFUL : all projects for test here will share the same workspace. pip might have conflicts...
 
