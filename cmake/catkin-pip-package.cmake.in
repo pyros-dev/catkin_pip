@@ -77,7 +77,18 @@ function(catkin_pip_python_setup)
 endfunction()
 
 
-function(_catkin_pip_package package_name package_path)
+function(catkin_pip_target package_name)
+
+    set (extra_macro_args ${ARGN})
+
+    # Did we get any optional args?
+    list(LENGTH extra_macro_args num_extra_args)
+    if (${num_extra_args} GREATER 0)
+        list(GET extra_macro_args 0 package_path)
+        #message ("Got package_path: ${package_path}")
+    else()
+        set(package_path ${CMAKE_CURRENT_SOURCE_DIR})
+    endif()
 
     set(${PROJECT_NAME}_PIP_TARGET ${package_name} CACHE STRING "Make target generated to install this pip package as --editable for development")
 
@@ -106,24 +117,10 @@ function(_catkin_pip_package package_name package_path)
 endfunction()
 
 
-# TODO : we now create an actual cmake target -> rename to catkin_pip_target ?
+# BWCOMPAT : eventually get rid of that...
 macro(catkin_pip_package package_name)
 
-    set (extra_macro_args ${ARGN})
-
-    # Did we get any optional args?
-    list(LENGTH extra_macro_args num_extra_args)
-    if (${num_extra_args} GREATER 0)
-        list(GET extra_macro_args 0 package_path)
-        #message ("Got package_path: ${package_path}")
-    else()
-        set(package_path ${CMAKE_CURRENT_SOURCE_DIR})
-    endif()
-
-    _catkin_pip_package(${package_name} ${package_path})
-
-    # Hijacking catkin scripts again
-    #set(_PACKAGE_XML_DIRECTORY ${package_path})
+    catkin_pip_target(${package_name} ${ARGN})
 
     # Here we plug back into usual catkin package build flow
     # CAREFUL : this will set variables into current scope.
