@@ -4,7 +4,9 @@ project(catkin_pip)
 # Attempting auto detection of ros install if needed
 # sourcing a ros workspace would have already fill up the CMAKE_PREFIX_PATH
 if ( NOT CMAKE_PREFIX_PATH )
-    if (EXISTS "/opt/ros/kinetic")
+    if (EXISTS "/opt/ros/lunar")
+        set(CMAKE_PREFIX_PATH "/opt/ros/lunar")
+    elseif (EXISTS "/opt/ros/kinetic")
         set(CMAKE_PREFIX_PATH "/opt/ros/kinetic")
     elseif (EXISTS "/opt/ros/jade")
         set(CMAKE_PREFIX_PATH "/opt/ros/jade")
