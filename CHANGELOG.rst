@@ -2,6 +2,24 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#147 <https://github.com/asmodehn/catkin_pip/issues/147>`_ from pyros-dev/lunar
+  adding lunar
+* adding --ignore-src when calling rosdep on tests,
+  to not attempt to download an old (or missing) version of catkin_pip.
+* adding lunar
+* Merge pull request `#144 <https://github.com/asmodehn/catkin_pip/issues/144>`_ from pyros-dev/fix_destinations
+  fixing catkin_destination not being called
+* tests are now using the new catkin_pip_target and calling catkin_package directly.
+* adding catkin_pip_target to API, to allow the user to call catkin_package how he wants.
+* splitting catkin_pip_package in function and macro to expose the catkin_destinations variables set in the scope.
+* adding install rules to verify catkin variables.
+* Merge pull request `#128 <https://github.com/asmodehn/catkin_pip/issues/128>`_ from pyros-dev/pyup-update-pytest-3.0.6-to-3.1.3
+  Update pytest to 3.1.3
+* Update pytest from 3.0.6 to 3.1.3
+* Contributors: AlexV, pyup-bot
+
 0.2.2 (2017-05-30)
 ------------------
 * Merge pull request `#123 <https://github.com/asmodehn/catkin_pip/issues/123>`_ from yotabits/devel
