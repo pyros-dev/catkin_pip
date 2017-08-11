@@ -2,8 +2,8 @@
 Changelog for package catkin_pip
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.3 (2017-08-11)
+------------------
 * Merge pull request `#147 <https://github.com/asmodehn/catkin_pip/issues/147>`_ from pyros-dev/lunar
   adding lunar
 * adding --ignore-src when calling rosdep on tests,
