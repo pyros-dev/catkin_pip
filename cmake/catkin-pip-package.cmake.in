@@ -98,11 +98,15 @@ function(catkin_pip_target package_name)
     # Note when installing in editable mode (for development) we shouldnt care about already installed versions.
     # However : https://github.com/asmodehn/catkin_pip/issues/58
     if(CATKIN_PIP_NO_DEPS)
+      if(NOT CATKIN_VIRTUALENV)
         catkin_pip_install_devel_target(${package_name} ${package_path} --no-dependencies --ignore-installed)
         #catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --no-dependencies --prefix "${CATKIN_DEVEL_PREFIX}" --ignore-installed)
+      endif()
     else()
+      if(NOT CATKIN_VIRTUALENV)
         catkin_pip_install_devel_target(${package_name} ${package_path} --ignore-installed)
         #catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --prefix "${CATKIN_DEVEL_PREFIX}" --ignore-installed)
+      endif()
     endif()
 
     if(NOT EXISTS ${package_path}/setup.py)
