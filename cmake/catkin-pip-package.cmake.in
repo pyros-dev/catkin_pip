@@ -49,6 +49,11 @@ function(catkin_pip_python_setup)
       assert(CATKIN_PIP_PYTHON_INSTALL_DIR)
       set(INSTALL_CMD_WORKING_DIRECTORY ${package_path})
 
+      set(__CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+      # tmp override CMAKE_INSTLAL_PREIFX for virutalenv setup
+      if (CATKIN_VIRTUALENV_PATH_${PROJECT_NAME})
+        set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/catkin_pip_env)
+      endif()
       if(NOT WIN32)
         set(INSTALL_SCRIPT
           ${CMAKE_CURRENT_BINARY_DIR}/catkin_generated/python_setuptools_install.sh)
@@ -64,10 +69,12 @@ function(catkin_pip_python_setup)
           ${INSTALL_SCRIPT}
           @ONLY)
       endif()
+      set(CMAKE_INSTALL_PREFIX ${__CMAKE_INSTALL_PREFIX})
 
       # generate python script which gets executed at install time
       configure_file(${catkin_EXTRAS_DIR}/templates/safe_execute_install.cmake.in
         ${CMAKE_CURRENT_BINARY_DIR}/catkin_generated/safe_execute_install.cmake)
+
       install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/catkin_generated/safe_execute_install.cmake)
 
     # END : This is the end of catkin_python_setup copy
@@ -92,21 +99,18 @@ function(catkin_pip_target package_name)
 
     set(${PROJECT_NAME}_PIP_TARGET ${package_name} CACHE STRING "Make target generated to install this pip package as --editable for development")
 
+    catkin_pip_setup_prefix(${CATKIN_VIRTUALENV_PATH_${PROJECT_NAME}})
     # Note : environment should already be setup at configure time for devel
 
     # Then we can run the pip command
     # Note when installing in editable mode (for development) we shouldnt care about already installed versions.
     # However : https://github.com/asmodehn/catkin_pip/issues/58
     if(CATKIN_PIP_NO_DEPS)
-      if(NOT CATKIN_VIRTUALENV)
         catkin_pip_install_devel_target(${package_name} ${package_path} --no-dependencies --ignore-installed)
         #catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --no-dependencies --prefix "${CATKIN_DEVEL_PREFIX}" --ignore-installed)
-      endif()
     else()
-      if(NOT CATKIN_VIRTUALENV)
         catkin_pip_install_devel_target(${package_name} ${package_path} --ignore-installed)
         #catkin_pip_runcmd(${CATKIN_PIP} install -e ${package_path} --prefix "${CATKIN_DEVEL_PREFIX}" --ignore-installed)
-      endif()
     endif()
 
     if(NOT EXISTS ${package_path}/setup.py)
