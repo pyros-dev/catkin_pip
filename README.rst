@@ -1,7 +1,7 @@
 catkin_pip
 ==========
 
-|Documentation| |Build Status| |Project View|
+|Documentation| |Build Status| |Project View| |Gitter|
 
 | Provides catkin extension (cmake hooks) to work with pure python
   packages in catkin workspaces.
@@ -85,3 +85,7 @@ As a result you can:
 .. |Documentation| image:: https://readthedocs.org/projects/catkin-pip/badge/?version=latest
    :target: http://catkin-pip.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
+
+.. |Gitter| image:: https://badges.gitter.im/asmodehn/catkin_pip.svg
+   :target: https://gitter.im/asmodehn/catkin_pip?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
+   :alt: Gitter
