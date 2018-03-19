@@ -1,7 +1,7 @@
 catkin_pip
 ==========
 
-|Build Status|
+|Documentation| |Build Status| |Project View|
 
 | Provides catkin extension (cmake hooks) to work with pure python
   packages in catkin workspaces.
@@ -75,5 +75,13 @@ As a result you can:
 - Do a Third Party release of an existing python package into a ROS package (no setup.py changes required).
    
 
-.. |Build Status| image:: https://travis-ci.org/asmodehn/catkin_pip.svg?branch=devel
-   :target: https://travis-ci.org/asmodehn/catkin_pip
+.. |Build Status| image:: https://travis-ci.org/pyros-dev/catkin_pip.svg?branch=devel
+   :target: https://travis-ci.org/pyros-dev/catkin_pip
+
+.. |Project View| image:: https://badge.waffle.io/pyros-dev/catkin_pip.svg?columns=all
+   :target: https://waffle.io/pyros-dev/catkin_pip
+   :alt: 'Waffle.io - Columns and their card count'
+
+.. |Documentation| image:: https://readthedocs.org/projects/catkin-pip/badge/?version=latest
+   :target: http://catkin-pip.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status

@@ -6,9 +6,6 @@ This directory aims at gathering tests to validate the behavior of catkin_pip by
 * "building" them (in catkin terminology) 
 * make sure we can use them (somehow - run tests)
 
-TODO : We should also use cookiecutter to get pure python package structure and make sure it also works with catkin.
-If not we should provide here the required tools to make it so (not attempt to modify the python package structure).
-
 Project examples to use :
 * [cookiecutter-pipproject](https://github.com/wdm0006/cookiecutter-pipproject)
 * [cookiecutter-pypackage-minimal](https://github.com/kragniz/cookiecutter-pypackage-minimal) 

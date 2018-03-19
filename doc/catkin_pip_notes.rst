@@ -34,7 +34,7 @@ The PYTHONPATH is setup to contain the ROS workspaces paths in the appropriate o
 So the following behavior has been decided for Catkin-Pip :
 - Catkin-Pip adds extra site directories to the PYTHONPATH (to make things as obvious as possible for a ROS user)
 - Catkin-Pip does NOT do any dynamic discoveries (reading easy-install.pth file to discover editable packages). Better keep things simple and not reimplement a python behavior in a shell script...
-  Because of this, **it can happen that a package PKG installed in an underlay will be imported before a catkin-pip'ed editable package PKG during development**.
-  The expected workaround, is to **use pyros_setup in that package**. It will dynamically reset the desired path order in sys.path, following its user-modifiable configuration configuration file.
+Because of this, **it can happen that a package PKG installed in an underlay will be imported before a catkin-pip'ed editable package PKG during development**.
+The expected workaround, is to **use pyros_setup in that package**. It will dynamically reset the desired path order in sys.path, following its user-modifiable configuration configuration file.
 
 More work can be done here, to make things more obvious (like add a field to a catkin-pip'ed package and use pkg_resources on import to find the correct one for example)...

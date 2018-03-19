@@ -33,7 +33,7 @@ catkin_package = catkin_pkg.package.parse_package(
 # ones.
 extensions = ['sphinx.ext.ifconfig', 'sphinx.ext.todo', 'sphinx.ext.graphviz',
               'sphinx.ext.intersphinx',
-              'catkin_sphinx.ShLexer', 'catkin_sphinx.cmake',
+              # 'catkin_sphinx.ShLexer', 'catkin_sphinx.cmake', # disabling because of build problems on readthedocs
               'sphinx.ext.autodoc', 'sphinx.ext.viewcode']
 
 
