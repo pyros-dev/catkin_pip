@@ -8,7 +8,7 @@ nose==1.3.7
 # Also install pytest since we support it
 pytest==3.5.0
 pytest-cov==2.4.0
-pytest-timeout==1.2.0
+pytest-timeout==1.3.0
 
 # Fixing security since python 2.7.6 on trusty is broken : https://stackoverflow.com/questions/29099404/ssl-insecureplatform-error-when-using-requests-package
 # On trusty it seems that installing libgnutls28-dev fixes the issue...
