@@ -1,2 +1,2 @@
-cookiecutter==1.5.1
+cookiecutter==1.6.0
 pyros-setup>=0.2.0
