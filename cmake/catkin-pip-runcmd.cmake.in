@@ -27,7 +27,7 @@ function(catkin_pip_runcmd)
     execute_process(
       # Note we need to use catkin_env to make sure our envhook is properly loaded
       COMMAND ${CATKIN_ENV} ${CATKIN_PIP_COMMAND}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      WORKING_DIRECTORY ${CATKIN_PIP_ENV}/@CATKIN_PIP_GLOBAL_PYTHON_DESTINATION@
       RESULT_VARIABLE PIP_RESULT
       OUTPUT_VARIABLE PIP_VARIABLE
       ERROR_VARIABLE PIP_ERROR
