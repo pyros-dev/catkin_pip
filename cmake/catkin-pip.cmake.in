@@ -30,6 +30,12 @@ IF ( NOT CATKIN_PIP_PACKAGE_FOUND )
     message ( FATAL_ERROR "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-package.cmake Not Found !!!" )
 ENDIF ( NOT CATKIN_PIP_PACKAGE_FOUND )
 
+# protecting against missing cmake file dependency
+include ( "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-package-virtualenv.cmake" RESULT_VARIABLE CATKIN_PIP_PACKAGE_VIRTUALENV_FOUND )
+IF ( NOT CATKIN_PIP_PACKAGE_VIRTUALENV_FOUND )
+    message ( FATAL_ERROR "${CMAKE_CURRENT_LIST_DIR}/catkin-pip-package-virtualenv.cmake Not Found !!!" )
+ENDIF ( NOT CATKIN_PIP_PACKAGE_VIRTUALENV_FOUND )
+
 # Setting our paths to package env-hooks provided by catkin-pip
 if ( NOT CATKIN_PIP_ENV_HOOKS_PATH )
     # templates should be found relative to our current path

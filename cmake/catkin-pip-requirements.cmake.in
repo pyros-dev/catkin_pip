@@ -28,7 +28,14 @@ function(catkin_pip_requirements requirements_txt)
     # Needed in case user call this directly (configure time)
     catkin_pip_setup_prefix(${CATKIN_PIP_ENV})
 
+    # If catkin_pip_use_viertualenv is set, install within package path, other wise install devel prefix
+    if(CATKIN_VIRTUALENV_PATH_${PROJECT_NAME})
+      set(_pip_install_prefix ${CATKIN_VIRTUALENV_PATH_${PROJECT_NAME}})
+    else()
+      set(_pip_install_prefix ${CATKIN_DEVEL_PREFIX})
+    endif()
+
     # runnig the pip command (configure time)
-    catkin_pip_runcmd(${CATKIN_PIP} install ${ARGN} -r ${requirements_txt} --ignore-installed --src ${CMAKE_SOURCE_DIR} --exists-action b --prefix "${CATKIN_DEVEL_PREFIX}")
+    catkin_pip_runcmd(${CATKIN_PIP} install ${ARGN} -r ${requirements_txt} --ignore-installed --src ${CMAKE_SOURCE_DIR} --exists-action b --prefix "${_pip_install_prefix}")
 
 endfunction()

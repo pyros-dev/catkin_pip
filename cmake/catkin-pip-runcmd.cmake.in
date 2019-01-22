@@ -43,11 +43,21 @@ endfunction()
 
 
 function(catkin_pip_install_devel_target package_name package_path)
+
+  # If catkin_pip_use_viertualenv is set, install within package path, other wise install devel prefix
+  if (CATKIN_VIRTUALENV_PATH_${PROJECT_NAME})
+    set(_pip_install_prefix ${CATKIN_VIRTUALENV_PATH_${PROJECT_NAME}})
+    set(CATKIN_PIP_INSTALL_DEVEL_OUTPUTS
+        ${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_SHARE_DESTINATION}/${CATKIN_PIP_PYTHON_INSTALL_DIR}/${package_name}.egg-link
+    )
+  else()
+    set(_pip_install_prefix ${CATKIN_DEVEL_PREFIX})
     set(CATKIN_PIP_INSTALL_DEVEL_OUTPUTS
         # ${CATKIN_DEVEL_PREFIX}/${CATKIN_PIP_PYTHON_INSTALL_DIR}/easy-install.pth
         # CAREFUL with multiple outputs : https://cmake.org/Bug/view.php?id=15116
         ${CATKIN_DEVEL_PREFIX}/${CATKIN_PIP_PYTHON_INSTALL_DIR}/${package_name}.egg-link
     )
+  endif()
 
     string(REPLACE ";" " " ARGN_STR "${ARGN}")
 
@@ -56,7 +66,7 @@ function(catkin_pip_install_devel_target package_name package_path)
 
 
     set(CATKIN_PIP_CMD ${CATKIN_ENV})
-    set(CATKIN_PIP_CMD_ARGS_STR "flock ${CATKIN_PIP_ENV}/catkin_pip.lock ${CATKIN_PIP} install -e ${package_path} --prefix ${CATKIN_DEVEL_PREFIX} ${ARGN_STR}")
+    set(CATKIN_PIP_CMD_ARGS_STR "flock ${CATKIN_PIP_ENV}/catkin_pip.lock ${CATKIN_PIP} install -e ${package_path} --prefix ${_pip_install_prefix} ${ARGN_STR}")
     # IF WE ARE PASSING EDITABLE PKG PATHS INTO PYTHONPATH we need to work around bug :
     # PYTHONPATH breaks pip install --editable Ref : https://github.com/pypa/pip/issues/4261
     # set(CATKIN_PIP_CMD_ARGS_STR "-c 'export PYTHONPATH=${CATKIN_DEVEL_PREFIX}/${CATKIN_PIP_PYTHON_INSTALL_DIR}:${CATKIN_PIP_ENV}/${CATKIN_PIP_PYTHON_INSTALL_DIR}\; ${CATKIN_PIP_CMD_ARGS_STR}'")

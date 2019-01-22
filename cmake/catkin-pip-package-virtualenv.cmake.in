@@ -1,0 +1,46 @@
+if ( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
+	message ( FATAL_ERROR " CMAKE MINIMUM BACKWARD COMPATIBILITY REQUIRED : 2.8 !" )
+endif( CMAKE_BACKWARDS_COMPATIBILITY LESS 2.8 )
+
+# Enforcing one time include https://cmake.org/Wiki/CMake_Performance_Tips#Use_an_include_guard
+if(catkin_pip_target_virtualenv_included)
+  return()
+endif(catkin_pip_target_virtualenv_included)
+set(catkin_pip_target_virtualenv_included true)
+
+message(STATUS "Loading catkin-pip-package-virtualenv.cmake from ${CMAKE_CURRENT_LIST_DIR}... ")
+
+
+# catkin_pip_package override catkin_pip_package, otherwise CATKIN_PIP_ENV directory
+## ned to call `catkin_pip_requirements` after `catkin_pip_package_virtualenv`
+macro(catkin_pip_package_virtualenv package_name)
+  if (NOT ${package_name} STREQUAL ${PROJECT_NAME})
+    message(FATAL_ERROR "We assume package_name(${package_name}) is equal to PROJECT_NAME(${PROJECT_NAME})")
+  endif()
+
+  unset(CATKIN_VIRTUALENV CACHE)
+  find_program(CATKIN_VIRTUALENV NAMES virtualenv)
+  # call catkin_package() to set CATKIN_PACKAGE_SHARE_DESTINATION
+
+  set(CATKIN_VIRTUALENV_PATH_${PROJECT_NAME} ${CATKIN_DEVEL_PREFIX}/share/${PROJECT_NAME}/catkin_pip_env CACHE PATH "The virtual eivironment for each package")
+  message("-- Set local virtual env path to CATKIN_VIRTUALENV_PATH_${PROJECT_NAME} : ${CATKIN_VIRTUALENV_PATH_${PROJECT_NAME}}")
+  message("-- Install local virutalenv to ${CATKIN_VIRTUALENV_PATH_${PROJECT_NAME}}")
+  catkin_pip_runcmd(python ${CATKIN_VIRTUALENV} -q --system-site-packages ${CATKIN_VIRTUALENV_PATH_${PROJECT_NAME}})
+  ### HACK somehow virtualenv create local dir, which shows two python.exe when we run `rosrun <pkg> python`
+  catkin_pip_runcmd(cmake -E remove_directory ${CATKIN_VIRTUALENV_PATH_${PROJECT_NAME}}/local)
+
+  ## OVERRIDE catkin_pip_env
+  unset(CATKIN_PIP_ENV CACHE)
+  set(CATKIN_PIP_ENV ${CATKIN_VIRTUALENV_PATH_${PROJECT_NAME}})
+
+  ## copy virtualenv path to install directory
+  install(DIRECTORY ${CATKIN_DEVEL_PREFIX}/share/${PROJECT_NAME}/catkin_pip_env/
+    DESTINATION share/${PROJECT_NAME}/catkin_pip_env
+    USE_SOURCE_PERMISSIONS
+    PATTERN "${PROJECT_NAME}.egg-link" EXCLUDE
+    )
+
+  ## RUN catkin_pip_package
+  catkin_pip_package(${package_name})
+endmacro()
+
