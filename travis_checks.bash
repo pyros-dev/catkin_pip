@@ -9,7 +9,7 @@ cd $DIR
 # It is used by travis and can also be used by a developer for checking his current working tree.
 #
 # These variables need to be setup before calling this script:
-# CI_ROS_DISTRO [indigo | jade | kinetic]
+# CI_ROS_DISTRO [kinetic | melodic]
 # ROS_FLOW [devel | install]
 
 # For travis docker, this is already done by the entrypoint in docker image.

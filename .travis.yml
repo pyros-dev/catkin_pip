@@ -13,14 +13,10 @@ env:
   # This will check any ROS distro supported on this OS
   # checking devel and install separately so that they don't influence each other (dependencies, path, env, etc.)
   matrix:
-    - ROS_DISTRO=indigo ROS_FLOW=devel
-    - ROS_DISTRO=indigo ROS_FLOW=install
-    - ROS_DISTRO=jade ROS_FLOW=devel
-    - ROS_DISTRO=jade ROS_FLOW=install
     - ROS_DISTRO=kinetic ROS_FLOW=devel
     - ROS_DISTRO=kinetic ROS_FLOW=install
-    - ROS_DISTRO=lunar ROS_FLOW=devel
-    - ROS_DISTRO=lunar ROS_FLOW=install
+    - ROS_DISTRO=melodic ROS_FLOW=devel
+    - ROS_DISTRO=melodic ROS_FLOW=install
   # TODO : test all possible flows (installing deps on devel or not, etc.)
 
 before_install:
@@ -38,7 +34,8 @@ install:
   # refreshing packages
   - docker exec -ti ${CONTAINER_NAME} apt-get update
   # TMP Patch because rosdep doesnt declare a dependency to sudo yet (2016-08-25) and it doesnt come with xenial
-  - docker exec -ti ${CONTAINER_NAME} apt-get install sudo -y
+  #- docker exec -ti ${CONTAINER_NAME} apt-get install sudo -y
+  - docker exec -ti ${CONTAINER_NAME} sudo rosdep init
   - docker exec -ti ${CONTAINER_NAME} rosdep update
   # copying local clone to the running container (volume is currently broken)
   - docker cp . ${CONTAINER_NAME}:/git_clone
