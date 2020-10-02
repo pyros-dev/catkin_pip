@@ -5,6 +5,8 @@
 
 # Upgrading to use latest nose
 nose==1.3.7
+# blocking dependencies to python2 compatible versions
+more-itertools==5.0.0
 # Also install pytest since we support it
 pytest==3.5.0
 pytest-cov==2.4.0
